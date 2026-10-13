@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-Hant">
+<html lang="zh-Hant" class="ph-locked">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -40,6 +40,18 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
 @media (prefers-reduced-motion: reduce){.dash-skeleton{animation:none}}
 .ph-banner{max-width:1280px;margin:16px auto 0;padding:12px 16px;border-radius:10px;background:color-mix(in srgb,var(--color-bad) 12%,var(--color-panel));color:var(--color-fg);font-family:var(--font-anthropic-sans);font-size:14px;box-sizing:border-box}
 .ph-banner[hidden]{display:none}
+.ph-gate{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--color-bg);z-index:10;padding:16px}
+.ph-gate[hidden]{display:none}
+.ph-gate-box{width:100%;max-width:340px;background:var(--color-panel);border:1px solid var(--color-border-line);border-radius:14px;padding:28px 24px;box-sizing:border-box;font-family:var(--font-anthropic-sans)}
+.ph-gate-box h1{font-family:var(--font-anthropic-serif);font-weight:400;font-size:22px;margin:0 0 4px}
+.ph-gate-box p{color:var(--color-fg-muted);font-size:13px;margin:0 0 18px}
+.ph-gate-box input{width:100%;box-sizing:border-box;font:inherit;font-size:18px;letter-spacing:.2em;padding:10px 12px;border:1px solid var(--color-border-line);border-radius:8px;background:var(--color-bg);color:var(--color-fg)}
+.ph-gate-box button{width:100%;margin-top:12px;font:inherit;font-size:15px;padding:10px;border:0;border-radius:8px;background:var(--color-fg);color:var(--color-bg);cursor:pointer}
+.ph-gate-box button:disabled{opacity:.6;cursor:default}
+.ph-gate-err{color:var(--color-bad);font-size:13px;min-height:18px;margin-top:10px}
+.ph-locked #dash-root{visibility:hidden}
+.ph-logout{position:fixed;top:10px;right:14px;font:inherit;font-size:12px;background:none;border:0;color:var(--color-fg-muted);cursor:pointer;font-family:var(--font-anthropic-sans)}
+.ph-locked .ph-logout{display:none}
 </style>
 <script>
 /* 簡易執行環境：提供頁面程式使用的 dash.*，資料由 Apps Script 端點在開啟時即時取得 */
@@ -59,25 +71,42 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
     calcs.forEach((c) => { state[c.id] = { status, data: [], message, meta: [] }; });
   };
 
-  async function load() {
+  const STORE = 'rxcare_pw';
+  const store = { get: () => { try { return localStorage.getItem(STORE); } catch (e) { return null; } },
+    set: (v) => { try { localStorage.setItem(STORE, v); } catch (e) {} },
+    clear: () => { try { localStorage.removeItem(STORE); } catch (e) {} } };
+  const gate = (show, msg) => {
+    document.documentElement.classList.toggle('ph-locked', show);
+    const g = document.getElementById('ph-gate');
+    if (g) g.hidden = !show;
+    const e = document.getElementById('ph-gate-err');
+    if (e) e.textContent = msg || '';
+    const btn = document.querySelector('#ph-gate button');
+    if (btn) btn.disabled = false;
+    if (show) { const i = document.getElementById('ph-pw'); if (i) { i.value = ''; i.focus(); } }
+  };
+
+  async function load(pw) {
     const cfg = window.DASH_CONFIG || {};
-    const key = new URLSearchParams(location.search).get('k');
     if (!cfg.endpoint || cfg.endpoint.indexOf('PASTE_') === 0) {
-      setAll('error', 'config'); banner('尚未設定資料端點：請在 config.js 填入 Apps Script 網址。'); return notify();
+      gate(false); setAll('error', 'config'); banner('尚未設定資料端點：請在 config.js 填入 Apps Script 網址。'); return notify();
     }
-    if (!key) { setAll('error', 'key'); banner('這個連結缺少存取金鑰，請向管理者索取完整連結。'); return notify(); }
+    pw = pw || store.get();
+    if (!pw) return gate(true);
     let payload;
     try {
-      const res = await fetch(cfg.endpoint + '?k=' + encodeURIComponent(key), { cache: 'no-store' });
+      const res = await fetch(cfg.endpoint + '?p=' + encodeURIComponent(pw), { cache: 'no-store' });
       payload = await res.json();
     } catch (e) {
-      setAll('error', String(e)); banner('無法連線到資料來源，請稍後重新整理。'); return notify();
+      gate(false); setAll('error', String(e)); banner('無法連線到資料來源，請稍後重新整理。'); return notify();
     }
+    if (payload && payload.error === 'unauthorized') { store.clear(); return gate(true, '密碼錯誤，請再試一次。'); }
+    if (payload && payload.error === 'locked') { return gate(true, '嘗試次數過多，請 10 分鐘後再試。'); }
     if (!payload || !payload.ok) {
-      setAll('error', payload && payload.error);
-      banner(payload && payload.error === 'unauthorized' ? '存取金鑰無效或已更換，請向管理者索取新的連結。' : '資料讀取失敗：' + (payload && payload.error || '未知原因'));
-      return notify();
+      gate(false); setAll('error', payload && payload.error); banner('資料讀取失敗：' + (payload && payload.error || '未知原因')); return notify();
     }
+    store.set(pw);
+    gate(false);
     banner('');
     const answers = { indicators: payload.indicators, groups: { values: payload.groups } };
     Object.keys(loaders).forEach((id) => {
@@ -110,13 +139,35 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
     data: get,
     onData: (fn) => { subs.push(fn); try { fn(); } catch (e) { console.error(e); } },
     refresh: () => load(),
+    logout: () => { store.clear(); gate(true); },
     setLink: (name) => { history.replaceState(null, '', location.pathname + location.search + '#' + name); },
     params: () => ({}), setParams: () => {}, resetParams: () => {},
   };
-  window.addEventListener('DOMContentLoaded', load);
+  window.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('ph-gate').addEventListener('submit', (ev) => {
+      ev.preventDefault();
+      const v = document.getElementById('ph-pw').value.trim();
+      if (!v) return;
+      ev.target.querySelector('button').disabled = true;
+      document.getElementById('ph-gate-err').textContent = '';
+      load(v);
+    });
+    document.getElementById('ph-logout').addEventListener('click', () => window.dash.logout());
+    load();
+  });
 })();
 </script>
 </head>
 <body>
+<form id="ph-gate" class="ph-gate" hidden autocomplete="off">
+  <div class="ph-gate-box">
+    <h1>藥事照護組 Dashboard</h1>
+    <p>亞東藥學部｜請輸入密碼</p>
+    <input id="ph-pw" type="password" inputmode="numeric" aria-label="密碼" autocomplete="current-password">
+    <button type="submit">進入</button>
+    <div id="ph-gate-err" class="ph-gate-err" role="alert"></div>
+  </div>
+</form>
+<button id="ph-logout" class="ph-logout" type="button">登出</button>
 <div id="ph-banner" class="ph-banner" role="status" hidden></div>
 <div id="dash-root">

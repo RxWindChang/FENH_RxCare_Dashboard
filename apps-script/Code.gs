@@ -5,8 +5,9 @@
  *   indicators：照護組行政 › 照護組指標
  *   groups：    2026照護組業務量填寫 › 群組月彙總
  *
- * 呼叫方式：<網頁應用程式網址>?k=<金鑰>
- * 金鑰存在「指令碼屬性」KEY，第一次請執行 setupKey() 產生。
+ * 網頁以 <網頁應用程式網址>?p=<密碼> 呼叫。
+ * 密碼存在「專案設定 › 指令碼屬性」的 PASSWORD，不寫在程式碼裡
+ * （這份程式碼放在公開的 GitHub repo，寫進來任何人都看得到）。
  */
 
 const SOURCES = {
@@ -17,12 +18,23 @@ const SOURCES = {
 // 快取秒數：多人同時開啟時不必每次都重讀試算表。設為 0 則每次都即時讀取。
 const CACHE_SECONDS = 60;
 
-function doGet(e) {
-  const key = PropertiesService.getScriptProperties().getProperty('KEY');
-  const given = e && e.parameter ? e.parameter.k : '';
-  if (!key || given !== key) return json_({ ok: false, error: 'unauthorized' });
+// 防止猜密碼：10 分鐘內累計錯誤達此次數，就暫停所有登入 10 分鐘。
+const MAX_FAILS = 30;
+const LOCK_SECONDS = 600;
 
+function doGet(e) {
   const cache = CacheService.getScriptCache();
+  const fails = Number(cache.get('fails') || 0);
+  if (fails >= MAX_FAILS) return json_({ ok: false, error: 'locked' });
+
+  const password = PropertiesService.getScriptProperties().getProperty('PASSWORD');
+  const given = e && e.parameter ? String(e.parameter.p || '') : '';
+  if (!password) return json_({ ok: false, error: '尚未設定密碼（指令碼屬性 PASSWORD）' });
+  if (given !== password) {
+    cache.put('fails', String(fails + 1), LOCK_SECONDS);
+    return json_({ ok: false, error: 'unauthorized' });
+  }
+
   if (CACHE_SECONDS > 0) {
     const hit = cache.get('payload');
     if (hit) return ContentService.createTextOutput(hit).setMimeType(ContentService.MimeType.JSON);
@@ -43,12 +55,10 @@ function doGet(e) {
   return ContentService.createTextOutput(text).setMimeType(ContentService.MimeType.JSON);
 }
 
-/** 第一次部署前執行一次：產生金鑰並顯示在「執行紀錄」。要換金鑰時再執行一次即可。 */
-function setupKey() {
-  const k = Utilities.getUuid().replace(/-/g, '') + Utilities.getUuid().replace(/-/g, '').slice(0, 8);
-  PropertiesService.getScriptProperties().setProperty('KEY', k);
-  CacheService.getScriptCache().remove('payload');
-  Logger.log('新金鑰：' + k);
+/** 第一次部署時執行一次，讓 Google 跳出授權畫面（讀取試算表）。不會改動任何資料。 */
+function authorize() {
+  for (const name in SOURCES) SpreadsheetApp.openById(SOURCES[name].id).getName();
+  Logger.log('授權完成。');
 }
 
 function json_(o) {
