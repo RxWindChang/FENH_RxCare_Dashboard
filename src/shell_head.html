@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<title>亞東藥學部 藥事照護組 Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="config.js"></script>
+<style>
+:root{
+  --font-anthropic-sans:"Noto Sans TC",system-ui,-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif;
+  --font-anthropic-serif:"Noto Serif TC","Songti TC",serif;
+  --cds-font-size-caption:12px;--cds-font-size-body:14px;--cds-font-size-heading:16px;--cds-font-size-title:28px;
+  --cds-font-weight-medium:500;
+  --cds-gap-xs:4px;--cds-gap-sm:8px;--cds-gap-md:16px;--cds-gap-lg:24px;--cds-gap-xl:36px;
+  --cds-pad-xs:4px;--cds-pad-sm:8px;--cds-pad-md:12px;--cds-pad-lg:18px;--cds-pad-xl:28px;
+  --cds-radius:10px;--cds-dur-slow:.35s;--cds-ease-out:cubic-bezier(.2,.8,.2,1);
+  --color-bg:#f7f7f5;--color-panel:#ffffff;--color-fg:#1f2328;--color-fg-muted:#6b7078;--color-border-line:#e3e3df;
+  --color-ok:#1f8a4c;--color-warn:#b7791f;--color-bad:#c53030;
+  --cds-chart-grid:#ecece8;--cds-chart-axis:#c9c9c3;--cds-chart-muted:#d9d9d3;--cds-chart-reference:#9a9a94;
+  --cds-surface-popover:#ffffff;--cds-border:#dcdcd6;--cds-shadow-popover:0 4px 16px rgba(0,0,0,.12);--cds-text-secondary:#6b7078;
+  --ph-skel:#ececea;
+}
+@media (prefers-color-scheme: dark){:root{
+  --color-bg:#17181a;--color-panel:#202225;--color-fg:#e8e8e6;--color-fg-muted:#9a9ea5;--color-border-line:#33363a;
+  --color-ok:#52c27f;--color-warn:#e0b04f;--color-bad:#f07070;
+  --cds-chart-grid:#2c2f33;--cds-chart-axis:#45494e;--cds-chart-muted:#3a3d42;--cds-chart-reference:#7d8188;
+  --cds-surface-popover:#2a2c30;--cds-border:#3d4045;--cds-shadow-popover:0 4px 16px rgba(0,0,0,.5);--cds-text-secondary:#9a9ea5;
+  --ph-skel:#2b2d31;
+}}
+html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:var(--font-anthropic-sans)}
+#dash-root{max-width:1280px;margin:0 auto;padding:28px clamp(16px,3vw,40px) 48px}
+.dash-skeleton{color:transparent!important;background:var(--ph-skel);border-radius:6px;animation:phPulse 1.4s ease-in-out infinite}
+.ph-chart.dash-skeleton{border-radius:var(--cds-radius)}
+@keyframes phPulse{50%{opacity:.55}}
+@media (prefers-reduced-motion: reduce){.dash-skeleton{animation:none}}
+.ph-banner{max-width:1280px;margin:16px auto 0;padding:12px 16px;border-radius:10px;background:color-mix(in srgb,var(--color-bad) 12%,var(--color-panel));color:var(--color-fg);font-family:var(--font-anthropic-sans);font-size:14px;box-sizing:border-box}
+.ph-banner[hidden]{display:none}
+</style>
+<script>
+/* 簡易執行環境：提供頁面程式使用的 dash.*，資料由 Apps Script 端點在開啟時即時取得 */
+(function () {
+  const loaders = {}, calcs = [], state = {}, subs = [];
+  const colors = ['#2f6fdb', '#e07b2b', '#2f9e6e', '#c2448f', '#7a5cd6', '#8a8f2a', '#d24b4b', '#3aa0c4'];
+  const get = (id) => state[id] || { status: 'loading', data: [], refreshing: false, meta: [] };
+  const notify = () => subs.forEach((fn) => { try { fn(); } catch (e) { console.error(e); } });
+  const banner = (msg) => {
+    const b = document.getElementById('ph-banner');
+    if (!b) return;
+    b.textContent = msg || '';
+    b.hidden = !msg;
+  };
+  const setAll = (status, message) => {
+    Object.keys(loaders).forEach((id) => { state[id] = { status, data: [], message, meta: [] }; });
+    calcs.forEach((c) => { state[c.id] = { status, data: [], message, meta: [] }; });
+  };
+
+  async function load() {
+    const cfg = window.DASH_CONFIG || {};
+    const key = new URLSearchParams(location.search).get('k');
+    if (!cfg.endpoint || cfg.endpoint.indexOf('PASTE_') === 0) {
+      setAll('error', 'config'); banner('尚未設定資料端點：請在 config.js 填入 Apps Script 網址。'); return notify();
+    }
+    if (!key) { setAll('error', 'key'); banner('這個連結缺少存取金鑰，請向管理者索取完整連結。'); return notify(); }
+    let payload;
+    try {
+      const res = await fetch(cfg.endpoint + '?k=' + encodeURIComponent(key), { cache: 'no-store' });
+      payload = await res.json();
+    } catch (e) {
+      setAll('error', String(e)); banner('無法連線到資料來源，請稍後重新整理。'); return notify();
+    }
+    if (!payload || !payload.ok) {
+      setAll('error', payload && payload.error);
+      banner(payload && payload.error === 'unauthorized' ? '存取金鑰無效或已更換，請向管理者索取新的連結。' : '資料讀取失敗：' + (payload && payload.error || '未知原因'));
+      return notify();
+    }
+    banner('');
+    const answers = { indicators: payload.indicators, groups: { values: payload.groups } };
+    Object.keys(loaders).forEach((id) => {
+      try {
+        const out = loaders[id]({ answer: answers[id] });
+        const rows = Array.isArray(out) ? out : out.rows || out.data || [];
+        state[id] = { status: 'ok', data: rows, columns: out.columns, meta: [] };
+      } catch (e) {
+        state[id] = { status: 'error', data: [], message: e.message, meta: [] };
+        console.error(id, e);
+      }
+    });
+    calcs.forEach((c) => {
+      const ins = c.inputs.map((i) => get(i));
+      if (ins.some((x) => x.status !== 'ok')) { state[c.id] = { status: 'error', data: [], meta: [] }; return; }
+      try { state[c.id] = { status: 'ok', data: c.fn(...ins.map((x) => x.data)), meta: [] }; }
+      catch (e) { state[c.id] = { status: 'error', data: [], message: e.message, meta: [] }; console.error(c.id, e); }
+    });
+    const t = document.getElementById('ph-sync');
+    if (t && payload.updated) t.textContent = '資料讀取時間：' + new Date(payload.updated).toLocaleString('zh-TW', { hour12: false });
+    notify();
+  }
+
+  let rt;
+  window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(notify, 150); });
+  window.dash = {
+    colors,
+    loader: (id, o) => { loaders[id] = o.fn; },
+    calc: (id, o) => { calcs.push({ id, inputs: o.inputs, fn: o.fn }); },
+    data: get,
+    onData: (fn) => { subs.push(fn); try { fn(); } catch (e) { console.error(e); } },
+    refresh: () => load(),
+    setLink: (name) => { history.replaceState(null, '', location.pathname + location.search + '#' + name); },
+    params: () => ({}), setParams: () => {}, resetParams: () => {},
+  };
+  window.addEventListener('DOMContentLoaded', load);
+})();
+</script>
+</head>
+<body>
+<div id="ph-banner" class="ph-banner" role="status" hidden></div>
+<div id="dash-root">
