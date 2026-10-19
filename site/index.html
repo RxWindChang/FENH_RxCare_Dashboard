@@ -239,6 +239,9 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
 .ph-grid[hidden],.ph-card[hidden],.ph-tiles[hidden],#ppl-body[hidden]{display:none}
 .ph-toggle span{cursor:pointer;user-select:none}
 .ph-toggle span.off{opacity:.35;text-decoration:line-through}
+.ph-grid-ov{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--cds-gap-md);margin-top:var(--cds-gap-md)}
+@media (max-width:1000px){.ph-grid-ov{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.ph-grid-ov{grid-template-columns:1fr}}
 .ph-msg{font-size:var(--cds-font-size-body);color:var(--color-fg-muted);padding:var(--cds-pad-lg) 0}
 .ph-foot{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);margin-top:var(--cds-gap-lg)}
 </style>
@@ -300,13 +303,13 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
     </div>
 
     <h2 class="ph-h2">近 12 個月趨勢</h2>
-    <div class="ph-grid3">
-      <div class="ph-card" id="ov-discharge-card"><p class="ph-card-t">出院準備服務</p><p class="ph-card-n">每月件數</p><div class="ph-chart dash-skeleton" id="ov-discharge" data-source="recent" style="min-height:150px"></div></div>
-      <div class="ph-card" id="ov-education-card"><p class="ph-card-t">藥物衛教</p><p class="ph-card-n">每月件數</p><div class="ph-chart dash-skeleton" id="ov-education" data-source="recent" style="min-height:150px"></div></div>
-      <div class="ph-card" id="ov-icu-count-card"><p class="ph-card-t">重症藥事申報件數</p><p class="ph-card-n">六單位合計，每月件數</p><div class="ph-chart dash-skeleton" id="ov-icu-count" data-source="recent" style="min-height:150px"></div></div>
-      <div class="ph-card" id="ov-icu-rate-card"><p class="ph-card-t">重症藥事總申報率</p><p class="ph-card-n">申報件數 ÷ 理論極限申報量（按床數）</p><div class="ph-chart dash-skeleton" id="ov-icu-rate" data-source="recent" style="min-height:150px"></div></div>
-      <div class="ph-card" id="ov-ckd-card"><p class="ph-card-t">CKD 藥師門診</p><p class="ph-card-n">每月人次</p><div class="ph-chart dash-skeleton" id="ov-ckd" data-source="recent" style="min-height:150px"></div></div>
-      <div class="ph-card" id="ov-anticoag-card"><p class="ph-card-t">抗凝藥師門診</p><p class="ph-card-n">每月人次</p><div class="ph-chart dash-skeleton" id="ov-anticoag" data-source="recent" style="min-height:150px"></div></div>
+    <div class="ph-grid-ov">
+      <div class="ph-card" id="ov-discharge-card"><p class="ph-card-t">出院準備服務</p><p class="ph-card-n">每月件數</p><div class="ph-chart dash-skeleton" id="ov-discharge" data-source="recent" style="min-height:230px"></div></div>
+      <div class="ph-card" id="ov-education-card"><p class="ph-card-t">藥物衛教</p><p class="ph-card-n">每月件數</p><div class="ph-chart dash-skeleton" id="ov-education" data-source="recent" style="min-height:230px"></div></div>
+      <div class="ph-card" id="ov-icu-count-card"><p class="ph-card-t">重症藥事申報件數</p><p class="ph-card-n">六單位合計，每月件數</p><div class="ph-chart dash-skeleton" id="ov-icu-count" data-source="recent" style="min-height:230px"></div></div>
+      <div class="ph-card" id="ov-icu-rate-card"><p class="ph-card-t">重症藥事總申報率</p><p class="ph-card-n">申報件數 ÷ 理論極限申報量（按床數）</p><div class="ph-chart dash-skeleton" id="ov-icu-rate" data-source="recent" style="min-height:230px"></div></div>
+      <div class="ph-card" id="ov-ckd-card"><p class="ph-card-t">CKD 藥師門診</p><p class="ph-card-n">每月人次</p><div class="ph-chart dash-skeleton" id="ov-ckd" data-source="recent" style="min-height:230px"></div></div>
+      <div class="ph-card" id="ov-anticoag-card"><p class="ph-card-t">抗凝藥師門診</p><p class="ph-card-n">每月人次</p><div class="ph-chart dash-skeleton" id="ov-anticoag" data-source="recent" style="min-height:230px"></div></div>
     </div>
   </section>
 
@@ -939,12 +942,12 @@ dash.calc('ppl_latest', {
   }
 
   const CHARTS = {
-    'ov-discharge': { type: 'bar', h: 150, series: [{ key: '出院準備服務', label: '出院準備服務' }] },
-    'ov-education': { type: 'bar', h: 150, series: [{ key: '藥物衛教', label: '藥物衛教', c: 1 }] },
-    'ov-icu-count': { type: 'bar', h: 150, series: [{ key: '重症申報總件數', label: '申報件數', c: 2 }] },
-    'ov-icu-rate': { type: 'line', h: 150, pct: true, yMax: 1, series: [{ key: '總申報率', label: '總申報率', c: 2 }] },
-    'ov-ckd': { type: 'bar', h: 150, series: [{ key: 'CKD藥師門診', label: 'CKD 藥師門診', c: 3 }] },
-    'ov-anticoag': { type: 'bar', h: 150, series: [{ key: '抗凝藥師門診', label: '抗凝藥師門診', c: 4 }] },
+    'ov-discharge': { type: 'bar', h: 230, series: [{ key: '出院準備服務', label: '出院準備服務' }] },
+    'ov-education': { type: 'bar', h: 230, series: [{ key: '藥物衛教', label: '藥物衛教', c: 1 }] },
+    'ov-icu-count': { type: 'bar', h: 230, series: [{ key: '重症申報總件數', label: '申報件數', c: 2 }] },
+    'ov-icu-rate': { type: 'line', h: 230, pct: true, yMax: 1, series: [{ key: '總申報率', label: '總申報率', c: 2 }] },
+    'ov-ckd': { type: 'bar', h: 230, series: [{ key: 'CKD藥師門診', label: 'CKD 藥師門診', c: 3 }] },
+    'ov-anticoag': { type: 'bar', h: 230, series: [{ key: '抗凝藥師門診', label: '抗凝藥師門診', c: 4 }] },
     'edu-chart': { type: 'bar', h: 260, series: [{ key: '出院準備服務', label: '出院準備服務' }, { key: '藥物衛教', label: '藥物衛教' }] },
     'icu-rate': { type: 'line', h: 240, pct: true, yMax: 1, series: [{ key: '總申報率', label: '總申報率', c: 2 }] },
     'icu-count': { type: 'bar', h: 240, series: [{ key: '重症申報總件數', label: '申報件數', c: 2 }] },
