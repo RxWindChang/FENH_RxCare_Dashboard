@@ -115,7 +115,7 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
     store.set(pw);
     gate(false);
     banner('');
-    const answers = { indicators: payload.indicators, groups: { values: payload.groups } };
+    const answers = { indicators: payload.indicators, groups: { values: payload.groups }, persons: { values: payload.persons } };
     Object.keys(loaders).forEach((id) => {
       try {
         const out = loaders[id]({ answer: answers[id] });

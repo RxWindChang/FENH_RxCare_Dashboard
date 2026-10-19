@@ -115,7 +115,7 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
     store.set(pw);
     gate(false);
     banner('');
-    const answers = { indicators: payload.indicators, groups: { values: payload.groups } };
+    const answers = { indicators: payload.indicators, groups: { values: payload.groups }, persons: { values: payload.persons } };
     Object.keys(loaders).forEach((id) => {
       try {
         const out = loaders[id]({ answer: answers[id] });
@@ -226,6 +226,19 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
 .ph-unit-h{display:flex;justify-content:space-between;align-items:baseline}
 [data-dash-source-state=empty]{color:transparent}
 [data-dash-source-state=refreshing]{opacity:.5;transition:opacity var(--cds-dur-slow)}
+.ph-seg{display:inline-flex;flex-wrap:wrap;gap:4px;padding:3px;border:1px solid var(--color-border-line);border-radius:999px;margin-bottom:var(--cds-gap-sm)}
+.ph-seg button{appearance:none;border:0;background:none;font:inherit;font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);padding:5px 12px;border-radius:999px;cursor:pointer}
+.ph-seg button[aria-pressed="true"]{background:var(--color-fg);color:var(--color-bg)}
+.ph-pick{display:flex;flex-wrap:wrap;align-items:center;gap:var(--cds-gap-sm) var(--cds-gap-md);margin-bottom:var(--cds-gap-md)}
+.ph-pick select{font:inherit;font-size:var(--cds-font-size-body);padding:6px 10px;border:1px solid var(--color-border-line);border-radius:8px;background:var(--color-panel);color:var(--color-fg);min-width:12rem}
+.ph-pick-info{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted)}
+.ph-click tbody tr{cursor:pointer}
+.ph-click tbody tr:hover td{background:color-mix(in srgb,var(--color-fg) 6%,transparent)}
+.ph-click tbody tr[aria-selected="true"] td{background:color-mix(in srgb,var(--color-fg) 10%,transparent);font-weight:600}
+.ph-grid[hidden],.ph-card[hidden],.ph-tiles[hidden],#ppl-body[hidden]{display:none}
+.ph-toggle span{cursor:pointer;user-select:none}
+.ph-toggle span.off{opacity:.35;text-decoration:line-through}
+.ph-msg{font-size:var(--cds-font-size-body);color:var(--color-fg-muted);padding:var(--cds-pad-lg) 0}
 .ph-foot{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);margin-top:var(--cds-gap-lg)}
 </style>
 
@@ -241,6 +254,7 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
     <button class="ph-tab" role="tab" data-tab="icu" aria-selected="false">重症藥事指標</button>
     <button class="ph-tab" role="tab" data-tab="clinic" aria-selected="false">藥師門診（CKD・抗凝）</button>
     <button class="ph-tab" role="tab" data-tab="groups" aria-selected="false">各群業務量</button>
+    <button class="ph-tab" role="tab" data-tab="people" aria-selected="false">個人業務量</button>
   </nav>
 
   <!-- 總覽 -->
@@ -416,14 +430,19 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
     </div>
 
     <h2 class="ph-h2" id="grp-trend-h">各群逐月趨勢</h2>
-    <div class="ph-legend" data-source="grp_pivot"><span><i class="ph-sw" data-c="0"></i>A 群</span><span><i class="ph-sw" data-c="1"></i>B 群</span><span><i class="ph-sw" data-c="2"></i>C 群</span><span><i class="ph-sw" data-c="3"></i>PGY</span></div>
-    <div class="ph-grid3">
-      <div class="ph-card" id="grp-svc-card"><p class="ph-card-t">藥事服務</p><p class="ph-card-n">各群每月合計</p><div class="ph-chart dash-skeleton" id="grp-svc" data-source="grp_pivot" style="min-height:170px"></div></div>
-      <div class="ph-card" id="grp-tdm-card"><p class="ph-card-t">藥物療效濃度監測（TDM）</p><p class="ph-card-n">各群每月合計</p><div class="ph-chart dash-skeleton" id="grp-tdm" data-source="grp_pivot" style="min-height:170px"></div></div>
-      <div class="ph-card" id="grp-dc-card"><p class="ph-card-t">出院準備服務</p><p class="ph-card-n">各群每月合計</p><div class="ph-chart dash-skeleton" id="grp-dc" data-source="grp_pivot" style="min-height:170px"></div></div>
-      <div class="ph-card" id="grp-edu-card"><p class="ph-card-t">藥物衛教服務</p><p class="ph-card-n">各群每月合計</p><div class="ph-chart dash-skeleton" id="grp-edu" data-source="grp_pivot" style="min-height:170px"></div></div>
-      <div class="ph-card" id="grp-con-card"><p class="ph-card-t">藥物諮詢</p><p class="ph-card-n">各群每月合計</p><div class="ph-chart dash-skeleton" id="grp-con" data-source="grp_pivot" style="min-height:170px"></div></div>
-      <div class="ph-card" id="grp-per-card"><p class="ph-card-t">每人藥事服務</p><p class="ph-card-n">藥事服務合計 ÷ 填報人數，人數不同的群組可直接比較</p><div class="ph-chart dash-skeleton" id="grp-per" data-source="grp_pivot" style="min-height:170px"></div></div>
+    <div class="ph-card" id="grp-big-card">
+      <div class="ph-seg" id="grp-seg" role="group" aria-label="選擇指標">
+        <button type="button" data-k="藥事服務" aria-pressed="true">藥事服務</button>
+        <button type="button" data-k="藥物療效濃度監測" aria-pressed="false">TDM</button>
+        <button type="button" data-k="出院準備服務" aria-pressed="false">出院準備</button>
+        <button type="button" data-k="藥物衛教服務" aria-pressed="false">衛教</button>
+        <button type="button" data-k="藥物諮詢" aria-pressed="false">諮詢</button>
+        <button type="button" data-k="每人藥事服務" aria-pressed="false">每人藥事服務</button>
+      </div>
+      <p class="ph-card-t" id="grp-big-t">藥事服務</p>
+      <p class="ph-card-n" id="grp-big-n">各群每月合計</p>
+      <div class="ph-legend" data-source="grp_pivot"><span><i class="ph-sw" data-c="0"></i>A 群</span><span><i class="ph-sw" data-c="1"></i>B 群</span><span><i class="ph-sw" data-c="2"></i>C 群</span><span><i class="ph-sw" data-c="3"></i>PGY</span></div>
+      <div class="ph-chart dash-skeleton" id="grp-big" data-source="grp_pivot" style="min-height:380px"></div>
     </div>
 
     <div class="ph-grid">
@@ -440,7 +459,80 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
     </div>
   </template></section>
 
-  <p class="ph-foot"><span id="ph-sync"></span><br>資料來源：Google 試算表「照護組行政」›「照護組指標」，以及「2026照護組業務量填寫」›「群組月彙總」（各群業務量分頁），每次開啟或重新整理時即時讀取；自動顯示最近 12 個已填報的月份。</p>
+  <!-- 個人業務量 -->
+  <section class="ph-sec" id="people" hidden><template id="people-tpl">
+    <div class="ph-card" id="ppl-all-card">
+      <p class="ph-card-t">全員最新月份一覽</p>
+      <p class="ph-card-n">資料月份 <span id="ppl-month">—</span>；PGY 只列近四個月有填報者；點選一列可查看該藥師明細</p>
+      <div class="ph-tbox">
+        <table class="ph-table ph-click" id="ppl-table" data-source="ppl_latest" data-row-key="藥師">
+          <thead><tr><th data-field="藥師" data-fmt="t">藥師</th><th data-field="群組" data-fmt="t">群組</th><th data-field="負責病房" data-fmt="t">負責病房</th><th data-field="藥事服務" data-fmt="n" class="ph-num">藥事服務</th><th data-field="藥物療效濃度監測" data-fmt="n" class="ph-num">TDM</th><th data-field="出院準備服務" data-fmt="n" class="ph-num">出院準備</th><th data-field="藥物衛教服務" data-fmt="n" class="ph-num">衛教</th><th data-field="藥物諮詢" data-fmt="n" class="ph-num">諮詢</th><th data-field="專任重症照護件數" data-fmt="n" class="ph-num">專任重症</th><th data-field="當月休假天數" data-fmt="n" class="ph-num">休假天數</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <h2 class="ph-h2" id="ppl-person-h">個人明細</h2>
+    <div class="ph-pick">
+      <select id="ppl-select" aria-label="選擇藥師" data-source="ppl_roster"></select>
+      <span class="ph-pick-info" id="ppl-info"></span>
+    </div>
+    <div class="ph-msg" id="ppl-msg" hidden></div>
+    <div id="ppl-body">
+    <div class="ph-tiles" id="ppl-tiles" data-source="ppl_recent"></div>
+
+    <div class="ph-grid">
+      <div class="ph-card" id="ppl-svc-card">
+        <p class="ph-card-t">五項服務逐月</p>
+        <p class="ph-card-n" id="ppl-svc-n">近 12 個已填報月份</p>
+        <div class="ph-legend ph-toggle" id="ppl-svc-legend" data-source="ppl_recent" title="點選圖例可隱藏或顯示該項"><span data-k="藥事服務"><i class="ph-sw" data-c="0"></i>藥事服務</span><span data-k="藥物療效濃度監測"><i class="ph-sw" data-c="1"></i>TDM</span><span data-k="出院準備服務"><i class="ph-sw" data-c="2"></i>出院準備</span><span data-k="藥物衛教服務"><i class="ph-sw" data-c="3"></i>衛教</span><span data-k="藥物諮詢"><i class="ph-sw" data-c="4"></i>諮詢</span></div>
+        <div class="ph-chart dash-skeleton" id="ppl-svc" data-source="ppl_recent" style="min-height:320px"></div>
+      </div>
+    </div>
+
+    <div class="ph-grid" id="ppl-icu-wrap" hidden>
+      <div class="ph-card" id="ppl-icu-card">
+        <p class="ph-card-t">重症藥事申報件數</p>
+        <p class="ph-card-n">專任、被代理、代理他人，每月件數</p>
+        <div class="ph-legend" data-source="ppl_recent"><span><i class="ph-sw" data-c="0"></i>專任</span><span><i class="ph-sw" data-c="1"></i>被代理</span><span><i class="ph-sw" data-c="2"></i>代理他人</span></div>
+        <div class="ph-chart" id="ppl-icu" data-source="ppl_recent" style="min-height:240px"></div>
+      </div>
+      <div class="ph-card" id="ppl-rate-card">
+        <p class="ph-card-t">負責單位總申報率</p>
+        <p class="ph-card-n">（專任＋被代理）÷ 理論極限申報量</p>
+        <div class="ph-chart" id="ppl-rate" data-source="ppl_recent" style="min-height:240px"></div>
+      </div>
+    </div>
+
+    <div class="ph-grid" id="ppl-epa-wrap" hidden>
+      <div class="ph-card" id="ppl-epa-card">
+        <p class="ph-card-t">PGY 訓練項目</p>
+        <p class="ph-card-n">目標：住院用藥評估、藥品諮詢每月 1 例；TDM CbD 次月 2 例；EPA TDM 末月 2 例</p>
+        <div class="ph-tbox">
+          <table class="ph-table" id="ppl-epa" data-source="ppl_recent" data-row-key="藥師,月份">
+            <thead><tr><th data-field="月份" data-fmt="t">月份</th><th data-field="負責病房" data-fmt="t">輪訓病房</th><th data-field="EPA住院病人用藥評估" data-fmt="n" class="ph-num">住院用藥評估</th><th data-field="EPA醫療人員藥品諮詢" data-fmt="n" class="ph-num">藥品諮詢</th><th data-field="TDM CbD" data-fmt="n" class="ph-num">TDM CbD</th><th data-field="EPA TDM" data-fmt="n" class="ph-num">EPA TDM</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="ph-grid">
+      <div class="ph-card" id="ppl-detail-card">
+        <p class="ph-card-t">逐月明細</p>
+        <p class="ph-card-n">最新月份在上；可左右捲動</p>
+        <div class="ph-tbox">
+          <table class="ph-table" id="ppl-detail" data-source="ppl_recent" data-row-key="藥師,月份">
+            <thead><tr><th data-field="月份" data-fmt="t">月份</th><th data-field="負責病房" data-fmt="t">負責病房</th><th data-field="藥事服務" data-fmt="n" class="ph-num">藥事服務</th><th data-field="藥物療效濃度監測" data-fmt="n" class="ph-num">TDM</th><th data-field="出院準備服務" data-fmt="n" class="ph-num">出院準備</th><th data-field="藥物衛教服務" data-fmt="n" class="ph-num">衛教</th><th data-field="藥物諮詢" data-fmt="n" class="ph-num">諮詢</th><th data-field="專任重症照護件數" data-fmt="n" class="ph-num">專任重症</th><th data-field="被代理申報件數" data-fmt="n" class="ph-num">被代理</th><th data-field="代理他人申報件數" data-fmt="n" class="ph-num">代理他人</th><th data-field="單位總申報率" data-fmt="p" class="ph-num">單位總申報率</th><th data-field="當月休假天數" data-fmt="n" class="ph-num">休假</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    </div>
+  </template></section>
+
+  <p class="ph-foot"><span id="ph-sync"></span><br>資料來源：Google 試算表「照護組行政」›「照護組指標」，以及「2026照護組業務量填寫」›「群組月彙總」與「儀表板資料」（各群、個人業務量分頁），每次開啟或重新整理時即時讀取；自動顯示最近 12 個已填報的月份。</p>
 </div>
 
 <script>
@@ -600,6 +692,70 @@ dash.calc('pgy_epa', {
     .map((r) => ({ 月份: r['月份'], PGY人數: r['填報人數'], EPA住院用藥評估達成人數: r['EPA住院用藥評估達成人數'], EPA藥品諮詢達成人數: r['EPA藥品諮詢達成人數'] })),
 });
 
+dash.loader('persons', {
+  description: '把「儀表板資料」值表轉成資料列：第一列為欄名，月份、藥師、群組、來源工作表、負責病房保留文字，其餘轉成數字。',
+  fn: ({ answer }) => {
+    const a = typeof answer === 'string' ? JSON.parse(answer) : answer;
+    const v = a && a.values;
+    if (!Array.isArray(v) || v.length < 2) throw new Error('沒有讀到「儀表板資料」工作表；若是網站版，請在 Apps Script 貼上新版 Code.gs 並部署新版本。');
+    const columns = v[0].map((c) => String(c).trim());
+    if (columns[0] !== '月份' || columns[1] !== '藥師') throw new Error('「儀表板資料」的前兩欄應為「月份」「藥師」，目前是：' + columns.slice(0, 2).join('、'));
+    const text = new Set(['月份', '藥師', '群組', '來源工作表', '負責病房']);
+    const rows = v.slice(1).filter((r) => r[0] && r[1]).map((r) => {
+      const o = {};
+      columns.forEach((c, i) => {
+        const x = (r[i] == null ? '' : String(r[i])).trim();
+        if (text.has(c)) o[c] = x || null;
+        else { const n = Number(x.replace(/,/g, '')); o[c] = x === '' || !Number.isFinite(n) ? null : n; }
+      });
+      return o;
+    });
+    return { columns, rows };
+  },
+});
+
+dash.calc('ppl_recent', {
+  inputs: ['persons'],
+  title: '個人：近 12 個已填報月份',
+  description: '保留有填「藥事服務」的列，取全組最近 12 個已填報月份；PGY 只保留近 4 個月有填報者。另算負責單位總申報率＝（專任＋被代理）÷ 理論極限申報量。',
+  fn: (persons) => {
+    const filled = persons.filter((r) => r['藥事服務'] != null);
+    const months = [...new Set(filled.map((r) => r['月份']))].sort();
+    const win = months.slice(-12), last4 = months.slice(-4);
+    const pgyKeep = new Set(filled.filter((r) => r['群組'] === 'PGY' && last4.includes(r['月份'])).map((r) => r['藥師']));
+    return filled
+      .filter((r) => win.includes(r['月份']) && (r['群組'] !== 'PGY' || pgyKeep.has(r['藥師'])))
+      .map((r) => {
+        const cap = r['理論極限申報量'], own = r['專任重症照護件數'];
+        const rate = cap > 0 && own != null ? Math.round(((own + (r['被代理申報件數'] || 0)) / cap) * 10000) / 10000 : null;
+        return { ...r, 單位總申報率: rate };
+      });
+  },
+});
+
+dash.calc('ppl_roster', {
+  inputs: ['ppl_recent'],
+  title: '個人：藥師名單',
+  description: '近 12 個月有填報的藥師，依群組排列（PGY 只含近 4 個月）。',
+  fn: (ppl_recent) => {
+    const seen = new Map();
+    ppl_recent.forEach((r) => { if (!seen.has(r['藥師'])) seen.set(r['藥師'], r['群組']); });
+    const order = { A群: 1, B群: 2, C群: 3, PGY: 4 };
+    return [...seen].map(([藥師, 群組]) => ({ 藥師, 群組 })).sort((a, b) => (order[a.群組] || 9) - (order[b.群組] || 9));
+  },
+});
+
+dash.calc('ppl_latest', {
+  inputs: ['ppl_recent'],
+  title: '個人：最新月份全員',
+  description: '最近一個已填報月份，每位藥師一列。',
+  fn: (ppl_recent) => {
+    const m = ppl_recent.reduce((a, r) => (r['月份'] > a ? r['月份'] : a), '');
+    const order = { A群: 1, B群: 2, C群: 3, PGY: 4 };
+    return ppl_recent.filter((r) => r['月份'] === m).sort((a, b) => (order[a['群組']] || 9) - (order[b['群組']] || 9));
+  },
+});
+
 (() => {
   const root = document.getElementById('dash-root');
   const C = dash.colors;
@@ -623,15 +779,45 @@ dash.calc('pgy_epa', {
   const tabs = [...root.querySelectorAll('.ph-tab')];
   const ids = tabs.map((t) => t.dataset.tab);
   let current = 'overview';
-  let groupsMounted = false;
+  const mounted = {};
+  let grpMetric = '藥事服務';
+  let person = null;
+  const pplOff = new Set();
+  const mount = (id) => {
+    if (mounted[id] || !document.getElementById(id + '-tpl')) return;
+    const sec = document.getElementById(id);
+    sec.appendChild(document.getElementById(id + '-tpl').content.cloneNode(true));
+    sec.querySelectorAll('.ph-sw[data-c]').forEach((sw) => { sw.style.background = C[+sw.dataset.c]; });
+    mounted[id] = true;
+    if (id === 'groups') {
+      sec.querySelectorAll('#grp-seg button').forEach((b) => b.addEventListener('click', () => {
+        grpMetric = b.dataset.k;
+        sec.querySelectorAll('#grp-seg button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+        render();
+      }));
+    }
+    if (id === 'people') {
+      document.getElementById('ppl-svc-legend').addEventListener('click', (ev) => {
+        const sp = ev.target.closest('span[data-k]');
+        if (!sp) return;
+        const k = sp.dataset.k;
+        if (pplOff.has(k)) pplOff.delete(k); else if (pplOff.size < 4) pplOff.add(k);
+        sp.classList.toggle('off', pplOff.has(k));
+        render();
+      });
+      document.getElementById('ppl-select').addEventListener('change', (ev) => { person = ev.target.value; render(); });
+      document.getElementById('ppl-table').addEventListener('click', (ev) => {
+        const tr = ev.target.closest('tr[data-key]');
+        if (!tr) return;
+        person = tr.dataset.key;
+        render();
+        document.getElementById('ppl-person-h').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
+  };
   const show = (id, link) => {
     current = id;
-    if (id === 'groups' && !groupsMounted) {
-      const sec = document.getElementById('groups');
-      sec.appendChild(document.getElementById('groups-tpl').content.cloneNode(true));
-      sec.querySelectorAll('.ph-sw[data-c]').forEach((sw) => { sw.style.background = C[+sw.dataset.c]; });
-      groupsMounted = true;
-    }
+    mount(id);
     tabs.forEach((t) => t.setAttribute('aria-selected', String(t.dataset.tab === id)));
     ids.forEach((s) => { document.getElementById(s).hidden = s !== id; });
     if (link) dash.setLink(id);
@@ -768,13 +954,100 @@ dash.calc('pgy_epa', {
   });
 
   const G = ['A群', 'B群', 'C群', 'PGY'];
-  const gSeries = (k) => G.map((g, i) => ({ key: g + '|' + k, label: g, c: i }));
-  CHARTS['grp-svc'] = { type: 'line', h: 170, src: 'grp_pivot', series: gSeries('藥事服務') };
-  CHARTS['grp-tdm'] = { type: 'line', h: 170, src: 'grp_pivot', series: gSeries('藥物療效濃度監測') };
-  CHARTS['grp-dc'] = { type: 'line', h: 170, src: 'grp_pivot', series: gSeries('出院準備服務') };
-  CHARTS['grp-edu'] = { type: 'line', h: 170, src: 'grp_pivot', series: gSeries('藥物衛教服務') };
-  CHARTS['grp-con'] = { type: 'line', h: 170, src: 'grp_pivot', series: gSeries('藥物諮詢') };
-  CHARTS['grp-per'] = { type: 'line', h: 170, src: 'grp_pivot', dec: true, series: gSeries('每人藥事服務') };
+  const GRP_LABEL = {
+    藥事服務: ['藥事服務', '各群每月合計'],
+    藥物療效濃度監測: ['藥物療效濃度監測（TDM）', '各群每月合計'],
+    出院準備服務: ['出院準備服務', '各群每月合計'],
+    藥物衛教服務: ['藥物衛教服務', '各群每月合計'],
+    藥物諮詢: ['藥物諮詢', '各群每月合計'],
+    每人藥事服務: ['每人藥事服務', '藥事服務合計 ÷ 填報人數，人數不同的群組可直接比較'],
+  };
+  function renderGroupsBig() {
+    const box = document.getElementById('grp-big');
+    if (!box) return;
+    const [t, n] = GRP_LABEL[grpMetric];
+    document.getElementById('grp-big-t').textContent = t;
+    document.getElementById('grp-big-n').textContent = n;
+    const D = dash.data('grp_pivot');
+    if (D.status === 'error' || dash.data('groups').status === 'error') return failBox(box);
+    if (D.status !== 'ok' || !Array.isArray(D.data)) { box.replaceChildren(); box.classList.add('dash-skeleton'); return; }
+    chart(box, D.data, { type: 'line', h: 380, dec: grpMetric === '每人藥事服務', series: G.map((g, i) => ({ key: g + '|' + grpMetric, label: g, c: i })) });
+  }
+
+  const PPL_SVC = [['藥事服務', '藥事服務'], ['藥物療效濃度監測', 'TDM'], ['出院準備服務', '出院準備'], ['藥物衛教服務', '衛教'], ['藥物諮詢', '諮詢']];
+  function pplTile(label, v, prev, f, sub) {
+    const d = document.createElement('div');
+    d.className = 'ph-card';
+    const l = document.createElement('div'); l.className = 'ph-tile-l'; l.textContent = label;
+    const val = document.createElement('div'); val.className = 'ph-tile-v'; val.textContent = fmt(f, v);
+    const s2 = document.createElement('div'); s2.className = 'ph-tile-d';
+    if (sub) s2.textContent = sub;
+    else if (v != null && prev != null) {
+      const dlt = f === 'p' ? Math.round((v - prev) * 10000) / 10000 : v - prev;
+      const sp = document.createElement('span');
+      sp.textContent = fmt(f === 'p' ? 'dp' : 'dn', dlt);
+      if (dlt > 0) sp.className = 'ph-up'; else if (dlt < 0) sp.className = 'ph-down';
+      s2.append(sp, ' 較前月');
+    } else s2.textContent = ' ';
+    d.append(l, val, s2);
+    return d;
+  }
+  function renderPeople() {
+    const P = dash.data('ppl_recent');
+    const base = dash.data('persons');
+    const svcBox = document.getElementById('ppl-svc');
+    const note = document.getElementById('ppl-msg');
+    const body = document.getElementById('ppl-body');
+    if (base.status === 'error' || P.status === 'error') {
+      note.textContent = base.message && /Apps Script|儀表板資料/.test(base.message) ? base.message : '個人資料讀取失敗。';
+      note.hidden = false; body.hidden = true;
+      return;
+    }
+    note.hidden = true; body.hidden = false;
+    if (P.status !== 'ok' || !Array.isArray(P.data)) return;
+    const all = P.data;
+    const roster = dash.data('ppl_roster').data || [];
+    const latest = dash.data('ppl_latest').data || [];
+    document.getElementById('ppl-month').textContent = latest.length ? latest[0]['月份'] : '—';
+    fillTable('ppl-table', latest, false);
+    if (!person || !roster.some((r) => r['藥師'] === person)) person = roster.length ? roster[0]['藥師'] : null;
+    [...document.querySelectorAll('#ppl-table tbody tr')].forEach((tr, i) => {
+      tr.dataset.key = latest[i]['藥師'];
+      tr.setAttribute('aria-selected', String(latest[i]['藥師'] === person));
+    });
+    const sel = document.getElementById('ppl-select');
+    const groupsOf = [...new Set(roster.map((r) => r['群組']))];
+    sel.replaceChildren(...groupsOf.map((g) => {
+      const og = document.createElement('optgroup');
+      og.label = g;
+      roster.filter((r) => r['群組'] === g).forEach((r) => og.appendChild(new Option(r['藥師'], r['藥師'])));
+      return og;
+    }));
+    sel.value = person || '';
+    if (!person) return;
+    const rows = all.filter((r) => r['藥師'] === person).sort((a, b) => (a['月份'] < b['月份'] ? -1 : 1));
+    const last = rows[rows.length - 1], prev = rows.length > 1 ? rows[rows.length - 2] : null;
+    document.getElementById('ppl-person-h').textContent = person + ' 個人明細';
+    document.getElementById('ppl-info').textContent = last ? `${last['群組']}｜${last['負責病房'] || '—'}｜最新資料 ${last['月份']}` : '';
+    document.getElementById('ppl-svc-n').textContent = rows.length ? `${rows[0]['月份']} – ${last['月份']}，共 ${rows.length} 個月` : '';
+    const tiles = PPL_SVC.map(([k, lab]) => pplTile(lab + '（最新月）', last && last[k], prev && prev[k], 'n'));
+    tiles.push(pplTile('休假天數（最新月）', last && last['當月休假天數'], null, 'n', ' '));
+    const hasIcu = rows.some((r) => (r['專任重症照護件數'] || 0) > 0 || (r['代理他人申報件數'] || 0) > 0);
+    const hasRate = rows.some((r) => r['單位總申報率'] != null);
+    if (hasRate) tiles.push(pplTile('負責單位總申報率', last && last['單位總申報率'], prev && prev['單位總申報率'], 'p'));
+    document.getElementById('ppl-tiles').replaceChildren(...tiles);
+    chart(svcBox, rows, { type: 'line', h: 320, series: PPL_SVC.map(([k, lab], i) => ({ key: k, label: lab, c: i })).filter((x) => !pplOff.has(x.key)) });
+    document.getElementById('ppl-icu-wrap').hidden = !hasIcu;
+    if (hasIcu) {
+      chart(document.getElementById('ppl-icu'), rows, { type: 'bar', h: 240, series: [{ key: '專任重症照護件數', label: '專任', c: 0 }, { key: '被代理申報件數', label: '被代理', c: 1 }, { key: '代理他人申報件數', label: '代理他人', c: 2 }] });
+      document.getElementById('ppl-rate-card').hidden = !hasRate;
+      if (hasRate) chart(document.getElementById('ppl-rate'), rows, { type: 'line', h: 240, pct: true, yMax: 1, series: [{ key: '單位總申報率', label: '總申報率', c: 0 }] });
+    }
+    const isPgy = last && last['群組'] === 'PGY';
+    document.getElementById('ppl-epa-wrap').hidden = !isPgy;
+    if (isPgy) fillTable('ppl-epa', rows, true);
+    fillTable('ppl-detail', rows, true);
+  }
 
   function render() {
     const base = dash.data('indicators');
@@ -818,7 +1091,9 @@ dash.calc('pgy_epa', {
       chart(box, rows, o.shared ? { ...o, yMax: sharedMax } : o);
     });
 
-    if (groupsMounted && current === 'groups') {
+    if (mounted.people && current === 'people') renderPeople();
+    if (mounted.groups && current === 'groups') {
+      renderGroupsBig();
       const L = dash.data('grp_latest');
       const P = dash.data('pgy_epa');
       const lrows = L.status === 'ok' && Array.isArray(L.data) ? L.data : [];
