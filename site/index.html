@@ -116,7 +116,7 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
     store.set(pw);
     gate(false);
     banner('');
-    const answers = { indicators: payload.indicators, groups: { values: payload.groups }, persons: { values: payload.persons } };
+    const answers = { indicators: payload.indicators, groups: { values: payload.groups }, persons: { values: payload.persons }, board: payload.board };
     Object.keys(loaders).forEach((id) => {
       try {
         const out = loaders[id]({ answer: answers[id] });
@@ -244,13 +244,165 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
 @media (max-width:640px){.ph-grid-ov{grid-template-columns:1fr}}
 .ph-msg{font-size:var(--cds-font-size-body);color:var(--color-fg-muted);padding:var(--cds-pad-lg) 0}
 .ph-foot{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);margin-top:var(--cds-gap-lg)}
+.hb-today{margin:var(--cds-gap-xs) 0 0;color:var(--color-fg-muted);font-size:var(--cds-font-size-body);line-height:1.7}
+.hb-today b{color:var(--color-fg);font-weight:600}
+.hb-chip{display:inline-block;padding:1px 9px;margin:0 4px 2px 0;border-radius:999px;background:color-mix(in srgb,var(--color-fg) 8%,transparent);color:var(--color-fg);font-size:var(--cds-font-size-caption);line-height:1.7;white-space:nowrap}
+.hb-chip.warn{background:color-mix(in srgb,var(--color-warn) 18%,transparent)}
+.hb-nav{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:var(--cds-gap-sm);margin:var(--cds-gap-lg) 0}
+@media (max-width:900px){.hb-nav{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:420px){.hb-nav{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.hb-tile{appearance:none;font:inherit;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:4px;padding:var(--cds-pad-md) var(--cds-pad-md) var(--cds-pad-sm);background:var(--color-panel);border:1px solid var(--color-border-line);border-radius:var(--cds-radius);color:var(--color-fg);min-width:0;transition:border-color .15s,box-shadow .15s}
+.hb-tile:hover{border-color:color-mix(in srgb,var(--color-fg) 35%,transparent)}
+.hb-tile[aria-pressed="true"]{border-color:var(--color-fg);box-shadow:0 0 0 1px var(--color-fg) inset}
+.hb-ico{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--hb-c,#2f6fdb) 14%,transparent);color:var(--hb-c,#2f6fdb);margin-bottom:4px}
+.hb-ico svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.hb-tile[data-view="schedule"]{--hb-c:#2f6fdb}.hb-tile[data-view="leave"]{--hb-c:#e07b2b}.hb-tile[data-view="meetings"]{--hb-c:#2f9e6e}
+.hb-tile[data-view="interns"]{--hb-c:#7a5cd6}.hb-tile[data-view="news"]{--hb-c:#c2448f}.hb-tile[data-view="stats"]{--hb-c:#3aa0c4}
+.hb-lab{font-weight:600;font-size:var(--cds-font-size-body)}
+.hb-sub{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hb-view[hidden],#stats-view[hidden]{display:none}
+.hb-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--cds-gap-sm) var(--cds-gap-md);margin-bottom:var(--cds-gap-md)}
+.hb-h2{font-size:var(--cds-font-size-heading);font-weight:600;margin:0}
+.hb-ctrl{display:flex;flex-wrap:wrap;align-items:center;gap:var(--cds-gap-sm) var(--cds-gap-md)}
+.hb-ctrl .ph-seg{margin:0}
+.hb-btn{appearance:none;font:inherit;width:30px;height:30px;border-radius:8px;border:1px solid var(--color-border-line);background:var(--color-panel);color:var(--color-fg);cursor:pointer;font-size:18px;line-height:1}
+.hb-btn:disabled{opacity:.35;cursor:default}
+.hb-month{font-weight:600;min-width:6.5em;text-align:center;display:inline-block}
+.hb-check{display:inline-flex;align-items:center;gap:6px;font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);cursor:pointer;white-space:nowrap}
+.hb-note{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);margin:var(--cds-gap-sm) 0}
+.hb-msg{padding:var(--cds-pad-xl) 0;color:var(--color-fg-muted);text-align:center}
+.hb-pre{font-size:var(--cds-font-size-body);white-space:pre-wrap;word-break:break-word;line-height:1.65}
+.hb-pre a{color:inherit;text-decoration:underline;text-underline-offset:2px;word-break:break-all}
+.hb-muted{color:var(--color-fg-muted)}
+.hb-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,22rem),1fr));gap:var(--cds-gap-md)}
+.hb-card{background:var(--color-panel);border:1px solid var(--color-border-line);border-radius:var(--cds-radius);padding:var(--cds-pad-lg);min-width:0}
+.hb-card-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:var(--cds-gap-sm)}
+.hb-card-t{font-weight:600;font-size:var(--cds-font-size-heading);margin:0}
+.hb-kv{display:grid;grid-template-columns:5.2em 1fr;gap:3px 10px;font-size:var(--cds-font-size-caption);margin:var(--cds-gap-xs) 0 var(--cds-gap-sm)}
+.hb-kv dt{color:var(--color-fg-muted)}.hb-kv dd{margin:0;white-space:pre-wrap}
+.hb-person{border-top:1px solid var(--color-border-line);padding:var(--cds-pad-sm) 0}
+.hb-person:first-of-type{border-top:0}
+.hb-person-n{font-weight:600;white-space:pre-wrap}
+.hb-person-meta{display:flex;flex-wrap:wrap;gap:4px 6px;margin:4px 0}
+.hb-small{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);white-space:pre-wrap;line-height:1.6}
+details.hb-det{margin-top:var(--cds-gap-md)}
+details.hb-det summary{cursor:pointer;color:var(--color-fg-muted);font-size:var(--cds-font-size-caption)}
+.lv-today{margin-bottom:var(--cds-gap-md)}
+.lv-list{display:flex;flex-direction:column;gap:6px}
+.lv-row{display:grid;grid-template-columns:7.5em 11em 1fr;gap:var(--cds-gap-md);align-items:start;padding:10px 14px;background:var(--color-panel);border:1px solid var(--color-border-line);border-radius:var(--cds-radius)}
+@media (max-width:700px){.lv-row{grid-template-columns:1fr}}
+.lv-row.we{background:transparent}
+.lv-row.now{border-color:var(--color-fg);box-shadow:0 0 0 1px var(--color-fg) inset}
+.lv-row.past{opacity:.6}
+.lv-date{font-weight:600}
+.lv-date small{display:block;font-weight:400;color:var(--color-fg-muted);font-size:var(--cds-font-size-caption)}
+.mt-month{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);font-weight:600;margin:var(--cds-gap-lg) 0 var(--cds-gap-sm)}
+.mt-month:first-child{margin-top:0}
+.mt-item{display:grid;grid-template-columns:4.6em 1fr;gap:var(--cds-gap-md);padding:12px 14px;background:var(--color-panel);border:1px solid var(--color-border-line);border-radius:var(--cds-radius);margin-bottom:6px}
+.mt-item.next{border-color:#2f9e6e;box-shadow:0 0 0 1px #2f9e6e inset}
+.mt-item.past{opacity:.55}
+.mt-d{text-align:center;line-height:1.15}
+.mt-d b{display:block;font-size:22px;font-weight:600}
+.mt-d span{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted)}
+.mt-t{font-weight:600;white-space:pre-wrap;line-height:1.5}
+.mt-meta{display:flex;flex-wrap:wrap;gap:2px 14px;font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);margin-top:4px}
+.mt-meta span{white-space:pre-wrap}
+.it-now{margin-bottom:var(--cds-gap-lg)}
+.it-tbl{width:100%;border-collapse:collapse;font-size:var(--cds-font-size-caption)}
+.it-tbl th,.it-tbl td{padding:6px 8px;border-bottom:1px solid var(--color-border-line);text-align:left;vertical-align:top;white-space:pre-wrap}
+.it-tbl th{color:var(--color-fg-muted);font-weight:500}
+.it-tbl .cur{background:color-mix(in srgb,#7a5cd6 12%,transparent)}
+.it-wrap{overflow-x:auto}
+.nw-search{display:flex;flex-wrap:wrap;gap:var(--cds-gap-sm) var(--cds-gap-md);align-items:center;margin-bottom:var(--cds-gap-sm)}
+.nw-search input[type=search]{flex:1 1 22rem;min-width:0;font:inherit;font-size:var(--cds-font-size-body);padding:9px 12px;border:1px solid var(--color-border-line);border-radius:10px;background:var(--color-panel);color:var(--color-fg)}
+.nw-cats{display:flex;flex-wrap:wrap;gap:6px}
+.nw-cats button{appearance:none;font:inherit;font-size:var(--cds-font-size-caption);padding:4px 11px;border-radius:999px;border:1px solid var(--color-border-line);background:var(--color-panel);color:var(--color-fg-muted);cursor:pointer}
+.nw-cats button[aria-pressed="true"]{background:var(--color-fg);color:var(--color-bg);border-color:var(--color-fg)}
+.nw-item{padding:14px 16px;background:var(--color-panel);border:1px solid var(--color-border-line);border-radius:var(--cds-radius);margin-bottom:8px}
+.nw-head{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin-bottom:6px;font-size:var(--cds-font-size-caption);color:var(--color-fg-muted)}
+.nw-head b{color:var(--color-fg);font-size:var(--cds-font-size-body)}
+.nw-text.clamp{display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;overflow:hidden}
+.nw-more{appearance:none;border:0;background:none;padding:4px 0 0;font:inherit;font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);cursor:pointer;text-decoration:underline}
+.nw-new{background:color-mix(in srgb,#c2448f 16%,transparent);color:#c2448f}
+.nw-grp{font-weight:600;margin:var(--cds-gap-lg) 0 var(--cds-gap-sm)}
+mark{background:color-mix(in srgb,var(--color-warn) 35%,transparent);color:inherit;border-radius:3px;padding:0 1px}
+.hb-src{margin-top:var(--cds-gap-lg);font-size:var(--cds-font-size-caption);color:var(--color-fg-muted)}
+.hb-src a{color:inherit}
 </style>
 
 <div class="ph-wrap">
   <header class="ph-head">
     <h1>亞東藥學部 藥事照護組 -Dashboard</h1>
-    <p class="ph-take">資料期間 <b data-source="summary" data-field="期間起" data-fmt="t" class="dash-skeleton">—</b> – <b data-source="summary" data-field="期間迄" data-fmt="t" class="dash-skeleton">—</b>（近 <b data-source="summary" data-field="月數" data-fmt="n">—</b> 個已填報月份）。重症藥事期間整體申報率 <b data-source="summary" data-field="期間申報率" data-fmt="p">—</b>，最新月份 <b data-source="recent" data-field="總申報率" data-latest data-fmt="p">—</b>。</p>
   </header>
+
+  <p class="hb-today" id="hb-today"></p>
+
+  <nav class="hb-nav" id="hb-nav" aria-label="功能選單">
+    <button type="button" class="hb-tile" data-view="schedule" aria-pressed="false">
+      <span class="hb-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4M7.5 14h2M11 14h2M14.5 14h2M7.5 17.5h2M11 17.5h2"/></svg></span>
+      <span class="hb-lab">當月班表</span><span class="hb-sub" id="hb-sub-schedule">　</span>
+    </button>
+    <button type="button" class="hb-tile" data-view="leave" aria-pressed="false">
+      <span class="hb-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="8" r="3"/><path d="M2.5 19c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5"/><path d="M15 7h6l-2-2M21 13h-6l2 2"/></svg></span>
+      <span class="hb-lab">休假與代理</span><span class="hb-sub" id="hb-sub-leave">　</span>
+    </button>
+    <button type="button" class="hb-tile" data-view="meetings" aria-pressed="false">
+      <span class="hb-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7.5" r="2.8"/><circle cx="5.5" cy="9.5" r="2.2"/><circle cx="18.5" cy="9.5" r="2.2"/><path d="M7 19.5c.4-3 2.4-4.8 5-4.8s4.6 1.8 5 4.8M1.8 18c.3-2 1.6-3.3 3.6-3.4M22.2 18c-.3-2-1.6-3.3-3.6-3.4"/></svg></span>
+      <span class="hb-lab">會議</span><span class="hb-sub" id="hb-sub-meetings">　</span>
+    </button>
+    <button type="button" class="hb-tile" data-view="interns" aria-pressed="false">
+      <span class="hb-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 9l10-4.5L22 9l-10 4.5z"/><path d="M6 11v4.5c1.6 1.6 3.6 2.4 6 2.4s4.4-.8 6-2.4V11M22 9v5.5"/></svg></span>
+      <span class="hb-lab">實習生排程</span><span class="hb-sub" id="hb-sub-interns">　</span>
+    </button>
+    <button type="button" class="hb-tile" data-view="news" aria-pressed="false">
+      <span class="hb-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 10v4h3l7 4.5V5.5l-7 4.5z"/><path d="M6.5 14l1.3 5h2.4l-1-4.2M17 9a4 4 0 010 6M19.5 6.5a7.5 7.5 0 010 11"/></svg></span>
+      <span class="hb-lab">宣達事項</span><span class="hb-sub" id="hb-sub-news">　</span>
+    </button>
+    <button type="button" class="hb-tile" data-view="stats" aria-pressed="false">
+      <span class="hb-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 20.5h17"/><rect x="5" y="11" width="3" height="7" rx="1"/><rect x="10.5" y="6" width="3" height="12" rx="1"/><rect x="16" y="13.5" width="3" height="4.5" rx="1"/></svg></span>
+      <span class="hb-lab">服務量指標</span><span class="hb-sub" id="hb-sub-stats">近 12 個月業務量</span>
+    </button>
+  </nav>
+
+  <section class="hb-view" id="view-schedule" hidden>
+    <div class="hb-bar"><h2 class="hb-h2" id="sch-title">當月班表</h2><div class="ph-seg" id="sch-seg" role="group" aria-label="選擇月份"></div></div>
+    <div id="sch-body"></div>
+  </section>
+
+  <section class="hb-view" id="view-leave" hidden>
+    <div class="hb-bar"><h2 class="hb-h2" id="lv-title">休假與代理</h2>
+      <div class="hb-ctrl"><button type="button" class="hb-btn" id="lv-prev" aria-label="上個月">‹</button><span id="lv-month" class="hb-month"></span><button type="button" class="hb-btn" id="lv-next" aria-label="下個月">›</button>
+      <label class="hb-check"><input type="checkbox" id="lv-only" checked> 只顯示有休假或備註的日子</label></div></div>
+    <div id="lv-body"></div>
+  </section>
+
+  <section class="hb-view" id="view-meetings" hidden>
+    <div class="hb-bar"><h2 class="hb-h2">會議</h2>
+      <div class="hb-ctrl">
+        <div class="ph-seg" id="mt-kind" role="group" aria-label="會議類別"><button type="button" data-k="dept" aria-pressed="true">藥學部會議</button><button type="button" data-k="care" aria-pressed="false">照護組會議</button></div>
+        <div class="ph-seg" id="mt-scope" role="group" aria-label="範圍"><button type="button" data-k="upcoming" aria-pressed="true">即將到來</button><button type="button" data-k="month" aria-pressed="false">本月</button><button type="button" data-k="all" aria-pressed="false">全部</button></div>
+      </div></div>
+    <div id="mt-body"></div>
+  </section>
+
+  <section class="hb-view" id="view-interns" hidden>
+    <div class="hb-bar"><h2 class="hb-h2">實習生排程</h2></div>
+    <div id="it-body"></div>
+  </section>
+
+  <section class="hb-view" id="view-news" hidden>
+    <div class="hb-bar"><h2 class="hb-h2">宣達事項</h2>
+      <div class="hb-ctrl">
+        <div class="ph-seg" id="nw-mode" role="group" aria-label="排列方式"><button type="button" data-k="time" aria-pressed="true">依時間</button><button type="button" data-k="cat" aria-pressed="false">依類別</button></div>
+      </div></div>
+    <div class="nw-search"><input type="search" id="nw-q" placeholder="搜尋關鍵字：可輸入多個詞，以空白分隔，例如「ADR 30天」「2026/09」「PGY 會議」" aria-label="搜尋宣達事項"><label class="hb-check"><input type="checkbox" id="nw-pgy"> 只看 PGY 須讀</label></div>
+    <div class="nw-cats" id="nw-cats" role="group" aria-label="類別"></div>
+    <p class="hb-note" id="nw-count"></p>
+    <div id="nw-body"></div>
+  </section>
+
+  <div id="stats-view" hidden>
+  <p class="ph-take">資料期間 <b data-source="summary" data-field="期間起" data-fmt="t" class="dash-skeleton">—</b> – <b data-source="summary" data-field="期間迄" data-fmt="t" class="dash-skeleton">—</b>（近 <b data-source="summary" data-field="月數" data-fmt="n">—</b> 個已填報月份）。重症藥事期間整體申報率 <b data-source="summary" data-field="期間申報率" data-fmt="p">—</b>，最新月份 <b data-source="recent" data-field="總申報率" data-latest data-fmt="p">—</b>。</p>
 
   <nav class="ph-tabs" role="tablist">
     <button class="ph-tab" role="tab" data-tab="overview" aria-selected="true">總覽</button>
@@ -536,7 +688,9 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
     </div>
   </template></section>
 
-  <p class="ph-foot"><span id="ph-sync"></span><br>資料來源：Google 試算表「照護組行政」›「照護組指標」，以及「2026照護組業務量填寫」›「群組月彙總」與「儀表板資料」（各群、個人業務量分頁），每次開啟或重新整理時即時讀取；自動顯示最近 12 個已填報的月份。</p>
+  </div>
+
+  <p class="ph-foot"><span id="ph-sync"></span><br>資料來源：Google 試算表「照護組行政」›「照護組指標」，以及「2026照護組業務量填寫」›「群組月彙總」與「儀表板資料」（各群、個人業務量分頁），每次開啟或重新整理時即時讀取；自動顯示最近 12 個已填報的月份。班表、休假、會議、實習生與宣達事項取自「班表/假表/會議時間 公告」試算表。</p>
 </div>
 
 <script>
@@ -1121,6 +1275,600 @@ dash.calc('ppl_latest', {
   dash.onData(render);
 })();
 </script>
+
+<script>
+dash.loader('board', {
+  description: '「班表/假表/會議時間 公告」試算表：本月與下月班表、休假、照護組會議、藥學部晨會、實習生排程、宣達事項。',
+  fn: ({ answer }) => {
+    const a = typeof answer === 'string' ? JSON.parse(answer) : answer;
+    if (!a) throw new Error('資料端點尚未提供班表與公告：請在 Apps Script 貼上新版 Code.gs 並發布新版本。');
+    if (a.error) throw new Error('讀取「班表/假表/會議時間 公告」失敗：' + a.error);
+    return [a];
+  },
+});
+
+(() => {
+  const BOARD_URL = 'https://docs.google.com/spreadsheets/d/1DWR-cish-CPCX2cDxibjfDXhOWd-WFBEu37vFySJVR0/edit';
+  const STATS_TABS = ['overview', 'education', 'icu', 'clinic', 'groups', 'people'];
+  const VIEWS = ['schedule', 'leave', 'meetings', 'interns', 'news', 'stats'];
+  const WD = ['日', '一', '二', '三', '四', '五', '六'];
+  const st = { view: null, roster: 0, leaveYm: null, meetKind: 'dept', meetScope: 'upcoming', newsMode: 'time', newsCat: '全部', newsQ: '', newsPgy: false, open: new Set() };
+
+  const $ = (id) => document.getElementById(id);
+  const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  const clean = (s) => (s == null ? '' : String(s)).replace(/\r/g, '').trim();
+  const pad2 = (n) => String(n).padStart(2, '0');
+  const ymKey = (d) => d.getFullYear() * 100 + d.getMonth() + 1;
+  const ymLabel = (k) => `${Math.floor(k / 100)}/${pad2(k % 100)}`;
+  const dLabel = (d) => `${d.getMonth() + 1}/${d.getDate()}（${WD[d.getDay()]}）`;
+  const sameDay = (a, b) => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+  const store = { get: (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} } };
+
+  // 文字中的網址變成可點的連結；可同時標示搜尋關鍵字
+  function richText(text, terms) {
+    const frag = document.createDocumentFragment();
+    const parts = String(text).split(/(https?:\/\/[^\s<>"'，。）)]+)/g);
+    parts.forEach((p, i) => {
+      if (!p) return;
+      if (i % 2 === 1) {
+        const a = el('a', null, p.length > 70 ? p.slice(0, 67) + '…' : p);
+        a.href = p; a.target = '_blank'; a.rel = 'noopener noreferrer';
+        frag.appendChild(a);
+      } else frag.appendChild(highlight(p, terms));
+    });
+    return frag;
+  }
+  function highlight(text, terms) {
+    const frag = document.createDocumentFragment();
+    if (!terms || !terms.length) { frag.appendChild(document.createTextNode(text)); return frag; }
+    const esc = terms.map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).filter(Boolean);
+    if (!esc.length) { frag.appendChild(document.createTextNode(text)); return frag; }
+    const re = new RegExp('(' + esc.join('|') + ')', 'gi');
+    String(text).split(re).forEach((p, i) => {
+      if (!p) return;
+      if (i % 2 === 1) frag.appendChild(el('mark', null, p)); else frag.appendChild(document.createTextNode(p));
+    });
+    return frag;
+  }
+  const pre = (text, cls, terms) => { const d = el('div', 'hb-pre' + (cls ? ' ' + cls : '')); d.appendChild(richText(text, terms)); return d; };
+  const msg = (box, text) => { box.replaceChildren(el('div', 'hb-msg', text)); };
+  const srcLine = (title) => {
+    const p = el('p', 'hb-src');
+    p.append('資料來源：「班表/假表/會議時間 公告」› ' + (title || '') + '　');
+    const a = el('a', null, '開啟原始試算表'); a.href = BOARD_URL; a.target = '_blank'; a.rel = 'noopener noreferrer';
+    p.appendChild(a);
+    return p;
+  };
+
+  // 沒有年份的日期（例如「10月1日 星期四」「11-05(四)」）：用星期幾推回年份
+  function yearOf(m, d, wd, ref) {
+    let best = null;
+    for (let y = ref - 4; y <= ref + 1; y++) {
+      const dt = new Date(y, m - 1, d);
+      if (dt.getMonth() !== m - 1 || dt.getDay() !== wd) continue;
+      if (best == null || Math.abs(y - ref) < Math.abs(best - ref) || (Math.abs(y - ref) === Math.abs(best - ref) && y < best)) best = y;
+    }
+    return best;
+  }
+  const wdIndex = (s) => { const m = String(s).match(/[日一二三四五六天]/); return m ? (m[0] === '天' ? 0 : WD.indexOf(m[0])) : -1; };
+
+  // ---------- 解析 ----------
+  function parseRoster(r) {
+    const v = r.values || [];
+    const head = v[0] || [];
+    const ym = (() => { const m = String(r.ym || head[0] || '').match(/(\d{4})\D?(\d{2})/); return m ? +m[1] * 100 + +m[2] : null; })();
+    const cols = head.map(clean);
+    const groups = []; const extra = []; let cur = null; let i = 1;
+    const isMonthHead = (row) => row && row.slice(1).filter((c) => /^\d{4}\/\d{2}$/.test(clean(c))).length >= 3;
+    for (; i < v.length; i++) {
+      const row = v[i] || [];
+      const a = clean(row[0]);
+      if (isMonthHead(row) || /^非8小時|試行新排法|^BPE/.test(a)) break;
+      if (!row.some((c) => clean(c))) { cur = null; continue; }
+      if (!a) { extra.push(row.map(clean).filter(Boolean)); continue; }
+      if (!cur) {
+        cur = { key: clean(row[7]), place: clean(row[5]), carts: clean(row[6]), people: [] };
+        groups.push(cur);
+      }
+      cur.people.push({ name: a.replace(/^#/, ''), ward: clean(row[1]), note: clean(row[2]), team: clean(row[3]), duty: clean(row[4]) });
+    }
+    groups.forEach((g, k) => {
+      const pgy = g.people.every((p) => /^PGY/.test(p.name));
+      g.label = pgy ? 'PGY' : ({ A: 'A 群', B: 'B 群', C: 'C 群' }[g.key] || ['A 群', 'B 群', 'C 群', 'PGY'][k] || '其他');
+    });
+    // 月份欄位區塊：非 8 小時工時、APPE／外院代訓、各群值班輪序
+    const monthly = [];
+    for (; i < v.length; i++) {
+      const row = v[i] || [];
+      if (!isMonthHead(row)) continue;
+      const idx = row.findIndex((c, j) => j > 0 && ym && clean(c) === ymLabel(ym));
+      const block = { title: clean(row[0]), items: [], rules: [] };
+      for (let j = i + 1; j < v.length; j++) {
+        const rr = v[j] || [];
+        if (!rr.some((c) => clean(c)) || isMonthHead(rr)) break;
+        const lab = clean(rr[0]);
+        const others = rr.slice(1).some((c) => clean(c));
+        if (!others) { if (lab) block.rules.push(lab); continue; }
+        if (idx > 0 && clean(rr[idx])) block.items.push({ label: lab, value: clean(rr[idx]) });
+      }
+      monthly.push(block);
+    }
+    return { ym, title: r.title, cols, groups, extra, monthly };
+  }
+
+  function parseLeave(lv, refYear) {
+    const v = (lv && lv.values) || [];
+    const days = []; let intro = '';
+    v.forEach((row, i) => {
+      const a = clean(row[0]);
+      const m = a.match(/^(\d{1,2})月(\d{1,2})日$/);
+      if (!m) { if (i === 0) intro = a; return; }
+      const wd = wdIndex(row[1]);
+      const y = yearOf(+m[1], +m[2], wd, refYear);
+      if (y == null) return;
+      days.push({ date: new Date(y, +m[1] - 1, +m[2]), off: [clean(row[2]), clean(row[3])].filter(Boolean), note: clean(row[4]) });
+    });
+    return { intro, days };
+  }
+
+  function parseCare(mt) {
+    const v = (mt && mt.values) || [];
+    const h = v.findIndex((r) => clean(r[0]) === '日期' && clean(r[1]) === '內容');
+    const out = [];
+    const dateRe = /(\d{4})\/(\d{1,2})\/(\d{1,2})/;
+    v.slice(h + 1).forEach((r) => {
+      const a = clean(r[0]);
+      const m = a.match(dateRe);
+      if (m) {
+        out.push({ date: new Date(+m[1], +m[2] - 1, +m[3]), tag: a.split('\n').slice(1).join(' '), title: clean(r[1]), who: clean(r[2]), rec: clean(r[3]), note: clean(r[4]) });
+      } else if (!a && clean(r[4])) {
+        const n = clean(r[4]); const mm = n.match(dateRe);
+        if (mm) out.push({ date: new Date(+mm[1], +mm[2] - 1, +mm[3]), title: n, extra: true });
+      }
+    });
+    return out.sort((x, y) => x.date - y.date);
+  }
+
+  function parseDept(dm, refYear) {
+    const v = (dm && dm.values) || [];
+    const h = v.findIndex((r) => clean(r[0]) === '日期' && /類別/.test(clean(r[1])));
+    const out = [];
+    v.slice(h + 1).forEach((r) => {
+      const a = clean(r[0]);
+      const m = a.match(/^(\d{1,2})-(\d{1,2})\s*\(([日一二三四五六])\)/);
+      if (!m) return;
+      const y = yearOf(+m[1], +m[2], WD.indexOf(m[3]), refYear);
+      if (y == null) return;
+      out.push({ date: new Date(y, +m[1] - 1, +m[2]), cat: clean(r[1]), place: clean(r[2]), title: clean(r[3]), who: clean(r[4]), chair: clean(r[5]) });
+    });
+    return out.sort((x, y) => x.date - y.date);
+  }
+
+  function parseRange(s, year) {
+    const t = [...String(s).matchAll(/(?:(\d{4})\/)?(\d{1,2})\/(\d{1,2})/g)];
+    if (t.length < 2) return null;
+    const y1 = t[0][1] ? +t[0][1] : year;
+    const a = new Date(y1, +t[0][2] - 1, +t[0][3]);
+    let y2 = t[1][1] ? +t[1][1] : y1;
+    let b = new Date(y2, +t[1][2] - 1, +t[1][3]);
+    if (b < a) b = new Date(y2 + 1, +t[1][2] - 1, +t[1][3]);
+    return { a, b };
+  }
+
+  function parseInterns(it) {
+    const v = (it && it.values) || [];
+    const programs = [];
+    for (let i = 0; i < v.length; i++) {
+      const head = clean(v[i][0]);
+      const m = head.match(/^(\d{4})\s+(.*APPE.*)$/);
+      if (!m) continue;
+      const year = +m[1];
+      const hdr = v[i + 1] || [];
+      const periods = [];
+      hdr.forEach((c, j) => {
+        if (j < 2) return;
+        const r = parseRange(c, year);
+        if (r) periods.push({ col: j, label: clean((v[i] || [])[j]), text: clean(c).split('\n')[0], sub: clean(c).split('\n').slice(1).join(' '), ...r });
+      });
+      const rows = []; const notes = [];
+      for (let k = i + 2; k < v.length; k++) {
+        const r = v[k] || [];
+        const a = clean(r[0]), b = clean(r[1]);
+        if (/^\d{4}\s+.*APPE/.test(a)) break;
+        if (!a && !b) { if (r.some((c) => clean(c))) { const n = r.map(clean).filter(Boolean).join(' '); if (/^\*/.test(n)) notes.push(n); continue; } break; }
+        if (!a && /^\*/.test(b)) { notes.push(b); continue; }
+        rows.push({ teacher: a, spec: b, cells: periods.map((p) => clean(r[p.col])) });
+      }
+      programs.push({ title: head, year, periods, rows, notes });
+    }
+    return programs;
+  }
+
+  function parseNews(an) {
+    const v = (an && an.values) || [];
+    const h = v.findIndex((r) => clean(r[0]) === '公告日期');
+    return v.slice(h + 1).map((r, i) => {
+      const m = clean(r[0]).match(/(\d{4})\/(\d{1,2})\/(\d{1,2})/);
+      const cats = clean(r[1]).split(/[,，、\n]+/).map((c) => c.trim()).filter(Boolean);
+      return { i, date: m ? new Date(+m[1], +m[2] - 1, +m[3]) : null, raw: clean(r[0]), cats: cats.length ? cats : ['未分類'], text: clean(r[2]), pgy: /^true$/i.test(clean(r[3])) };
+    }).filter((x) => x.text).sort((a, b) => ((b.date || 0) - (a.date || 0)) || (a.i - b.i));
+  }
+
+  // ---------- 資料狀態 ----------
+  let parsed = null, parsedFrom = null;
+  function data() {
+    const B = dash.data('board');
+    if (B.status !== 'ok' || !Array.isArray(B.data) || !B.data[0]) return { status: B.status, message: B.message };
+    const b = B.data[0];
+    if (parsedFrom !== b) {
+      const today = b.today ? new Date(b.today + 'T00:00:00') : new Date();
+      today.setHours(0, 0, 0, 0);
+      const ref = today.getFullYear();
+      parsed = {
+        today,
+        rosters: (b.rosters || []).map(parseRoster).filter((r) => r.groups.length),
+        leave: parseLeave(b.leave, ref), leaveTitle: b.leave && b.leave.title,
+        care: parseCare(b.careMeetings), careTitle: b.careMeetings && b.careMeetings.title,
+        dept: parseDept(b.deptMeetings, ref), deptTitle: b.deptMeetings && b.deptMeetings.title,
+        interns: parseInterns(b.interns), internsTitle: b.interns && b.interns.title,
+        news: parseNews(b.announcements), newsTitle: b.announcements && b.announcements.title,
+      };
+      parsedFrom = b;
+    }
+    return { status: 'ok', ...parsed };
+  }
+
+  // ---------- 各功能畫面 ----------
+  function renderSchedule(D) {
+    const seg = $('sch-seg'), body = $('sch-body');
+    if (!D.rosters.length) return msg(body, '找不到本月班表。');
+    if (st.roster >= D.rosters.length) st.roster = 0;
+    seg.replaceChildren(...D.rosters.map((r, k) => {
+      const b = el('button', null, (r.ym === ymKey(D.today) ? '本月 ' : '下月 ') + (r.ym ? ymLabel(r.ym) : r.title));
+      b.type = 'button'; b.setAttribute('aria-pressed', String(k === st.roster));
+      b.addEventListener('click', () => { st.roster = k; render(); });
+      return b;
+    }));
+    seg.hidden = D.rosters.length < 2;
+    const R = D.rosters[st.roster];
+    $('sch-title').textContent = (R.ym ? ymLabel(R.ym) + ' ' : '') + '班表';
+    const grid = el('div', 'hb-grid');
+    R.groups.forEach((g) => {
+      const c = el('div', 'hb-card');
+      const hh = el('div', 'hb-card-h'); hh.append(el('p', 'hb-card-t', g.label), el('span', 'hb-small', g.people.length + ' 人'));
+      c.appendChild(hh);
+      if (g.place || g.carts) {
+        const kv = el('dl', 'hb-kv');
+        if (g.place) kv.append(el('dt', null, R.cols[5] || '交藥位置'), el('dd', null, g.place));
+        if (g.carts) kv.append(el('dt', null, R.cols[6] || '交車'), el('dd', null, g.carts.replace(/\n{2,}/g, '\n')));
+        c.appendChild(kv);
+      }
+      g.people.forEach((p) => {
+        const d = el('div', 'hb-person');
+        d.appendChild(el('div', 'hb-person-n', p.name));
+        const meta = el('div', 'hb-person-meta');
+        if (p.ward) meta.appendChild(el('span', 'hb-chip', p.ward));
+        if (p.duty) meta.appendChild(el('span', 'hb-chip warn', p.duty));
+        d.appendChild(meta);
+        if (p.note) d.appendChild(pre(p.note, 'hb-small'));
+        if (p.team) d.appendChild(pre(p.team, 'hb-small hb-muted'));
+        c.appendChild(d);
+      });
+      grid.appendChild(c);
+    });
+    const nodes = [grid];
+    const mon = R.monthly.filter((m) => m.items.length);
+    if (mon.length) {
+      const g2 = el('div', 'hb-grid'); g2.style.marginTop = 'var(--cds-gap-md)';
+      mon.forEach((m) => {
+        const c = el('div', 'hb-card');
+        c.appendChild(el('p', 'hb-card-t', /^非8小時/.test(m.title) ? '本月非 8 小時班別' : '本月值班與教學'));
+        m.items.forEach((x) => {
+          const d = el('div', 'hb-person');
+          d.appendChild(el('div', 'hb-small', x.label.length > 24 ? x.label.slice(0, 24) + '…' : x.label));
+          d.appendChild(pre(x.value));
+          c.appendChild(d);
+        });
+        if (m.rules.length) {
+          const det = el('details', 'hb-det'); det.appendChild(el('summary', null, '規則說明'));
+          m.rules.forEach((t) => det.appendChild(pre(t, 'hb-small')));
+          c.appendChild(det);
+        }
+        g2.appendChild(c);
+      });
+      nodes.push(g2);
+    }
+    if (R.extra.length) {
+      const det = el('details', 'hb-det'); det.appendChild(el('summary', null, '其他支援人員（原表內容）'));
+      R.extra.forEach((r) => det.appendChild(el('div', 'hb-small', r.join('　｜　'))));
+      nodes.push(det);
+    }
+    nodes.push(srcLine(R.title));
+    body.replaceChildren(...nodes);
+  }
+
+  function renderLeave(D) {
+    const body = $('lv-body');
+    const days = D.leave.days;
+    if (!days.length) return msg(body, '找不到休假資料。');
+    const months = [...new Set(days.map((d) => ymKey(d.date)))].sort((a, b) => a - b);
+    const tk = ymKey(D.today);
+    if (st.leaveYm == null || !months.includes(st.leaveYm)) st.leaveYm = months.includes(tk) ? tk : months[months.length - 1];
+    const pos = months.indexOf(st.leaveYm);
+    $('lv-month').textContent = ymLabel(st.leaveYm);
+    $('lv-prev').disabled = pos <= 0; $('lv-next').disabled = pos >= months.length - 1;
+    const only = $('lv-only').checked;
+    const list = days.filter((d) => ymKey(d.date) === st.leaveYm);
+    const nodes = [];
+    const todayRow = days.find((d) => sameDay(d.date, D.today));
+    if (st.leaveYm === tk) {
+      const c = el('div', 'hb-card lv-today');
+      c.appendChild(el('p', 'hb-card-t', '今天 ' + dLabel(D.today)));
+      const meta = el('div', 'hb-person-meta');
+      if (todayRow && todayRow.off.length) todayRow.off.forEach((n) => meta.appendChild(el('span', 'hb-chip warn', n)));
+      else meta.appendChild(el('span', 'hb-small', '今天沒有登記休假'));
+      c.appendChild(meta);
+      if (todayRow && todayRow.note) c.appendChild(pre(todayRow.note, 'hb-small'));
+      nodes.push(c);
+    }
+    const wrap = el('div', 'lv-list');
+    list.forEach((d) => {
+      const we = d.date.getDay() === 0 || d.date.getDay() === 6;
+      const has = d.off.length || d.note;
+      if (only && !has && !sameDay(d.date, D.today)) return;
+      const row = el('div', 'lv-row' + (we ? ' we' : '') + (sameDay(d.date, D.today) ? ' now' : '') + (d.date < D.today ? ' past' : ''));
+      const dd = el('div', 'lv-date', `${d.date.getMonth() + 1}/${d.date.getDate()}`);
+      dd.appendChild(el('small', null, '星期' + WD[d.date.getDay()] + (sameDay(d.date, D.today) ? '・今天' : '')));
+      const off = el('div', 'hb-person-meta');
+      d.off.forEach((n) => off.appendChild(el('span', 'hb-chip warn', n)));
+      if (!d.off.length) off.appendChild(el('span', 'hb-small', '—'));
+      row.append(dd, off, d.note ? pre(d.note, 'hb-small') : el('div', 'hb-small', ''));
+      wrap.appendChild(row);
+    });
+    if (!wrap.children.length) wrap.appendChild(el('div', 'hb-msg', '這個月沒有登記休假或備註。'));
+    nodes.push(wrap);
+    if (D.leave.intro) {
+      const det = el('details', 'hb-det'); det.appendChild(el('summary', null, '休假與代理原則'));
+      det.appendChild(pre(D.leave.intro, 'hb-small'));
+      nodes.push(det);
+    }
+    nodes.push(srcLine(D.leaveTitle));
+    body.replaceChildren(...nodes);
+  }
+
+  function renderMeetings(D) {
+    const body = $('mt-body');
+    [['mt-kind', st.meetKind], ['mt-scope', st.meetScope]].forEach(([id, k]) => $(id).querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.k === k))));
+    const items = st.meetKind === 'dept' ? D.dept : D.care;
+    if (!items.length) return msg(body, '找不到會議資料。');
+    const t = D.today, tk = ymKey(t);
+    const horizon = new Date(t); horizon.setDate(horizon.getDate() + 45);
+    let list;
+    if (st.meetScope === 'upcoming') list = items.filter((x) => x.date >= t && x.date <= horizon);
+    else if (st.meetScope === 'month') list = items.filter((x) => ymKey(x.date) === tk);
+    else list = items.slice().reverse();
+    if (st.meetScope === 'upcoming' && !list.length) list = items.filter((x) => x.date >= t).slice(0, 8);
+    const next = items.find((x) => x.date >= t);
+    const nodes = [];
+    let lastYm = null;
+    list.forEach((x) => {
+      const k = ymKey(x.date);
+      if (k !== lastYm) { nodes.push(el('div', 'mt-month', ymLabel(k))); lastYm = k; }
+      const it = el('div', 'mt-item' + (x === next ? ' next' : '') + (x.date < t ? ' past' : ''));
+      const d = el('div', 'mt-d'); d.append(el('b', null, String(x.date.getDate())), el('span', null, `${x.date.getMonth() + 1}月・${WD[x.date.getDay()]}`));
+      const c = el('div');
+      if (x === next) c.appendChild(el('span', 'hb-chip', sameDay(x.date, t) ? '今天' : '下一場'));
+      c.appendChild(pre(x.title || x.cat || '（未填內容）', 'mt-t'));
+      const meta = el('div', 'mt-meta');
+      const add = (lab, v) => { if (v && v !== '-' && v !== 'NA' && v !== 'N/A') meta.appendChild(el('span', null, lab + '：' + v.replace(/\n+/g, '、'))); };
+      if (st.meetKind === 'dept') { add('類別', x.cat); add('時間地點', x.place); add('主講', x.who); add('座長', x.chair); }
+      else { if (x.tag) add('備註', x.tag); add('報告', x.who); add('紀錄', x.rec); add('相關', x.note); }
+      c.appendChild(meta);
+      it.append(d, c);
+      nodes.push(it);
+    });
+    if (!list.length) nodes.push(el('div', 'hb-msg', st.meetScope === 'month' ? '本月沒有排定會議。' : '沒有即將到來的會議。'));
+    nodes.push(srcLine(st.meetKind === 'dept' ? D.deptTitle : D.careTitle));
+    body.replaceChildren(...nodes);
+  }
+
+  function renderInterns(D) {
+    const body = $('it-body');
+    const P = D.interns;
+    if (!P.length) return msg(body, '找不到實習生排程。');
+    const t = D.today;
+    const soon = new Date(t); soon.setDate(soon.getDate() + 60);
+    const now = [], next = [];
+    P.forEach((p) => p.periods.forEach((per, j) => {
+      const who = p.rows.filter((r) => r.cells[j] && r.cells[j] !== '(空)').map((r) => ({ teacher: r.teacher, spec: r.spec, students: r.cells[j] }));
+      if (!who.length) return;
+      const rec = { p, per, who };
+      if (per.a <= t && t <= per.b) now.push(rec);
+      else if (per.a > t && per.a <= soon) next.push(rec);
+    }));
+    const nodes = [];
+    const cards = (title, recs) => {
+      if (!recs.length) return;
+      nodes.push(el('div', 'mt-month', title));
+      const g = el('div', 'hb-grid it-now');
+      recs.forEach(({ p, per, who }) => {
+        const c = el('div', 'hb-card');
+        const hh = el('div', 'hb-card-h'); hh.append(el('p', 'hb-card-t', p.title.replace(/^\d{4}\s+/, '')), el('span', 'hb-small', `${dLabel(per.a)} – ${dLabel(per.b)}`));
+        c.appendChild(hh);
+        if (per.sub) c.appendChild(el('div', 'hb-small', per.sub));
+        who.forEach((w) => {
+          const d = el('div', 'hb-person');
+          d.appendChild(el('div', 'hb-person-n', w.students));
+          d.appendChild(el('div', 'hb-small', `指導：${w.teacher}${w.spec ? '（' + w.spec + '）' : ''}`));
+          c.appendChild(d);
+        });
+        g.appendChild(c);
+      });
+      nodes.push(g);
+    };
+    cards('目前進行中', now);
+    cards('60 天內開始', next);
+    if (!now.length && !next.length) nodes.push(el('div', 'hb-msg', '目前沒有進行中或即將開始的 APPE 實習。'));
+    const progs = P.slice().sort((a, b) => b.year - a.year);
+    progs.forEach((p) => {
+      const det = el('details', 'hb-det');
+      if (p.year >= t.getFullYear()) det.open = true;
+      det.appendChild(el('summary', null, p.title));
+      const wrap = el('div', 'it-wrap');
+      const tbl = el('table', 'it-tbl');
+      const hr = el('tr'); hr.append(el('th', null, '指導藥師'), el('th', null, '專科'));
+      p.periods.forEach((per) => { const th = el('th', per.a <= t && t <= per.b ? 'cur' : null, per.text); hr.appendChild(th); });
+      const thead = el('thead'); thead.appendChild(hr); tbl.appendChild(thead);
+      const tb = el('tbody');
+      p.rows.forEach((r) => {
+        const tr = el('tr'); tr.append(el('td', null, r.teacher), el('td', 'hb-muted', r.spec));
+        r.cells.forEach((c, j) => tr.appendChild(el('td', p.periods[j].a <= t && t <= p.periods[j].b ? 'cur' : null, c || '—')));
+        tb.appendChild(tr);
+      });
+      tbl.appendChild(tb); wrap.appendChild(tbl); det.appendChild(wrap);
+      p.notes.forEach((n) => det.appendChild(el('div', 'hb-small', n)));
+      nodes.push(det);
+    });
+    nodes.push(el('p', 'hb-note', '這裡整理 APPE 實習的輪訓表；BPE 一般病房與 ICU 等其他實習安排，請見原始試算表。'));
+    nodes.push(srcLine(D.internsTitle));
+    body.replaceChildren(...nodes);
+  }
+
+  const norm = (s) => String(s).normalize('NFKC').toLowerCase();
+  function renderNews(D) {
+    const body = $('nw-body');
+    const all = D.news;
+    if (!all.length) return msg(body, '找不到宣達事項。');
+    const order = ['規範/政令', '臨床照護業務', '值班/藥車', 'PGY/UGY教學', '學術/研究'];
+    const cats = [...new Set(all.flatMap((x) => x.cats))].sort((a, b) => ((order.indexOf(a) + 1 || 99) - (order.indexOf(b) + 1 || 99)));
+    const cb = $('nw-cats');
+    cb.replaceChildren(...['全部', ...cats].map((c) => {
+      const n = c === '全部' ? all.length : all.filter((x) => x.cats.includes(c)).length;
+      const b = el('button', null, `${c} ${n}`); b.type = 'button';
+      b.setAttribute('aria-pressed', String(st.newsCat === c));
+      b.addEventListener('click', () => { st.newsCat = c; render(); });
+      return b;
+    }));
+    $('nw-mode').querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.k === st.newsMode)));
+    const terms = norm(st.newsQ).split(/\s+/).filter(Boolean);
+    const hay = (x) => {
+      if (!x._h) {
+        const d = x.date;
+        const ds = d ? [`${d.getFullYear()}/${pad2(d.getMonth() + 1)}/${pad2(d.getDate())}`, `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()}`, `${d.getFullYear()}/${pad2(d.getMonth() + 1)}`, `${d.getFullYear()}-${pad2(d.getMonth() + 1)}`, `${d.getMonth() + 1}月`, `${d.getFullYear()}年`].join(' ') : x.raw;
+        x._h = norm([ds, x.cats.join(' '), x.text, x.pgy ? 'pgy須讀 pgy必讀' : ''].join(' '));
+        x._h = x._h + ' ' + x._h.replace(/\s+/g, '');
+      }
+      return x._h;
+    };
+    let list = all.filter((x) => (st.newsCat === '全部' || x.cats.includes(st.newsCat)) && (!st.newsPgy || x.pgy) && terms.every((t) => hay(x).includes(t)));
+    const rawTerms = st.newsQ.split(/\s+/).filter(Boolean);
+    $('nw-count').textContent = (terms.length || st.newsCat !== '全部' || st.newsPgy) ? `符合 ${list.length} 則（共 ${all.length} 則）` : `共 ${all.length} 則，最新的在最上方`;
+    const recent = new Date(D.today); recent.setDate(recent.getDate() - 14);
+    const item = (x) => {
+      const box = el('div', 'nw-item');
+      const hd = el('div', 'nw-head');
+      hd.appendChild(el('b', null, x.date ? `${x.date.getFullYear()}/${pad2(x.date.getMonth() + 1)}/${pad2(x.date.getDate())}` : x.raw));
+      x.cats.forEach((c) => hd.appendChild(el('span', 'hb-chip', c)));
+      if (x.pgy) hd.appendChild(el('span', 'hb-chip warn', 'PGY 須讀'));
+      if (x.date && x.date >= recent) hd.appendChild(el('span', 'hb-chip nw-new', 'NEW'));
+      box.appendChild(hd);
+      const txt = pre(x.text, 'nw-text', rawTerms);
+      const long = x.text.split('\n').length > 6 || x.text.length > 320;
+      const key = x.raw + '|' + x.i;
+      if (long && !st.open.has(key) && !terms.length) txt.classList.add('clamp');
+      box.appendChild(txt);
+      if (long && !terms.length) {
+        const more = el('button', 'nw-more', st.open.has(key) ? '收合' : '展開全文'); more.type = 'button';
+        more.addEventListener('click', () => { if (st.open.has(key)) st.open.delete(key); else st.open.add(key); render(); });
+        box.appendChild(more);
+      }
+      return box;
+    };
+    const nodes = [];
+    if (st.newsMode === 'cat') {
+      cats.forEach((c) => {
+        const sub = list.filter((x) => x.cats.includes(c));
+        if (!sub.length) return;
+        nodes.push(el('div', 'nw-grp', `${c}（${sub.length}）`));
+        sub.forEach((x) => nodes.push(item(x)));
+      });
+    } else list.forEach((x) => nodes.push(item(x)));
+    if (!list.length) nodes.push(el('div', 'hb-msg', '沒有符合條件的宣達事項，請換個關鍵字或類別。'));
+    nodes.push(srcLine(D.newsTitle));
+    body.replaceChildren(...nodes);
+  }
+
+  // ---------- 首頁摘要與切換 ----------
+  function renderSubs(D) {
+    const t = D.today;
+    const set = (id, s) => { const e = $(id); if (e) e.textContent = s || '　'; };
+    const r0 = D.rosters[0];
+    set('hb-sub-schedule', r0 && r0.ym ? ymLabel(r0.ym) + (D.rosters.length > 1 ? '・下月已公告' : '') : '');
+    const td = D.leave.days.find((d) => sameDay(d.date, t));
+    set('hb-sub-leave', td && td.off.length ? '今日休假 ' + td.off.length + ' 人' : '今日無人休假');
+    const nx = [...D.dept, ...D.care].filter((x) => x.date >= t).sort((a, b) => a.date - b.date)[0];
+    set('hb-sub-meetings', nx ? '下一場 ' + dLabel(nx.date) : '');
+    let n = 0; D.interns.forEach((p) => p.periods.forEach((per, j) => { if (per.a <= t && t <= per.b && p.rows.some((r) => r.cells[j] && r.cells[j] !== '(空)')) n++; }));
+    set('hb-sub-interns', n ? '進行中 ' + n + ' 梯' : '目前無 APPE');
+    const nw = D.news[0];
+    set('hb-sub-news', nw && nw.date ? '最新 ' + (nw.date.getMonth() + 1) + '/' + nw.date.getDate() : '');
+    const today = $('hb-today');
+    today.replaceChildren();
+    today.append('今天 ', el('b', null, `${t.getFullYear()}/${pad2(t.getMonth() + 1)}/${pad2(t.getDate())}（${WD[t.getDay()]}）`), '　今日休假：');
+    if (td && td.off.length) td.off.forEach((x) => today.appendChild(el('span', 'hb-chip warn', x)));
+    else today.append('無');
+    if (nx) today.append('　下一場會議：', el('b', null, dLabel(nx.date)), ' ' + (nx.title || nx.cat || '').split('\n')[0].slice(0, 30));
+  }
+
+  const RENDER = { schedule: renderSchedule, leave: renderLeave, meetings: renderMeetings, interns: renderInterns, news: renderNews };
+  function render() {
+    const D = data();
+    if (D.status !== 'ok') {
+      const text = D.status === 'error' ? (D.message || '讀取班表與公告失敗。') : '讀取中…';
+      Object.keys(RENDER).forEach((v) => { const b = $(v === 'schedule' ? 'sch-body' : v === 'leave' ? 'lv-body' : v === 'meetings' ? 'mt-body' : v === 'interns' ? 'it-body' : 'nw-body'); if (b) msg(b, text); });
+      if (D.status === 'error') $('hb-today').textContent = '';
+      return;
+    }
+    renderSubs(D);
+    if (RENDER[st.view]) RENDER[st.view](D);
+  }
+
+  function go(view, link) {
+    if (!VIEWS.includes(view)) view = 'schedule';
+    st.view = view;
+    document.querySelectorAll('#hb-nav .hb-tile').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.view === view)));
+    VIEWS.filter((v) => v !== 'stats').forEach((v) => { $('view-' + v).hidden = v !== view; });
+    const sv = $('stats-view');
+    const wasHidden = sv.hidden;
+    sv.hidden = view !== 'stats';
+    if (view === 'stats' && wasHidden) setTimeout(() => window.dispatchEvent(new Event('resize')), 30);
+    store.set('rxcare_view', view);
+    if (link) {
+      if (view === 'stats') {
+        const cur = document.querySelector('.ph-tab[aria-selected="true"]');
+        dash.setLink(cur ? cur.dataset.tab : 'overview');
+      } else dash.setLink(view);
+    }
+    render();
+  }
+
+  document.querySelectorAll('#hb-nav .hb-tile').forEach((b) => b.addEventListener('click', () => go(b.dataset.view, true)));
+  $('lv-prev').addEventListener('click', () => { const D = data(); if (D.status !== 'ok') return; const ms = [...new Set(D.leave.days.map((d) => ymKey(d.date)))].sort((a, b) => a - b); const i = ms.indexOf(st.leaveYm); if (i > 0) { st.leaveYm = ms[i - 1]; render(); } });
+  $('lv-next').addEventListener('click', () => { const D = data(); if (D.status !== 'ok') return; const ms = [...new Set(D.leave.days.map((d) => ymKey(d.date)))].sort((a, b) => a - b); const i = ms.indexOf(st.leaveYm); if (i < ms.length - 1) { st.leaveYm = ms[i + 1]; render(); } });
+  $('lv-only').addEventListener('change', render);
+  $('mt-kind').addEventListener('click', (e) => { const b = e.target.closest('button[data-k]'); if (b) { st.meetKind = b.dataset.k; render(); } });
+  $('mt-scope').addEventListener('click', (e) => { const b = e.target.closest('button[data-k]'); if (b) { st.meetScope = b.dataset.k; render(); } });
+  $('nw-mode').addEventListener('click', (e) => { const b = e.target.closest('button[data-k]'); if (b) { st.newsMode = b.dataset.k; render(); } });
+  let qt;
+  $('nw-q').addEventListener('input', (e) => { clearTimeout(qt); qt = setTimeout(() => { st.newsQ = e.target.value.trim(); render(); }, 150); });
+  $('nw-pgy').addEventListener('change', (e) => { st.newsPgy = e.target.checked; render(); });
+
+  const h0 = location.hash.slice(1);
+  go(STATS_TABS.includes(h0) ? 'stats' : (VIEWS.includes(h0) ? h0 : (store.get('rxcare_view') || 'schedule')), false);
+  dash.onData(render);
+})();
+</script>
+
 
 </div>
 </body>
