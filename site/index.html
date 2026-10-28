@@ -8,7 +8,7 @@
 <meta http-equiv="Cache-Control" content="no-cache">
 <script>/* 版本自動比對：開啟網頁或回到分頁時檢查 version.json，有新版就自動換成新版 */
 (function () {
-  var BUILD = '226f67bb47';
+  var BUILD = '538c5113cd';
   function check() {
     fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
       if (!j || !j.v || j.v === BUILD) return;
@@ -383,6 +383,7 @@ mark{background:color-mix(in srgb,var(--color-warn) 35%,transparent);color:inher
 .mt-item.extra .mt-t{font-weight:500}
 .mt-ex-h{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:2px}
 .hb-chip.mt-free{background:color-mix(in srgb,#8a5cd0 12%,transparent);color:#6b3fb8;border:1px solid color-mix(in srgb,#8a5cd0 30%,transparent)}
+.g-support .sch-name{color:var(--color-fg)}
 </style>
 
 <div class="ph-wrap">
@@ -1650,7 +1651,14 @@ dash.loader('board', {
     if (st.group === '全部') {
       R.rows.filter((x) => x.kind === 'support').forEach((x, k) => {
         const tr = el('tr', 'g-support' + (k === 0 ? ' g-first' : ''));
-        x.cells.slice(0, 8).forEach((c, j) => tr.appendChild(Object.assign(el('td', 'c' + j), { textContent: j === 7 ? '' : c }))); // 原表 H 欄（如 H22–H24）不顯示
+        x.cells.slice(0, 8).forEach((c, j) => {
+          const td = el('td', 'c' + j);
+          if (j === 7 || !c.trim()) {} // 原表 H 欄（如 H22–H24）不顯示
+          else if (j === 1 || j === 4) td.appendChild(el('div', 'sch-name', c)); // B、E 欄是人名
+          else if (/^(代理值班|口服調劑|貴重針劑|一般針劑)/.test(c)) td.appendChild(el('span', 'hb-chip duty' + (/^代理/.test(c) ? ' proxy' : ' fixed'), c));
+          else td.textContent = c;
+          tr.appendChild(td);
+        });
         for (let j = x.cells.length; j < 8; j++) tr.appendChild(el('td', 'c' + j));
         tb.appendChild(tr);
       });
