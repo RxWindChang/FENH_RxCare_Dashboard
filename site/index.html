@@ -8,7 +8,7 @@
 <meta http-equiv="Cache-Control" content="no-cache">
 <script>/* 版本自動比對：開啟網頁或回到分頁時檢查 version.json，有新版就自動換成新版 */
 (function () {
-  var BUILD = 'b8430c321f';
+  var BUILD = '226f67bb47';
   function check() {
     fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
       if (!j || !j.v || j.v === BUILD) return;
@@ -1650,7 +1650,7 @@ dash.loader('board', {
     if (st.group === '全部') {
       R.rows.filter((x) => x.kind === 'support').forEach((x, k) => {
         const tr = el('tr', 'g-support' + (k === 0 ? ' g-first' : ''));
-        x.cells.slice(0, 8).forEach((c, j) => tr.appendChild(Object.assign(el('td', 'c' + j), { textContent: c })));
+        x.cells.slice(0, 8).forEach((c, j) => tr.appendChild(Object.assign(el('td', 'c' + j), { textContent: j === 7 ? '' : c }))); // 原表 H 欄（如 H22–H24）不顯示
         for (let j = x.cells.length; j < 8; j++) tr.appendChild(el('td', 'c' + j));
         tb.appendChild(tr);
       });
