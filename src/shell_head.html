@@ -27,13 +27,7 @@ document.write('<script src="config.js?v=' + Date.now() + '"><\/script>');</scri
   --cds-surface-popover:#ffffff;--cds-border:#dcdcd6;--cds-shadow-popover:0 4px 16px rgba(0,0,0,.12);--cds-text-secondary:#6b7078;
   --ph-skel:#ececea;
 }
-@media (prefers-color-scheme: dark){:root{
-  --color-bg:#17181a;--color-panel:#202225;--color-fg:#e8e8e6;--color-fg-muted:#9a9ea5;--color-border-line:#33363a;
-  --color-ok:#52c27f;--color-warn:#e0b04f;--color-bad:#f07070;
-  --cds-chart-grid:#2c2f33;--cds-chart-axis:#45494e;--cds-chart-muted:#3a3d42;--cds-chart-reference:#7d8188;
-  --cds-surface-popover:#2a2c30;--cds-border:#3d4045;--cds-shadow-popover:0 4px 16px rgba(0,0,0,.5);--cds-text-secondary:#9a9ea5;
-  --ph-skel:#2b2d31;
-}}
+html{color-scheme:light}
 html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:var(--font-anthropic-sans);-webkit-font-smoothing:antialiased;font-feature-settings:"tnum" 1,"cv11" 1}
 /* 專業字體調整：標題與大數字改用黑體，加重字重、收緊字距 */
 #dash-root .ph-head h1{font-weight:700;letter-spacing:-.01em}

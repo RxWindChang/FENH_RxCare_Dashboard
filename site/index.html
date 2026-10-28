@@ -27,13 +27,7 @@ document.write('<script src="config.js?v=' + Date.now() + '"><\/script>');</scri
   --cds-surface-popover:#ffffff;--cds-border:#dcdcd6;--cds-shadow-popover:0 4px 16px rgba(0,0,0,.12);--cds-text-secondary:#6b7078;
   --ph-skel:#ececea;
 }
-@media (prefers-color-scheme: dark){:root{
-  --color-bg:#17181a;--color-panel:#202225;--color-fg:#e8e8e6;--color-fg-muted:#9a9ea5;--color-border-line:#33363a;
-  --color-ok:#52c27f;--color-warn:#e0b04f;--color-bad:#f07070;
-  --cds-chart-grid:#2c2f33;--cds-chart-axis:#45494e;--cds-chart-muted:#3a3d42;--cds-chart-reference:#7d8188;
-  --cds-surface-popover:#2a2c30;--cds-border:#3d4045;--cds-shadow-popover:0 4px 16px rgba(0,0,0,.5);--cds-text-secondary:#9a9ea5;
-  --ph-skel:#2b2d31;
-}}
+html{color-scheme:light}
 html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:var(--font-anthropic-sans);-webkit-font-smoothing:antialiased;font-feature-settings:"tnum" 1,"cv11" 1}
 /* 專業字體調整：標題與大數字改用黑體，加重字重、收緊字距 */
 #dash-root .ph-head h1{font-weight:700;letter-spacing:-.01em}
@@ -1640,18 +1634,15 @@ dash.loader('board', {
       if (b.items) {
         const vis = b.items.filter((it) => it.line < COLLAPSE_ROW), fold = b.items.filter((it) => it.line >= COLLAPSE_ROW);
         const title = (/^非8小時/.test(b.title) ? '非 8 小時班別' : b.title) + (R.ym ? `（${ymLabel(R.ym)}）` : '');
-        if (b.line < COLLAPSE_ROW && vis.length) visible.push(card(title, vis));
-        if (fold.length) folded.push(card(b.line >= COLLAPSE_ROW ? title : title + '（續）', fold));
-      } else if (b.line >= COLLAPSE_ROW) {
-        folded.push(Object.assign(el('div', 'hb-small sch-raw'), { textContent: b.raw.join('　｜　') }));
-      } else visible.push(Object.assign(el('div', 'hb-small sch-raw'), { textContent: b.raw.join('　｜　') }));
+        if (b.items.length) folded.push(card(title, b.items));
+      } else folded.push(Object.assign(el('div', 'hb-small sch-raw'), { textContent: b.raw.join('　｜　') }));
     });
     const nodes = [el('div', 'sch-filter'), wrap];
     nodes[0].append(fseg, el('span', 'hb-small', `${show.reduce((n, g) => n + g.rows.length, 0)} 人`));
     if (visible.length) { const g2 = el('div', 'hb-grid'); g2.style.marginTop = 'var(--cds-gap-md)'; visible.forEach((x) => g2.appendChild(x)); nodes.push(g2); }
     if (folded.length) {
       const det = el('details', 'hb-det');
-      det.appendChild(el('summary', null, `原表第 ${COLLAPSE_ROW} 列以下（APPE／外院代訓、值班輪序、實習等）`));
+      det.appendChild(el('summary', null, '其他班表資訊（非 8 小時班別、APPE／外院代訓、值班輪序、實習等）'));
       const g3 = el('div', 'hb-grid'); g3.style.marginTop = 'var(--cds-gap-sm)';
       folded.forEach((x) => g3.appendChild(x));
       det.appendChild(g3);
