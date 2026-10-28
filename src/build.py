@@ -13,7 +13,11 @@ page = page.replace("dash.loader('indicators', {\n  description: '把試算表�
                     "dash.loader('indicators', {\n  description: '依欄位位置命名「照護組指標」的各欄，並把數字與百分比轉成數值。',")
 page = page.replace('<p class="ph-foot">', '<p class="ph-foot"><span id="ph-sync"></span><br>', 1)
 assert "atob(" not in page
+import hashlib, json
 out = head + page + "\n</div>\n</body>\n</html>\n"
+build = hashlib.sha1(out.encode()).hexdigest()[:10]
+out = out.replace('__BUILD__', build)
 (root / 'site').mkdir(exist_ok=True)
+(root / 'site/version.json').write_text(json.dumps({'v': build}), encoding='utf-8')
 (root / 'site/index.html').write_text(out, encoding='utf-8')
-print('wrote', len(out.encode()), 'bytes')
+print('wrote', len(out.encode()), 'bytes, build', build)

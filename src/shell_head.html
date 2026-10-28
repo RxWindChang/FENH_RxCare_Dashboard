@@ -5,6 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
 <meta name="referrer" content="no-referrer">
+<meta http-equiv="Cache-Control" content="no-cache">
+<script>/* 版本自動比對：開啟網頁或回到分頁時檢查 version.json，有新版就自動換成新版 */
+(function () {
+  var BUILD = '__BUILD__';
+  function check() {
+    fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
+      if (!j || !j.v || j.v === BUILD) return;
+      var k = 'rxcare_upd_' + j.v;
+      try { if (sessionStorage.getItem(k)) return; sessionStorage.setItem(k, '1'); } catch (e) {}
+      var u = new URL(location.href); u.searchParams.set('v', j.v); location.replace(u.toString());
+    }).catch(function () {});
+  }
+  check();
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') check(); });
+})();</script>
 <title>亞東藥學部 藥事照護組 Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
