@@ -360,6 +360,9 @@ mark{background:color-mix(in srgb,var(--color-warn) 35%,transparent);color:inher
 .lv-ev{color:color-mix(in srgb,#2f6fdb 85%,var(--color-fg));font-weight:500}
 .lv-ev::before{content:"● ";font-size:.75em;vertical-align:.1em}
 .lv-hol{color:#c53030;font-weight:600}
+
+.hb-chip.duty.fixed{background:#2f6fdb;color:#fff;font-weight:600}
+.hb-chip.duty.proxy{background:color-mix(in srgb,var(--color-fg) 6%,transparent);color:var(--color-fg-muted);font-weight:400}
 </style>
 
 <div class="ph-wrap">
@@ -1595,7 +1598,7 @@ dash.loader('board', {
         if (restLines) nm.appendChild(el('div', 'hb-small', restLines));
         tr.appendChild(nm);
         [1, 2, 3].forEach((c) => { const td = el('td', 'c' + c); td.appendChild(pre(x.cells[c] || '', c === 1 ? 'sch-ward' : 'hb-small')); tr.appendChild(td); });
-        const duty = el('td', 'c4'); if (x.cells[4]) duty.appendChild(el('span', 'hb-chip duty', x.cells[4])); tr.appendChild(duty);
+        const duty = el('td', 'c4'); if (x.cells[4]) duty.appendChild(el('span', 'hb-chip duty' + (/^代理/.test(x.cells[4]) ? ' proxy' : ' fixed'), x.cells[4])); tr.appendChild(duty);
         if (k === 0) {
           const n = g.rows.length;
           [5, 6].forEach((c) => { const td = el('td', 'c' + c + ' shared'); td.rowSpan = n; td.appendChild(pre((x.cells[c] || '').replace(/\n{2,}/g, '\n'), 'hb-small')); tr.appendChild(td); });
