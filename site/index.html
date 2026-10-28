@@ -8,7 +8,7 @@
 <meta http-equiv="Cache-Control" content="no-cache">
 <script>/* 版本自動比對：開啟網頁或回到分頁時檢查 version.json，有新版就自動換成新版 */
 (function () {
-  var BUILD = '538c5113cd';
+  var BUILD = '19d2d67717';
   function check() {
     fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
       if (!j || !j.v || j.v === BUILD) return;
@@ -1634,7 +1634,7 @@ dash.loader('board', {
       g.rows.forEach((x, k) => {
         const tr = el('tr', 'g-' + (g.label === 'PGY' ? 'pgy' : g.label.toLowerCase()) + (k === 0 && gi > 0 ? ' g-first' : ''));
         const nm = el('td', 'c0'); const raw = x.cells[0] || '';
-        nm.appendChild(el('div', 'sch-name', raw.replace(/^#/, '').split('\n')[0]));
+        nm.appendChild(el('div', 'sch-name', raw.replace(/^#/, '').split('\n')[0].replace(/\s+\d{4}\/\d{1,2}\s*$/, ''))); // 姓名後的年月（如「林于雅 2026/03」）不顯示
         const restLines = raw.split('\n').slice(1).join('\n');
         if (restLines) nm.appendChild(el('div', 'hb-small', restLines));
         tr.appendChild(nm);
