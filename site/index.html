@@ -8,7 +8,7 @@
 <meta http-equiv="Cache-Control" content="no-cache">
 <script>/* 版本自動比對：開啟網頁或回到分頁時檢查 version.json，有新版就自動換成新版 */
 (function () {
-  var BUILD = 'f522fb39c6';
+  var BUILD = '7c7e62b77f';
   function check() {
     fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
       if (!j || !j.v || j.v === BUILD) return;
@@ -378,6 +378,11 @@ mark{background:color-mix(in srgb,var(--color-warn) 35%,transparent);color:inher
 
 .hb-chip.duty.fixed{background:transparent;color:#1f5fd0;font-weight:700;padding-left:0;padding-right:0}
 .hb-chip.duty.proxy{background:rgba(120,128,140,.08);border:1px solid rgba(120,128,140,.35);color:#7b828c;font-weight:400}
+
+.mt-item.extra{background:color-mix(in srgb,#8a5cd0 4%,var(--color-panel));border-style:dashed;border-color:color-mix(in srgb,#8a5cd0 40%,transparent)}
+.mt-item.extra .mt-t{font-weight:500}
+.mt-ex-h{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:2px}
+.hb-chip.mt-free{background:color-mix(in srgb,#8a5cd0 12%,transparent);color:#6b3fb8;border:1px solid color-mix(in srgb,#8a5cd0 30%,transparent)}
 </style>
 
 <div class="ph-wrap">
@@ -1476,17 +1481,37 @@ dash.loader('board', {
     const h = v.findIndex((r) => clean(r[0]) === '日期' && clean(r[1]) === '內容');
     const out = [];
     const dateRe = /(\d{4})\/(\d{1,2})\/(\d{1,2})/;
+    // E 欄「APPE/外訓藥師 報告（自由旁聽）」：每一則都有自己的日期，獨立列在那一天
+    const extras = (text, ref) => {
+      const left = [];
+      text.split('\n').map((t) => t.trim()).filter(Boolean).forEach((t) => {
+        let m = t.match(/^(\d{4})\/(\d{1,2})\/(\d{1,2})\s*/), y, mo, d;
+        if (m) { y = +m[1]; mo = +m[2]; d = +m[3]; }
+        else if ((m = t.match(/^(\d{1,2})\/(\d{1,2})\s*/))) {
+          mo = +m[1]; d = +m[2];
+          y = ref ? ref.getFullYear() : new Date().getFullYear();
+          if (ref && ref.getMonth() === 11 && mo === 1) y++; else if (ref && ref.getMonth() === 0 && mo === 12) y--;
+        }
+        if (!m) { left.push(t); return; }
+        let rest = t.slice(m[0].length).replace(/^[（(][一二三四五六日][)）]\s*/, '');
+        const tm = rest.match(/^(\d{1,2}:?\d{2}(?:\s*[-–~]\s*\d{1,2}:?\d{2})?)\s*/);
+        let time = '';
+        if (tm) { time = tm[1].replace(/\b(\d{2})(\d{2})\b/g, '$1:$2').replace(/\s+/g, ''); rest = rest.slice(tm[0].length); }
+        out.push({ date: new Date(y, mo - 1, d), title: rest || t, time, extra: true });
+      });
+      return left.join('\n');
+    };
     v.slice(h + 1).forEach((r) => {
       const a = clean(r[0]);
       const m = a.match(dateRe);
+      const e = clean(r[4]);
       if (m) {
-        out.push({ date: new Date(+m[1], +m[2] - 1, +m[3]), tag: a.split('\n').slice(1).join(' '), title: clean(r[1]), who: clean(r[2]), rec: clean(r[3]), note: clean(r[4]) });
-      } else if (!a && clean(r[4])) {
-        const n = clean(r[4]); const mm = n.match(dateRe);
-        if (mm) out.push({ date: new Date(+mm[1], +mm[2] - 1, +mm[3]), title: n, extra: true });
-      }
+        const date = new Date(+m[1], +m[2] - 1, +m[3]);
+        const note = e ? extras(e, date) : '';
+        out.push({ date, tag: a.split('\n').slice(1).join(' '), title: clean(r[1]), who: clean(r[2]), rec: clean(r[3]), note });
+      } else if (!a && e) extras(e, out.length ? out[out.length - 1].date : null);
     });
-    return out.sort((x, y) => x.date - y.date);
+    return out.sort((x, y) => (x.date - y.date) || ((x.extra ? 1 : 0) - (y.extra ? 1 : 0)));
   }
 
   function parseDept(dm, refYear) {
@@ -1744,16 +1769,17 @@ dash.loader('board', {
     else if (st.meetScope === 'month') list = items.filter((x) => ymKey(x.date) === tk);
     else list = items.slice().reverse();
     if (st.meetScope === 'upcoming' && !list.length) list = items.filter((x) => x.date >= t).slice(0, 8);
-    const next = items.find((x) => x.date >= t);
+    const next = items.find((x) => x.date >= t && !x.extra);
     const nodes = [];
     let lastYm = null;
     list.forEach((x) => {
       const k = ymKey(x.date);
       if (k !== lastYm) { nodes.push(el('div', 'mt-month', ymLabel(k))); lastYm = k; }
-      const it = el('div', 'mt-item' + (x === next ? ' next' : '') + (x.date < t ? ' past' : ''));
+      const it = el('div', 'mt-item' + (x === next ? ' next' : '') + (x.extra ? ' extra' : '') + (x.date < t ? ' past' : ''));
       const d = el('div', 'mt-d'); d.append(el('b', null, String(x.date.getDate())), el('span', null, `${x.date.getMonth() + 1}月・${WD[x.date.getDay()]}`));
       const c = el('div');
       if (x === next) c.appendChild(el('span', 'hb-chip', sameDay(x.date, t) ? '今天' : '下一場'));
+      if (x.extra) { const h = el('div', 'mt-ex-h'); h.append(el('span', 'hb-chip mt-free', '自由旁聽'), el('span', 'hb-small', 'APPE／外訓藥師 報告' + (x.time ? '・' + x.time : ''))); if (sameDay(x.date, t)) h.prepend(el('span', 'hb-chip', '今天')); c.appendChild(h); }
       c.appendChild(pre(x.title || x.cat || '（未填內容）', 'mt-t'));
       const meta = el('div', 'mt-meta');
       const add = (lab, v) => { if (v && v !== '-' && v !== 'NA' && v !== 'N/A') meta.appendChild(el('span', null, lab + '：' + v.replace(/\n+/g, '、'))); };
@@ -1902,7 +1928,7 @@ dash.loader('board', {
     set('hb-sub-schedule', r0 && r0.ym ? ymLabel(r0.ym) + (D.rosters.length > 1 ? '・下月已公告' : '') : '');
     const td = D.leave.days.find((d) => sameDay(d.date, t));
     set('hb-sub-leave', td && td.off.length ? '今日休假 ' + td.off.length + ' 人' : '今日無人休假');
-    const nx = [...D.dept, ...D.care].filter((x) => x.date >= t).sort((a, b) => a.date - b.date)[0];
+    const nx = [...D.dept, ...D.care].filter((x) => x.date >= t && !x.extra).sort((a, b) => a.date - b.date)[0];
     set('hb-sub-meetings', nx ? '下一場 ' + dLabel(nx.date) : '');
     let n = 0; D.interns.forEach((p) => p.periods.forEach((per, j) => { if (per.a <= t && t <= per.b && p.rows.some((r) => r.cells[j] && r.cells[j] !== '(空)')) n++; }));
     set('hb-sub-interns', n ? '進行中 ' + n + ' 梯' : '目前無 APPE');
