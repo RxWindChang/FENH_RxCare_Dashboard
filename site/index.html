@@ -8,7 +8,7 @@
 <meta http-equiv="Cache-Control" content="no-cache">
 <script>/* 版本自動比對：開啟網頁或回到分頁時檢查 version.json，有新版就自動換成新版 */
 (function () {
-  var BUILD = '7c7e62b77f';
+  var BUILD = 'b8430c321f';
   function check() {
     fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
       if (!j || !j.v || j.v === BUILD) return;
@@ -376,7 +376,7 @@ mark{background:color-mix(in srgb,var(--color-warn) 35%,transparent);color:inher
 .lv-ev::before{content:"● ";font-size:.75em;vertical-align:.1em}
 .lv-hol{color:#c53030;font-weight:600}
 
-.hb-chip.duty.fixed{background:transparent;color:#1f5fd0;font-weight:700;padding-left:0;padding-right:0}
+.hb-chip.duty.fixed{background:#eef4fd;border:1px solid #8fb2ea;color:#1f5fd0;font-weight:700}
 .hb-chip.duty.proxy{background:rgba(120,128,140,.08);border:1px solid rgba(120,128,140,.35);color:#7b828c;font-weight:400}
 
 .mt-item.extra{background:color-mix(in srgb,#8a5cd0 4%,var(--color-panel));border-style:dashed;border-color:color-mix(in srgb,#8a5cd0 40%,transparent)}
