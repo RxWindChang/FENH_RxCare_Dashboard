@@ -26,10 +26,10 @@ const TZ = 'Asia/Taipei';
 // 「儀表板資料」中只供公式定位用的欄位，不傳到網頁
 const HELPER_COLUMNS = ['來源工作表', '區塊起始列', '區塊列數', '月份欄'];
 
-// 快取秒數：多人同時開啟時不必每次都重讀試算表。設為 0 則每次都即時讀取。
-const CACHE_SECONDS = 60;
+// 快取秒數：30 分鐘內開啟都直接用快取，不必重讀試算表（網頁按「立即更新」才會強制重讀）。設為 0 則每次都即時讀取。
+const CACHE_SECONDS = 1800;
 // 改版時換這個字串，舊版程式留下的快取就不會被讀到
-const CACHE_VERSION = 'v3';
+const CACHE_VERSION = 'v4';
 
 // 防止猜密碼：10 分鐘內累計錯誤達此次數，就暫停所有登入 10 分鐘。
 const MAX_FAILS = 30;
@@ -48,16 +48,24 @@ function doGet(e) {
     return json_({ ok: false, error: 'unauthorized' });
   }
 
-  if (CACHE_SECONDS > 0) {
+  const fresh = e && e.parameter && e.parameter.fresh === '1';
+  if (CACHE_SECONDS > 0 && !fresh) {
     const hit = cacheGet_(cache);
     if (hit) return ContentService.createTextOutput(hit).setMimeType(ContentService.MimeType.JSON);
   }
+  let text;
+  try { text = build_(); } catch (err) { return json_({ ok: false, error: String(err && err.message || err) }); }
+  if (CACHE_SECONDS > 0) cachePut_(cache, text);
+  return ContentService.createTextOutput(text).setMimeType(ContentService.MimeType.JSON);
+}
 
+/** 讀取所有試算表，組成網頁要的資料（JSON 字串）。 */
+function build_() {
   const payload = { ok: true, updated: new Date().toISOString() };
   for (const name in SOURCES) {
     const s = SOURCES[name];
     const sheet = SpreadsheetApp.openById(s.id).getSheetByName(s.sheet);
-    if (!sheet) return json_({ ok: false, error: '找不到工作表：' + s.sheet });
+    if (!sheet) throw new Error('找不到工作表：' + s.sheet);
     const values = sheet.getDataRange().getDisplayValues();
     payload[name] = s.trim ? trim_(values) : values;
   }
@@ -66,10 +74,20 @@ function doGet(e) {
   } catch (err) {
     payload.board = { error: String(err && err.message || err) };
   }
+  return JSON.stringify(payload);
+}
 
-  const text = JSON.stringify(payload);
-  if (CACHE_SECONDS > 0) cachePut_(cache, text);
-  return ContentService.createTextOutput(text).setMimeType(ContentService.MimeType.JSON);
+/** 由定時觸發每 30 分鐘執行：先把資料讀好放進快取，大家開網頁時就不用等。 */
+function warm() {
+  cachePut_(CacheService.getScriptCache(), build_());
+}
+
+/** 執行一次即可：建立「每 30 分鐘執行 warm」的定時觸發（重複執行不會重複建立）。 */
+function setupTrigger() {
+  ScriptApp.getProjectTriggers().filter((t) => t.getHandlerFunction() === 'warm').forEach((t) => ScriptApp.deleteTrigger(t));
+  ScriptApp.newTrigger('warm').timeBased().everyMinutes(30).create();
+  warm();
+  Logger.log('已設定每 30 分鐘預先讀取資料。');
 }
 
 /** 班表/假表/會議時間 公告：依工作表名稱找出要用的那幾張。 */
@@ -154,7 +172,7 @@ function cachePut_(cache, text) {
     const n = Math.ceil(text.length / size);
     for (let i = 0; i < n; i++) parts[CACHE_VERSION + '_' + i] = text.slice(i * size, (i + 1) * size);
     parts[CACHE_VERSION + '_n'] = String(n);
-    cache.putAll(parts, CACHE_SECONDS);
+    cache.putAll(parts, CACHE_SECONDS + 600);
   } catch (err) { /* 快取失敗時略過，下次直接讀試算表 */ }
 }
 

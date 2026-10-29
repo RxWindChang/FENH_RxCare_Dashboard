@@ -89,9 +89,17 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
   };
 
   const STORE = 'rxcare_pw';
-  const store = { get: () => { try { return localStorage.getItem(STORE); } catch (e) { return null; } },
-    set: (v) => { try { localStorage.setItem(STORE, v); } catch (e) {} },
-    clear: () => { try { localStorage.removeItem(STORE); } catch (e) {} } };
+  // 密碼記在這台裝置：localStorage 為主，另存一年期 cookie 備援（某些瀏覽器會清掉其中一種）
+  const ck = { get: () => { const m = document.cookie.match(/(?:^|; )rxcare_pw=([^;]*)/); return m ? decodeURIComponent(m[1]) : null; },
+    set: (v) => { try { document.cookie = 'rxcare_pw=' + encodeURIComponent(v) + '; max-age=31536000; path=/; SameSite=Strict; Secure'; } catch (e) {} },
+    clear: () => { try { document.cookie = 'rxcare_pw=; max-age=0; path=/'; } catch (e) {} } };
+  const store = { get: () => { let v = null; try { v = localStorage.getItem(STORE); } catch (e) {} return v || ck.get(); },
+    set: (v) => { try { localStorage.setItem(STORE, v); } catch (e) {} ck.set(v); },
+    clear: () => { try { localStorage.removeItem(STORE); localStorage.removeItem(DATA); } catch (e) {} ck.clear(); } };
+  // 資料暫存：30 分鐘內再開啟直接用這台裝置上的資料，不重新讀取
+  const DATA = 'rxcare_data', FRESH_MS = 30 * 60 * 1000;
+  const dataCache = { get: () => { try { const j = JSON.parse(localStorage.getItem(DATA) || 'null'); return j && j.payload && j.payload.ok ? j : null; } catch (e) { return null; } },
+    set: (payload) => { const t = Date.now(); try { localStorage.setItem(DATA, JSON.stringify({ t, payload })); } catch (e) {} return t; } };
   const gate = (show, msg) => {
     document.documentElement.classList.toggle('ph-locked', show);
     const g = document.getElementById('ph-gate');
@@ -103,28 +111,18 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
     if (show) { const i = document.getElementById('ph-pw'); if (i) { i.value = ''; i.focus(); } }
   };
 
-  async function load(pw) {
-    const cfg = window.DASH_CONFIG || {};
-    if (!cfg.endpoint || cfg.endpoint.indexOf('PASTE_') === 0) {
-      gate(false); setAll('error', 'config'); banner('尚未設定資料端點：請在 config.js 填入 Apps Script 網址。'); return notify();
-    }
-    pw = pw || store.get();
-    if (!pw) return gate(true);
-    let payload;
-    try {
-      const res = await fetch(cfg.endpoint + '?p=' + encodeURIComponent(pw), { cache: 'no-store' });
-      payload = await res.json();
-    } catch (e) {
-      gate(false); setAll('error', String(e)); banner('無法連線到資料來源，請稍後重新整理。'); return notify();
-    }
-    if (payload && payload.error === 'unauthorized') { store.clear(); return gate(true, '密碼錯誤，請再試一次。'); }
-    if (payload && payload.error === 'locked') { return gate(true, '嘗試次數過多，請 10 分鐘後再試。'); }
-    if (!payload || !payload.ok) {
-      gate(false); setAll('error', payload && payload.error); banner('資料讀取失敗：' + (payload && payload.error || '未知原因')); return notify();
-    }
-    store.set(pw);
-    gate(false);
-    banner('');
+  let loading = false, shownT = 0;
+  function syncLine(payload, busy) {
+    const t = document.getElementById('ph-sync');
+    if (!t) return;
+    t.replaceChildren();
+    if (payload && payload.updated) t.append('資料時間：' + new Date(payload.updated).toLocaleString('zh-TW', { hour12: false }) + '（每 30 分鐘自動更新）　');
+    if (busy) { t.append('更新中…'); return; }
+    const a = document.createElement('a'); a.href = '#'; a.textContent = '立即更新';
+    a.addEventListener('click', (ev) => { ev.preventDefault(); load(null, true); });
+    t.append(a);
+  }
+  function apply(payload) {
     const answers = { indicators: payload.indicators, groups: { values: payload.groups }, persons: { values: payload.persons }, board: payload.board };
     Object.keys(loaders).forEach((id) => {
       try {
@@ -142,10 +140,57 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
       try { state[c.id] = { status: 'ok', data: c.fn(...ins.map((x) => x.data)), meta: [] }; }
       catch (e) { state[c.id] = { status: 'error', data: [], message: e.message, meta: [] }; console.error(c.id, e); }
     });
-    const t = document.getElementById('ph-sync');
-    if (t && payload.updated) t.textContent = '資料讀取時間：' + new Date(payload.updated).toLocaleString('zh-TW', { hour12: false });
     notify();
   }
+
+  async function load(pw, force) {
+    const cfg = window.DASH_CONFIG || {};
+    if (!cfg.endpoint || cfg.endpoint.indexOf('PASTE_') === 0) {
+      gate(false); setAll('error', 'config'); banner('尚未設定資料端點：請在 config.js 填入 Apps Script 網址。'); return notify();
+    }
+    const typed = !!pw;
+    pw = pw || store.get();
+    if (!pw) return gate(true);
+    // 已登入過：先用這台裝置上的資料立刻顯示；未滿 30 分鐘就不再讀取
+    const cached = !typed && dataCache.get();
+    let shown = false;
+    if (cached && !loading) {
+      if (shownT !== cached.t) { gate(false); banner(''); apply(cached.payload); shownT = cached.t; }
+      shown = true;
+      if (!force && Date.now() - cached.t < FRESH_MS) { syncLine(cached.payload); return; }
+    }
+    if (loading) return;
+    loading = true;
+    syncLine(cached && cached.payload, true);
+    let payload;
+    try {
+      const res = await fetch(cfg.endpoint + '?p=' + encodeURIComponent(pw) + (force ? '&fresh=1' : ''), { cache: 'no-store' });
+      payload = await res.json();
+    } catch (e) {
+      loading = false;
+      if (shown) { syncLine(cached.payload); banner('暫時無法連線，顯示的是上次讀取的資料。'); return; }
+      gate(false); setAll('error', String(e)); banner('無法連線到資料來源，請稍後重新整理。'); return notify();
+    }
+    loading = false;
+    if (payload && payload.error === 'unauthorized') { store.clear(); return gate(true, '密碼已更換或錯誤，請重新輸入。'); }
+    if (payload && payload.error === 'locked') { return gate(true, '嘗試次數過多，請 10 分鐘後再試。'); }
+    if (!payload || !payload.ok) {
+      if (shown) { syncLine(cached.payload); banner('資料更新失敗，顯示的是上次讀取的資料。'); return; }
+      gate(false); setAll('error', payload && payload.error); banner('資料讀取失敗：' + (payload && payload.error || '未知原因')); return notify();
+    }
+    store.set(pw);
+    shownT = dataCache.set(payload);
+    gate(false);
+    banner('');
+    apply(payload);
+    syncLine(payload);
+  }
+
+  // 網頁一直開著的話，每 30 分鐘自動更新一次；回到分頁時若已過 30 分鐘也會更新
+  const stale = () => { const c = dataCache.get(); return !c || Date.now() - c.t >= FRESH_MS; };
+  const bgUpdate = () => { if (store.get() && stale() && !loading) load(); };
+  setInterval(bgUpdate, 60 * 1000);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') bgUpdate(); });
 
   let rt;
   window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(notify, 150); });
@@ -155,7 +200,7 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
     calc: (id, o) => { calcs.push({ id, inputs: o.inputs, fn: o.fn }); },
     data: get,
     onData: (fn) => { subs.push(fn); try { fn(); } catch (e) { console.error(e); } },
-    refresh: () => load(),
+    refresh: () => load(null, true),
     logout: () => { store.clear(); gate(true); },
     setLink: (name) => { history.replaceState(null, '', location.pathname + location.search + '#' + name); },
     params: () => ({}), setParams: () => {}, resetParams: () => {},
@@ -176,7 +221,7 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
 </script>
 </head>
 <body>
-<form id="ph-gate" class="ph-gate" hidden autocomplete="off">
+<form id="ph-gate" class="ph-gate" hidden>
   <div class="ph-gate-box">
     <h1>藥事照護組 Dashboard</h1>
     <p>亞東藥學部｜請輸入密碼</p>
