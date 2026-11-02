@@ -8,7 +8,7 @@
 <meta http-equiv="Cache-Control" content="no-cache">
 <script>/* 版本自動比對：開啟網頁或回到分頁時檢查 version.json，有新版就自動換成新版 */
 (function () {
-  var BUILD = '5661b29486';
+  var BUILD = '69780f3572';
   function check() {
     fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
       if (!j || !j.v || j.v === BUILD) return;
@@ -432,6 +432,10 @@ mark{background:color-mix(in srgb,var(--color-warn) 35%,transparent);color:inher
 
 s.hb-struck{text-decoration:line-through;text-decoration-thickness:1.5px;text-decoration-color:currentColor;opacity:.75}
 .lv-name.cancelled{background:transparent;border:1px dashed #b9bec6;color:#8a9099}
+
+.it-year td.it-lab{font-weight:600;white-space:nowrap}
+.it-year td.it-sub{padding-left:18px;white-space:nowrap}
+.it-year tr.it-sec td{color:var(--color-fg-muted);font-weight:600;background:color-mix(in srgb,var(--color-fg) 3%,transparent)}
 </style>
 
 <div class="ph-wrap">
@@ -1641,6 +1645,30 @@ dash.loader('board', {
     return programs;
   }
 
+  // 年度總覽（原表「2026/01 … 2026/12」那種月份表頭的區塊）
+  function parseInternYears(it) {
+    const v = (it && it.values) || [];
+    const out = [];
+    for (let i = 0; i < v.length; i++) {
+      const r = v[i] || [];
+      const ms = r.slice(1).map(clean).map((c) => c.match(/^(\d{4})\/(\d{2})$/));
+      if (ms.filter(Boolean).length < 6) continue;
+      const year = +ms.find(Boolean)[1];
+      const months = ms.map((m) => (m ? +m[2] : null));
+      const rows = [];
+      let k = i + 1;
+      for (; k < v.length; k++) {
+        const rr = v[k] || [];
+        if (!rr.some((c) => clean(c))) break;
+        if (rr.slice(1).map(clean).filter((c) => /^\d{4}\/\d{2}$/.test(c)).length >= 6) break;
+        rows.push({ label: clean(rr[0]), cells: months.map((m, j) => clean(rr[j + 1])), indent: /^\s/.test(String(rr[0] || '')) });
+      }
+      out.push({ year, months, rows });
+      i = k - 1;
+    }
+    return out;
+  }
+
   function parseNews(an) {
     const v = (an && an.values) || [];
     const h = v.findIndex((r) => clean(r[0]) === '公告日期');
@@ -1667,7 +1695,7 @@ dash.loader('board', {
         leave: parseLeave(b.leave, ref), leaveTitle: b.leave && b.leave.title,
         care: parseCare(b.careMeetings), careTitle: b.careMeetings && b.careMeetings.title,
         dept: parseDept(b.deptMeetings, ref), deptTitle: b.deptMeetings && b.deptMeetings.title,
-        interns: parseInterns(b.interns), internsTitle: b.interns && b.interns.title,
+        interns: parseInterns(b.interns), internYears: parseInternYears(b.interns), internsTitle: b.interns && b.interns.title,
         news: parseNews(b.announcements), newsTitle: b.announcements && b.announcements.title,
       };
       parsedFrom = b;
@@ -1919,6 +1947,26 @@ dash.loader('board', {
     cards('目前進行中', now);
     cards('60 天內開始', next);
     if (!now.length && !next.length) nodes.push(el('div', 'hb-msg', '目前沒有進行中或即將開始的 APPE 實習。'));
+    // 下一年度（含以後）的整體規劃：收合，放在各梯次表格最上面
+    (D.internYears || []).filter((y) => y.year > t.getFullYear()).sort((a, b) => b.year - a.year).forEach((y) => {
+      const det = el('details', 'hb-det');
+      det.appendChild(el('summary', null, `${y.year} 實習規劃（年度總覽）`));
+      const wrap = el('div', 'it-wrap');
+      const tbl = el('table', 'it-tbl it-year');
+      const hr = el('tr'); hr.appendChild(el('th', null, '項目'));
+      y.months.forEach((m) => { if (m) hr.appendChild(el('th', null, m + ' 月')); });
+      const thead = el('thead'); thead.appendChild(hr); tbl.appendChild(thead);
+      const tb = el('tbody');
+      y.rows.forEach((r) => {
+        const has = r.cells.some((c) => c && c !== '-');
+        const tr = el('tr', has ? null : 'it-sec');
+        tr.appendChild(el('td', r.indent ? 'it-sub' : 'it-lab', r.label));
+        y.months.forEach((m, j) => { if (m) tr.appendChild(el('td', null, r.cells[j] && r.cells[j] !== '-' ? r.cells[j] : '')); });
+        tb.appendChild(tr);
+      });
+      tbl.appendChild(tb); wrap.appendChild(tbl); det.appendChild(wrap);
+      nodes.push(det);
+    });
     const progs = P.slice().sort((a, b) => b.year - a.year);
     progs.forEach((p) => {
       const det = el('details', 'hb-det');
