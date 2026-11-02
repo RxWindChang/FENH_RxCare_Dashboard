@@ -8,7 +8,7 @@
 <meta http-equiv="Cache-Control" content="no-cache">
 <script>/* 版本自動比對：開啟網頁或回到分頁時檢查 version.json，有新版就自動換成新版 */
 (function () {
-  var BUILD = '4748257f74';
+  var BUILD = '4cb88af466';
   function check() {
     fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
       if (!j || !j.v || j.v === BUILD) return;
@@ -436,6 +436,13 @@ s.hb-struck{text-decoration:line-through;text-decoration-thickness:1.5px;text-de
 .it-year td.it-lab{font-weight:600;white-space:nowrap}
 .it-year td.it-sub{padding-left:18px;white-space:nowrap}
 .it-year tr.it-sec td{color:var(--color-fg-muted);font-weight:600;background:color-mix(in srgb,var(--color-fg) 3%,transparent)}
+
+/* 實習類別：淡底色＋左側色條 */
+.it-card{border-left-width:4px}
+.it-appe{--it:#3b6fd4}.it-bpe{--it:#2f9e6e}.it-tajen{--it:#c98a1b}.it-ext{--it:#8a5cd0}.it-other{--it:#8a9099}
+.hb-card.it-card{border-left-color:var(--it);background:color-mix(in srgb,var(--it) 5%,var(--color-panel))}
+.it-legend{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:var(--cds-gap-sm)}
+.it-tag{font-size:var(--cds-font-size-caption);padding:2px 8px;border-radius:999px;background:color-mix(in srgb,var(--it) 10%,transparent);color:color-mix(in srgb,var(--it) 80%,var(--color-fg));border:1px solid color-mix(in srgb,var(--it) 30%,transparent)}
 </style>
 
 <div class="ph-wrap">
@@ -1669,6 +1676,38 @@ dash.loader('board', {
     return out;
   }
 
+  // BPE（藥事照護實習）：每一梯是「藥事照護 實習內容」開頭的區塊，B／D／F 欄為三站
+  function parseBPE(it) {
+    const v = (it && it.values) || [];
+    const out = [];
+    for (let i = 0; i < v.length; i++) {
+      const a0 = clean((v[i] || [])[0]);
+      if (!/藥事照護\s*實習內容/.test(a0.replace(/\n/g, ' '))) continue;
+      const head = v[i] || [], timeRow = v[i + 2] || [];
+      const whole = parseRange(clean(head[6]).split('\n')[0]);
+      const year = whole ? whole.a.getFullYear() : null;
+      const stations = [1, 3, 5].map((j) => {
+        const lines = clean(timeRow[j]).split('\n');
+        const r = parseRange(lines[0], year);
+        return r ? { col: j, name: clean(head[j]).split('\n')[0].replace(/^\*/, ''), sub: lines.slice(1).join('；'), ...r } : null;
+      }).filter(Boolean);
+      const students = [];
+      for (let k = i + 3; k < v.length; k++) {
+        const r = v[k] || [];
+        const nm = clean(r[0]);
+        if (!nm) break;
+        const parts = nm.split('\n').map((x) => x.trim());
+        const school = (parts.find((x) => /^[（(].*[)）]$/.test(x)) || '').replace(/[（()）]/g, '');
+        students.push({ name: parts[0], school, teachers: stations.map((st) => clean(r[st.col]).replace(/^藥師[：:]\s*/, '')) });
+      }
+      if (!stations.length || !students.length) continue;
+      const key = stations.map((x) => +x.a).join() + '|' + students.map((x) => x.name).join();
+      if (out.some((o) => o.key === key)) continue; // 同一梯重複貼兩次時只列一次
+      out.push({ title: 'BPE', key, range: whole, stations, students });
+    }
+    return out;
+  }
+
   function parseNews(an) {
     const v = (an && an.values) || [];
     const h = v.findIndex((r) => clean(r[0]) === '公告日期');
@@ -1695,7 +1734,7 @@ dash.loader('board', {
         leave: parseLeave(b.leave, ref), leaveTitle: b.leave && b.leave.title,
         care: parseCare(b.careMeetings), careTitle: b.careMeetings && b.careMeetings.title,
         dept: parseDept(b.deptMeetings, ref), deptTitle: b.deptMeetings && b.deptMeetings.title,
-        interns: parseInterns(b.interns), internYears: parseInternYears(b.interns), internsTitle: b.interns && b.interns.title,
+        interns: parseInterns(b.interns), internYears: parseInternYears(b.interns), bpe: parseBPE(b.interns), internsTitle: b.interns && b.interns.title,
         news: parseNews(b.announcements), newsTitle: b.announcements && b.announcements.title,
       };
       parsedFrom = b;
@@ -1926,10 +1965,20 @@ dash.loader('board', {
           const lines = c.split('\n');
           const mm = lines[0].match(/^(.*\S)\s+(\S+)$/);
           const per = { a: new Date(y.year, m - 1, 1), b: new Date(y.year, m, 0), sub: lines.slice(1).join(' ') };
-          out.push({ p: { title: name }, per, monthly: true, who: [{ students: mm ? mm[1] : lines[0], teacher: mm ? mm[2] : '', spec: '' }] });
+          out.push({ kind: /大仁/.test(sec) ? 'tajen' : /聯訓|外訓/.test(sec) ? 'ext' : 'other', p: { title: name }, per, monthly: true, who: [{ students: mm ? mm[1] : lines[0], teacher: mm ? mm[2] : '', spec: '' }] });
         });
       });
     });
+    return out;
+  }
+
+  function bpeRecs(D) {
+    const out = [];
+    (D.bpe || []).forEach((b) => b.stations.forEach((st, j) => {
+      const byT = new Map();
+      b.students.forEach((x) => { const t = x.teachers[j] || '未定'; if (!byT.has(t)) byT.set(t, []); byT.get(t).push(x.name + (x.school ? '（' + x.school + '）' : '')); });
+      out.push({ kind: 'bpe', p: { title: 'BPE・' + st.name }, per: { a: st.a, b: st.b, sub: st.sub }, who: [...byT].map(([t, ns]) => ({ students: ns.join('、'), teacher: t, spec: '' })) });
+    }));
     return out;
   }
 
@@ -1943,22 +1992,23 @@ dash.loader('board', {
     P.forEach((p) => p.periods.forEach((per, j) => {
       const who = p.rows.filter((r) => r.cells[j] && r.cells[j] !== '(空)').map((r) => ({ teacher: r.teacher, spec: r.spec, students: r.cells[j] }));
       if (!who.length) return;
-      const rec = { p, per, who };
+      const rec = { kind: /APPE/i.test(p.title) ? 'appe' : 'other', p, per, who };
       if (per.a <= t && t <= per.b) now.push(rec);
       else if (per.a > t && per.a <= soon) next.push(rec);
     }));
-    monthlyRecs(D).forEach((rec) => {
+    [...monthlyRecs(D), ...bpeRecs(D)].forEach((rec) => {
       if (rec.per.a <= t && t <= rec.per.b) now.push(rec);
       else if (rec.per.a > t && rec.per.a <= soon) next.push(rec);
     });
     next.sort((x, y) => x.per.a - y.per.a);
+    now.sort((x, y) => x.per.a - y.per.a);
     const nodes = [];
     const cards = (title, recs) => {
       if (!recs.length) return;
       nodes.push(el('div', 'mt-month', title));
       const g = el('div', 'hb-grid it-now');
-      recs.forEach(({ p, per, who, monthly }) => {
-        const c = el('div', 'hb-card');
+      recs.forEach(({ p, per, who, monthly, kind }) => {
+        const c = el('div', 'hb-card it-card it-' + (kind || 'other'));
         const hh = el('div', 'hb-card-h'); hh.append(el('p', 'hb-card-t', p.title.replace(/^\d{4}\s+/, '')), el('span', 'hb-small', monthly ? `${per.a.getFullYear()}/${pad2(per.a.getMonth() + 1)} 整月` : `${dLabel(per.a)} – ${dLabel(per.b)}`));
         c.appendChild(hh);
         if (per.sub) c.appendChild(el('div', 'hb-small', per.sub));
@@ -1972,9 +2022,29 @@ dash.loader('board', {
       });
       nodes.push(g);
     };
+    const lg = el('div', 'it-legend');
+    [['appe', 'APPE'], ['bpe', 'BPE'], ['tajen', '大仁二階'], ['ext', '外訓／院際聯訓']].forEach(([k, l]) => lg.appendChild(el('span', 'it-tag it-' + k, l)));
+    nodes.push(lg);
     cards('目前進行中', now);
     cards('60 天內開始', next);
     if (!now.length && !next.length) nodes.push(el('div', 'hb-msg', '目前沒有進行中或即將開始的實習。'));
+    (D.bpe || []).filter((b) => b.range && b.range.b >= t).forEach((b) => {
+      const det = el('details', 'hb-det');
+      det.appendChild(el('summary', null, `BPE 藥事照護實習 ${dLabel(b.range.a)} – ${dLabel(b.range.b)}`));
+      const wrap = el('div', 'it-wrap');
+      const tbl = el('table', 'it-tbl');
+      const hr = el('tr'); hr.appendChild(el('th', null, '實習生'));
+      b.stations.forEach((st) => { const th = el('th', st.a <= t && t <= st.b ? 'cur' : null); th.append(st.name, el('div', 'hb-small', `${dLabel(st.a)} – ${dLabel(st.b)}`)); if (st.sub) th.appendChild(el('div', 'hb-small', st.sub)); hr.appendChild(th); });
+      const thead = el('thead'); thead.appendChild(hr); tbl.appendChild(thead);
+      const tb = el('tbody');
+      b.students.forEach((x) => {
+        const tr = el('tr'); const td = el('td'); td.append(el('b', null, x.name)); if (x.school) td.append(el('div', 'hb-small', x.school)); tr.appendChild(td);
+        b.stations.forEach((st, j) => tr.appendChild(el('td', st.a <= t && t <= st.b ? 'cur' : null, x.teachers[j] || '—')));
+        tb.appendChild(tr);
+      });
+      tbl.appendChild(tb); wrap.appendChild(tbl); det.appendChild(wrap);
+      nodes.push(det);
+    });
     // 下一年度（含以後）的整體規劃：收合，放在各梯次表格最上面
     (D.internYears || []).filter((y) => y.year > t.getFullYear()).sort((a, b) => b.year - a.year).forEach((y) => {
       const det = el('details', 'hb-det');
@@ -2015,7 +2085,7 @@ dash.loader('board', {
       p.notes.forEach((n) => det.appendChild(el('div', 'hb-small', n)));
       nodes.push(det);
     });
-    nodes.push(el('p', 'hb-note', '大仁二階、院際聯訓等依年度總覽的月份列出（整月）；BPE 一般病房與 ICU 等其他實習安排，請見原始試算表。'));
+    nodes.push(el('p', 'hb-note', '大仁二階、院際聯訓等依年度總覽的月份列出（整月）；BPE 依各梯「藥事照護實習內容」表的三站日期列出。'));
     nodes.push(srcLine(D.internsTitle));
     body.replaceChildren(...nodes);
   }
@@ -2095,7 +2165,7 @@ dash.loader('board', {
     const nx = [...D.dept, ...D.care].filter((x) => x.date >= t && !x.extra).sort((a, b) => a.date - b.date)[0];
     set('hb-sub-meetings', nx ? '下一場 ' + dLabel(nx.date) : '');
     let n = 0; D.interns.forEach((p) => p.periods.forEach((per, j) => { if (per.a <= t && t <= per.b && p.rows.some((r) => r.cells[j] && r.cells[j] !== '(空)')) n++; }));
-    n += monthlyRecs(D).filter((r) => r.per.a <= t && t <= r.per.b).length;
+    n += [...monthlyRecs(D), ...bpeRecs(D)].filter((r) => r.per.a <= t && t <= r.per.b).length;
     set('hb-sub-interns', n ? '進行中 ' + n + ' 梯' : '目前無實習');
     const nw = D.news[0];
     set('hb-sub-news', nw && nw.date ? '最新 ' + (nw.date.getMonth() + 1) + '/' + nw.date.getDate() : '');
