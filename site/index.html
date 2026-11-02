@@ -8,7 +8,7 @@
 <meta http-equiv="Cache-Control" content="no-cache">
 <script>/* 版本自動比對：開啟網頁或回到分頁時檢查 version.json，有新版就自動換成新版 */
 (function () {
-  var BUILD = '4cb88af466';
+  var BUILD = 'ea6cd8f766';
   function check() {
     fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
       if (!j || !j.v || j.v === BUILD) return;
@@ -443,6 +443,15 @@ s.hb-struck{text-decoration:line-through;text-decoration-thickness:1.5px;text-de
 .hb-card.it-card{border-left-color:var(--it);background:color-mix(in srgb,var(--it) 5%,var(--color-panel))}
 .it-legend{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:var(--cds-gap-sm)}
 .it-tag{font-size:var(--cds-font-size-caption);padding:2px 8px;border-radius:999px;background:color-mix(in srgb,var(--it) 10%,transparent);color:color-mix(in srgb,var(--it) 80%,var(--color-fg));border:1px solid color-mix(in srgb,var(--it) 30%,transparent)}
+
+.it-all{--it:#5b6370}
+button.it-tag{cursor:pointer;font:inherit;font-size:var(--cds-font-size-caption);transition:background .15s,box-shadow .15s}
+button.it-tag:hover{background:color-mix(in srgb,var(--it) 18%,transparent)}
+button.it-tag[aria-pressed="true"]{background:var(--it);color:#fff;border-color:var(--it);font-weight:600}
+.it-cols{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:var(--cds-gap-md);align-items:start}
+.it-col{display:flex;flex-direction:column;gap:var(--cds-gap-md);min-width:0}
+.it-col-h{font-size:var(--cds-font-size-caption);font-weight:600;color:color-mix(in srgb,var(--it) 85%,var(--color-fg));padding:0 2px 4px;border-bottom:2px solid color-mix(in srgb,var(--it) 45%,transparent)}
+@media (max-width:760px){.it-cols{grid-template-columns:minmax(0,1fr)}}
 </style>
 
 <div class="ph-wrap">
@@ -1407,7 +1416,7 @@ dash.loader('board', {
   const STATS_TABS = ['overview', 'education', 'icu', 'clinic', 'groups', 'people'];
   const VIEWS = ['schedule', 'leave', 'meetings', 'interns', 'news', 'stats'];
   const WD = ['日', '一', '二', '三', '四', '五', '六'];
-  const st = { view: null, roster: 0, group: '全部', leaveYm: null, meetKind: 'dept', meetScope: 'upcoming', newsMode: 'time', newsCat: '全部', newsQ: '', newsPgy: false, open: new Set() };
+  const st = { view: null, roster: 0, group: '全部', leaveYm: null, meetKind: 'dept', meetScope: 'upcoming', newsMode: 'time', newsCat: '全部', newsQ: '', newsPgy: false, open: new Set(), itKind: '全部' };
 
   const $ = (id) => document.getElementById(id);
   const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
@@ -2003,32 +2012,52 @@ dash.loader('board', {
     next.sort((x, y) => x.per.a - y.per.a);
     now.sort((x, y) => x.per.a - y.per.a);
     const nodes = [];
+    const KINDS = [['appe', 'APPE'], ['bpe', 'BPE'], ['tajen', '大仁二階'], ['ext', '外訓／院際聯訓'], ['other', '其他']];
+    const show = (k) => st.itKind === '全部' || st.itKind === k;
+    const card = ({ p, per, who, monthly, kind }) => {
+      const c = el('div', 'hb-card it-card it-' + (kind || 'other'));
+      const hh = el('div', 'hb-card-h'); hh.append(el('p', 'hb-card-t', p.title.replace(/^\d{4}\s+/, '')), el('span', 'hb-small', monthly ? `${per.a.getFullYear()}/${pad2(per.a.getMonth() + 1)} 整月` : `${dLabel(per.a)} – ${dLabel(per.b)}`));
+      c.appendChild(hh);
+      if (per.sub) c.appendChild(el('div', 'hb-small', per.sub));
+      who.forEach((w) => {
+        const d = el('div', 'hb-person');
+        d.appendChild(el('div', 'hb-person-n', w.students));
+        if (w.teacher) d.appendChild(el('div', 'hb-small', `指導：${w.teacher}${w.spec ? '（' + w.spec + '）' : ''}`));
+        c.appendChild(d);
+      });
+      return c;
+    };
+    // 依實習類別分欄：APPE 一欄、BPE 一欄、大仁二階一欄……，各欄依日期由上而下
     const cards = (title, recs) => {
+      recs = recs.filter((r) => show(r.kind || 'other'));
       if (!recs.length) return;
       nodes.push(el('div', 'mt-month', title));
-      const g = el('div', 'hb-grid it-now');
-      recs.forEach(({ p, per, who, monthly, kind }) => {
-        const c = el('div', 'hb-card it-card it-' + (kind || 'other'));
-        const hh = el('div', 'hb-card-h'); hh.append(el('p', 'hb-card-t', p.title.replace(/^\d{4}\s+/, '')), el('span', 'hb-small', monthly ? `${per.a.getFullYear()}/${pad2(per.a.getMonth() + 1)} 整月` : `${dLabel(per.a)} – ${dLabel(per.b)}`));
-        c.appendChild(hh);
-        if (per.sub) c.appendChild(el('div', 'hb-small', per.sub));
-        who.forEach((w) => {
-          const d = el('div', 'hb-person');
-          d.appendChild(el('div', 'hb-person-n', w.students));
-          if (w.teacher) d.appendChild(el('div', 'hb-small', `指導：${w.teacher}${w.spec ? '（' + w.spec + '）' : ''}`));
-          c.appendChild(d);
-        });
-        g.appendChild(c);
+      const cols = KINDS.map(([k, l]) => [k, l, recs.filter((r) => (r.kind || 'other') === k)]).filter((x) => x[2].length);
+      const g = el('div', 'it-cols');
+      g.style.setProperty('--n', cols.length);
+      cols.forEach(([k, l, rs]) => {
+        const col = el('div', 'it-col');
+        col.appendChild(el('div', 'it-col-h it-' + k, `${l}（${rs.length}）`));
+        rs.forEach((r) => col.appendChild(card(r)));
+        g.appendChild(col);
       });
       nodes.push(g);
     };
-    const lg = el('div', 'it-legend');
-    [['appe', 'APPE'], ['bpe', 'BPE'], ['tajen', '大仁二階'], ['ext', '外訓／院際聯訓']].forEach(([k, l]) => lg.appendChild(el('span', 'it-tag it-' + k, l)));
+    // 上方類別標籤：點選即篩選，再點一次回到全部
+    const lg = el('div', 'it-legend'); lg.setAttribute('role', 'group'); lg.setAttribute('aria-label', '實習類別篩選');
+    const allB = el('button', 'it-tag it-all', '全部'); allB.type = 'button'; allB.setAttribute('aria-pressed', String(st.itKind === '全部'));
+    allB.addEventListener('click', () => { st.itKind = '全部'; render(); });
+    lg.appendChild(allB);
+    KINDS.slice(0, 4).forEach(([k, l]) => {
+      const b = el('button', 'it-tag it-' + k, l); b.type = 'button'; b.setAttribute('aria-pressed', String(st.itKind === k));
+      b.addEventListener('click', () => { st.itKind = st.itKind === k ? '全部' : k; render(); });
+      lg.appendChild(b);
+    });
     nodes.push(lg);
     cards('目前進行中', now);
     cards('60 天內開始', next);
-    if (!now.length && !next.length) nodes.push(el('div', 'hb-msg', '目前沒有進行中或即將開始的實習。'));
-    (D.bpe || []).filter((b) => b.range && b.range.b >= t).forEach((b) => {
+    if (![...now, ...next].some((r) => show(r.kind || 'other'))) nodes.push(el('div', 'hb-msg', st.itKind === '全部' ? '目前沒有進行中或即將開始的實習。' : '這個類別目前沒有進行中或即將開始的實習。'));
+    (D.bpe || []).filter((b) => show('bpe') && b.range && b.range.b >= t).forEach((b) => {
       const det = el('details', 'hb-det');
       det.appendChild(el('summary', null, `BPE 藥事照護實習 ${dLabel(b.range.a)} – ${dLabel(b.range.b)}`));
       const wrap = el('div', 'it-wrap');
@@ -2066,7 +2095,7 @@ dash.loader('board', {
       nodes.push(det);
     });
     const progs = P.slice().sort((a, b) => b.year - a.year);
-    progs.forEach((p) => {
+    progs.filter(() => show('appe')).forEach((p) => {
       const det = el('details', 'hb-det');
       if (p.year >= t.getFullYear()) det.open = true;
       det.appendChild(el('summary', null, p.title));
