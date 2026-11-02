@@ -8,7 +8,7 @@
 <meta http-equiv="Cache-Control" content="no-cache">
 <script>/* 版本自動比對：開啟網頁或回到分頁時檢查 version.json，有新版就自動換成新版 */
 (function () {
-  var BUILD = 'ea6cd8f766';
+  var BUILD = '1ca94bbcfe';
   function check() {
     fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
       if (!j || !j.v || j.v === BUILD) return;
@@ -298,6 +298,8 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
 @media (max-width:640px){.ph-grid-ov{grid-template-columns:1fr}}
 .ph-msg{font-size:var(--cds-font-size-body);color:var(--color-fg-muted);padding:var(--cds-pad-lg) 0}
 .ph-foot{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);margin-top:var(--cds-gap-lg)}
+.ph-foot-v{font-size:11px;fill:var(--color-fg);font-variant-numeric:tabular-nums}
+.ph-foot-l{font-weight:600}
 .hb-today{margin:var(--cds-gap-xs) 0 0;color:var(--color-fg-muted);font-size:var(--cds-font-size-body);line-height:1.7}
 .hb-today b{color:var(--color-fg);font-weight:600}
 .hb-chip{display:inline-block;padding:1px 9px;margin:0 4px 2px 0;border-radius:999px;background:color-mix(in srgb,var(--color-fg) 8%,transparent);color:var(--color-fg);font-size:var(--cds-font-size-caption);line-height:1.7;white-space:nowrap}
@@ -671,13 +673,14 @@ button.it-tag[aria-pressed="true"]{background:var(--it);color:#fff;border-color:
     <div class="ph-tiles">
       <div class="ph-card"><div class="ph-tile-l">CKD 藥師門診・期間合計</div><div class="ph-tile-v" data-source="summary" data-field="CKD合計" data-fmt="n">—</div><div class="ph-tile-s">人次</div></div>
       <div class="ph-card"><div class="ph-tile-l">CKD 藥師門診・月平均</div><div class="ph-tile-v" data-source="summary" data-field="CKD月均" data-fmt="a">—</div><div class="ph-tile-s">人次／月</div></div>
+      <div class="ph-card"><div class="ph-tile-l">CKD 藥師門診・平均每診</div><div class="ph-tile-v" data-source="summary" data-field="CKD每診平均" data-fmt="a">—</div><div class="ph-tile-s">人次／診（週五）</div></div>
       <div class="ph-card"><div class="ph-tile-l">抗凝藥師門診・期間合計</div><div class="ph-tile-v" data-source="summary" data-field="抗凝合計" data-fmt="n">—</div><div class="ph-tile-s">人次</div></div>
       <div class="ph-card"><div class="ph-tile-l">抗凝藥師門診・月平均</div><div class="ph-tile-v" data-source="summary" data-field="抗凝月均" data-fmt="a">—</div><div class="ph-tile-s">人次／月</div></div>
     </div>
     <div class="ph-grid">
       <div class="ph-card" id="clinic-chart-card">
         <p class="ph-card-t">CKD 與抗凝藥師門診，逐月</p>
-        <p class="ph-card-n">近 12 個已填報月份，每月人次</p>
+        <p class="ph-card-n">近 12 個已填報月份，每月人次；圖下方為 CKD 平均每診服務人次（每週五一診，扣除 Note 欄的停診日）</p>
         <div class="ph-legend" data-source="recent"><span><i class="ph-sw" data-c="0"></i>CKD 藥師門診</span><span><i class="ph-sw" data-c="1"></i>抗凝藥師門診</span></div>
         <div class="ph-chart dash-skeleton" id="clinic-chart" data-source="recent" style="min-height:260px"></div>
       </div>
@@ -686,7 +689,7 @@ button.it-tag[aria-pressed="true"]{background:var(--it);color:#fff;border-color:
         <p class="ph-card-n">最新月份在上；備註取自試算表 CKD 門診 Note 欄</p>
         <div class="ph-tbox">
           <table class="ph-table" id="clinic-table" data-source="recent" data-row-key="月份">
-            <thead><tr><th data-field="月份" data-fmt="t">月份</th><th data-field="CKD藥師門診" data-fmt="n" class="ph-num">CKD</th><th data-field="抗凝藥師門診" data-fmt="n" class="ph-num">抗凝</th><th data-field="CKD藥師門診備註" data-fmt="t">備註</th></tr></thead>
+            <thead><tr><th data-field="月份" data-fmt="t">月份</th><th data-field="CKD藥師門診" data-fmt="n" class="ph-num">CKD</th><th data-field="CKD診次" data-fmt="n" class="ph-num">診次</th><th data-field="CKD每診人次" data-fmt="a" class="ph-num">每診</th><th data-field="抗凝藥師門診" data-fmt="n" class="ph-num">抗凝</th><th data-field="CKD藥師門診備註" data-fmt="t">備註</th></tr></thead>
             <tbody></tbody>
           </table>
         </div>
@@ -860,7 +863,19 @@ dash.calc('recent', {
   description: '只留下已有填報數字的月份（出服、衛教、CKD 有值，或重症件數大於 0），取最近 12 個。',
   fn: (indicators) => {
     const filled = (r) => r['出院準備服務'] != null || r['藥物衛教'] != null || (r['重症申報總件數'] || 0) > 0 || r['CKD藥師門診'] != null;
-    return indicators.filter(filled).slice(-12);
+    // CKD 藥師門診每週五一診：當月週五數，扣掉 Note 欄寫到的停診日期（同月份的週五）
+    const fridays = (y, m) => { let n = 0; for (let d = 1; d <= new Date(y, m, 0).getDate(); d++) if (new Date(y, m - 1, d).getDay() === 5) n++; return n; };
+    return indicators.filter(filled).slice(-12).map((r) => {
+      const [y, m] = r['月份'].split('/').map(Number);
+      const stops = new Set();
+      [...String(r['CKD藥師門診備註'] || '').matchAll(/(\d{4})\/(\d{1,2})\/(\d{1,2})/g)].forEach((x) => {
+        const d = new Date(+x[1], +x[2] - 1, +x[3]);
+        if (+x[1] === y && +x[2] === m && d.getDay() === 5) stops.add(+x[3]);
+      });
+      const n = fridays(y, m) - stops.size;
+      const per = r['CKD藥師門診'] != null && n > 0 ? Math.round((r['CKD藥師門診'] / n) * 10) / 10 : null;
+      return { ...r, CKD診次: r['CKD藥師門診'] != null ? n : null, CKD停診: stops.size, CKD每診人次: per };
+    });
   },
 });
 
@@ -884,6 +899,7 @@ dash.calc('summary', {
       重症件數合計: sum('重症申報總件數'), 重症理論量合計: cap,
       期間申報率: cap ? Math.round((sum('重症申報總件數') / cap) * 10000) / 10000 : null,
       CKD合計: sum('CKD藥師門診'), CKD月均: avg('CKD藥師門診'),
+      CKD每診平均: sum('CKD診次') ? Math.round((sum('CKD藥師門診') / sum('CKD診次')) * 10) / 10 : null,
       抗凝合計: sum('抗凝藥師門診'), 抗凝月均: avg('抗凝藥師門診'),
       出院準備服務_較前月: diff('出院準備服務'), 藥物衛教_較前月: diff('藥物衛教'),
       重症申報總件數_較前月: diff('重症申報總件數'), 總申報率_較前月: diff('總申報率'),
@@ -1120,6 +1136,8 @@ dash.calc('ppl_latest', {
     box.replaceChildren();
     const W = box.clientWidth;
     if (!W || !rows.length) return;
+    const foot = o.foot || [];
+    const FH = foot.length ? 10 + foot.length * 18 : 0;
     const H = o.h;
     const ser = o.series.map((s, i) => ({ ...s, color: C[s.c != null ? s.c : i] }));
     const vals = rows.flatMap((r) => ser.map((s) => r[s.key])).filter((v) => v != null);
@@ -1129,10 +1147,11 @@ dash.calc('ppl_latest', {
     const y = d3.scaleLinear([0, ymax], [H - bottom, top]).nice(o.ticks || 4);
     const ticks = y.ticks(o.ticks || 4);
     const yf = o.pct ? d3.format('.0%') : d3.format(',');
-    const svg = d3.select(box).append('svg').attr('class', 'ph-svg').attr('width', '100%').attr('height', H).attr('viewBox', `0 0 ${W} ${H}`);
+    const svg = d3.select(box).append('svg').attr('class', 'ph-svg').attr('width', '100%').attr('height', H + FH).attr('viewBox', `0 0 ${W} ${H + FH}`);
     const meas = svg.append('text').attr('class', 'ph-tick');
     let wl = 0;
     ticks.forEach((t) => { meas.text(yf(t)); wl = Math.max(wl, meas.node().getComputedTextLength()); });
+    foot.forEach((f) => { meas.text(f.label); wl = Math.max(wl, meas.node().getComputedTextLength()); });
     meas.remove();
     const L = Math.ceil(wl) + 8, R = 4;
     const x = d3.scaleBand(rows.map((r) => r['月份']), [L, W - R]).paddingInner(0.25).paddingOuter(0.1);
@@ -1152,6 +1171,15 @@ dash.calc('ppl_latest', {
     svg.append('g').selectAll('text').data(dom.map((d, i) => [d, i]).filter(([, i]) => i % every === 0)).join('text')
       .attr('class', 'ph-tick').attr('x', ([d]) => x(d) + x.bandwidth() / 2).attr('y', H - 6).attr('text-anchor', 'middle').text(([d, i]) => mShort(d, i));
     const cx = (r) => x(r['月份']) + x.bandwidth() / 2;
+    // 圖下方的逐月數值列（與月份對齊）
+    foot.forEach((f, i) => {
+      const yy = H + 8 + i * 18 + 9;
+      if (i === 0) svg.append('line').attr('class', 'ph-grid-l').attr('x1', L).attr('x2', W - R).attr('y1', H + 2).attr('y2', H + 2);
+      svg.append('text').attr('class', 'ph-tick ph-foot-l').attr('x', L - 6).attr('y', yy).attr('dy', '0.32em').attr('text-anchor', 'end').text(f.label);
+      svg.append('g').selectAll('text').data(rows).join('text').attr('class', 'ph-foot-v')
+        .attr('x', cx).attr('y', yy).attr('dy', '0.32em').attr('text-anchor', 'middle')
+        .text((r) => (r[f.key] == null ? '—' : f.fmt ? f.fmt(r[f.key], r) : r[f.key]));
+    });
     if (o.type === 'bar') {
       const inner = d3.scaleBand(ser.map((s) => s.key), [0, x.bandwidth()]).padding(ser.length > 1 ? 0.12 : 0);
       const bw = Math.max(1, Math.min(inner.bandwidth(), 32)), off = (inner.bandwidth() - bw) / 2;
@@ -1176,7 +1204,7 @@ dash.calc('ppl_latest', {
     box.appendChild(tip);
     const gap = x.step() * x.paddingInner() / 2;
     svg.append('g').selectAll('rect').data(rows).join('rect')
-      .attr('x', (r) => x(r['月份']) - gap).attr('width', x.step()).attr('y', 0).attr('height', H).attr('fill', 'transparent')
+      .attr('x', (r) => x(r['月份']) - gap).attr('width', x.step()).attr('y', 0).attr('height', H + FH).attr('fill', 'transparent')
       .on('mouseenter', (ev, r) => {
         hl.attr('x', x(r['月份']) - gap).style('opacity', 0.35);
         const h = document.createElement('div');
@@ -1190,6 +1218,12 @@ dash.calc('ppl_latest', {
           const v = document.createElement('b'); v.textContent = r[s.key] == null ? '—' : (o.pct ? fmtP : o.dec ? fmtA : fmtN)(r[s.key]);
           l.append(n, v);
           return l;
+        });
+        foot.forEach((f) => {
+          const l = document.createElement('div'); l.className = 'ph-tip-l';
+          const n = document.createElement('span'); n.textContent = f.tip || f.label;
+          const v = document.createElement('b'); v.textContent = r[f.key] == null ? '—' : f.fmt ? f.fmt(r[f.key], r) : r[f.key];
+          l.append(n, v); lines.push(l);
         });
         tip.replaceChildren(h, ...lines);
         tip.hidden = false;
@@ -1229,7 +1263,8 @@ dash.calc('ppl_latest', {
     'edu-chart': { type: 'bar', h: 260, series: [{ key: '出院準備服務', label: '出院準備服務' }, { key: '藥物衛教', label: '藥物衛教' }] },
     'icu-rate': { type: 'line', h: 240, pct: true, yMax: 1, series: [{ key: '總申報率', label: '總申報率', c: 2 }] },
     'icu-count': { type: 'bar', h: 240, series: [{ key: '重症申報總件數', label: '申報件數', c: 2 }] },
-    'clinic-chart': { type: 'bar', h: 260, series: [{ key: 'CKD藥師門診', label: 'CKD 藥師門診' }, { key: '抗凝藥師門診', label: '抗凝藥師門診' }] },
+    'clinic-chart': { type: 'bar', h: 260, series: [{ key: 'CKD藥師門診', label: 'CKD 藥師門診' }, { key: '抗凝藥師門診', label: '抗凝藥師門診' }],
+      foot: [{ key: 'CKD每診人次', label: 'CKD 每診', tip: 'CKD 每診平均', fmt: (v, r) => v.toFixed(1) }, { key: 'CKD診次', label: '診次', tip: 'CKD 診次（週五）' }] },
   };
   ['3G', '4E', '5C1', '5F1', '5F2', '5H'].forEach((u) => {
     CHARTS['unit-' + u] = { type: 'line', h: 140, pct: true, shared: true, ticks: 2, series: [{ key: u + '申報率', label: u + ' 申報率', c: 0 }] };
