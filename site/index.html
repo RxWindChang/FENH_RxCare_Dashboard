@@ -8,7 +8,7 @@
 <meta http-equiv="Cache-Control" content="no-cache">
 <script>/* 版本自動比對：開啟網頁或回到分頁時檢查 version.json，有新版就自動換成新版 */
 (function () {
-  var BUILD = '5f39ee5c5d';
+  var BUILD = '5661b29486';
   function check() {
     fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
       if (!j || !j.v || j.v === BUILD) return;
@@ -429,6 +429,9 @@ mark{background:color-mix(in srgb,var(--color-warn) 35%,transparent);color:inher
 .mt-ex-h{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:2px}
 .hb-chip.mt-free{background:color-mix(in srgb,#8a5cd0 12%,transparent);color:#6b3fb8;border:1px solid color-mix(in srgb,#8a5cd0 30%,transparent)}
 .g-support .sch-name{color:var(--color-fg)}
+
+s.hb-struck{text-decoration:line-through;text-decoration-thickness:1.5px;text-decoration-color:currentColor;opacity:.75}
+.lv-name.cancelled{background:transparent;border:1px dashed #b9bec6;color:#8a9099}
 </style>
 
 <div class="ph-wrap">
@@ -1432,6 +1435,24 @@ dash.loader('board', {
     return frag;
   }
   const pre = (text, cls, terms) => { const d = el('div', 'hb-pre' + (cls ? ' ' + cls : '')); d.appendChild(richText(text, terms)); return d; };
+  // 依試算表的刪除線／底線（runs：[[起, 迄, 's'|'u'|'su'], ...]）呈現文字
+  function marked(text, runs) {
+    const frag = document.createDocumentFragment();
+    if (!runs || !runs.length) { frag.appendChild(richText(text)); return frag; }
+    const cuts = new Set([0, text.length]);
+    runs.forEach(([a, b]) => { cuts.add(Math.max(0, Math.min(text.length, a))); cuts.add(Math.max(0, Math.min(text.length, b))); });
+    const pts = [...cuts].sort((x, y) => x - y);
+    for (let i = 0; i < pts.length - 1; i++) {
+      const a = pts[i], b = pts[i + 1]; if (b <= a) continue;
+      const f = runs.filter((r) => r[0] <= a && r[1] >= b).map((r) => r[2]).join('');
+      let node = richText(text.slice(a, b));
+      if (f.includes('u')) { const u = el('u'); u.appendChild(node); node = u; }
+      if (f.includes('s')) { const x = el('s', 'hb-struck'); x.appendChild(node); node = x; }
+      frag.appendChild(node);
+    }
+    return frag;
+  }
+  const shiftRuns = (runs, from, to) => (runs || []).map(([a, b, f]) => [Math.max(a, from) - from, Math.min(b, to) - from, f]).filter(([a, b]) => b > a);
   const msg = (box, text) => { box.replaceChildren(el('div', 'hb-msg', text)); };
   const srcLine = (title) => {
     const p = el('p', 'hb-src');
@@ -1509,6 +1530,7 @@ dash.loader('board', {
 
   function parseLeave(lv, refYear) {
     const v = (lv && lv.values) || [];
+    const marks = (lv && lv.marks) || {};
     const days = []; let intro = '';
     v.forEach((row, i) => {
       const a = clean(row[0]);
@@ -1517,7 +1539,11 @@ dash.loader('board', {
       const wd = wdIndex(row[1]);
       const y = yearOf(+m[1], +m[2], wd, refYear);
       if (y == null) return;
-      days.push({ date: new Date(y, +m[1] - 1, +m[2]), off: [clean(row[2]), clean(row[3])].filter(Boolean), note: clean(row[4]) });
+      const mk = (c) => marks[i + ',' + c] || null;
+      // 整格畫刪除線的休假視為已取消：照樣顯示（劃掉），但不算入今日休假人數
+      const names = [2, 3].map((c) => ({ n: clean(row[c]), runs: mk(c) })).filter((x) => x.n)
+        .map((x) => ({ ...x, cancelled: !!(x.runs && x.runs.some(([a, b, f]) => f.includes('s') && a <= 0 && b >= x.n.length)) }));
+      days.push({ date: new Date(y, +m[1] - 1, +m[2]), names, off: names.filter((x) => !x.cancelled).map((x) => x.n), note: clean(row[4]), noteRuns: mk(4) });
     });
     return { intro, days };
   }
@@ -1762,13 +1788,22 @@ dash.loader('board', {
     const list = days.filter((d) => ymKey(d.date) === st.leaveYm);
     const nodes = [];
     const todayRow = days.find((d) => sameDay(d.date, D.today));
-    const offChips = (box, names) => names.forEach((n) => box.appendChild(el('span', 'lv-name', n)));
-    const noteBox = (text) => {
+    const offChips = (box, names) => names.forEach((x) => {
+      const c = el('span', 'lv-name' + (x.cancelled ? ' cancelled' : ''));
+      c.appendChild(marked(x.n, x.runs));
+      if (x.cancelled) c.title = '已取消';
+      box.appendChild(c);
+    });
+    const noteBox = (text, runs) => {
       const d = el('div', 'lv-note');
+      let pos = 0;
       text.split('\n').forEach((line) => {
+        const start = pos; pos += line.length + 1;
         const t = line.trim(); if (!t) return;
         const cls = /^➤/.test(t) ? 'lv-ev' : /休診|颱風|停班|連假/.test(t) ? 'lv-hol' : /→|代|交/.test(t) ? 'lv-sub' : 'lv-line';
-        const p = el('div', cls); p.appendChild(richText(t.replace(/^➤\s*/, ''))); d.appendChild(p);
+        const lead = line.length - line.replace(/^\s*(➤\s*)?/, '').length;
+        const body = line.slice(lead).replace(/\s+$/, '');
+        const p = el('div', cls); p.appendChild(marked(body, shiftRuns(runs, start + lead, start + lead + body.length))); d.appendChild(p);
       });
       return d;
     };
@@ -1777,17 +1812,17 @@ dash.loader('board', {
       const h = el('div', 'lv-hero-h'); h.append(el('span', 'lv-badge', '今天'), el('b', null, dLabel(D.today)));
       c.appendChild(h);
       const meta = el('div', 'lv-names');
-      if (todayRow && todayRow.off.length) { meta.appendChild(el('span', 'hb-small', '休假：')); offChips(meta, todayRow.off); }
+      if (todayRow && todayRow.names.length) { meta.appendChild(el('span', 'hb-small', '休假：')); offChips(meta, todayRow.names); }
       else meta.appendChild(el('span', 'hb-small', '今天沒有登記休假'));
       c.appendChild(meta);
-      if (todayRow && todayRow.note) c.appendChild(noteBox(todayRow.note));
+      if (todayRow && todayRow.note) c.appendChild(noteBox(todayRow.note, todayRow.noteRuns));
       nodes.push(c);
     }
     const wrap = el('div', 'lv-list');
     list.forEach((d) => {
       const dow = d.date.getDay();
       const isToday = sameDay(d.date, D.today);
-      const has = d.off.length || d.note;
+      const has = d.names.length || d.note;
       if (only && !has && !isToday) return;
       const hol = /休診|颱風假|國定|連假/.test(d.note || '');
       const row = el('div', 'lv-row' + (dow === 6 ? ' sat' : dow === 0 ? ' sun' : '') + (hol ? ' hol' : '') + (isToday ? ' now' : '') + (d.date < D.today ? ' past' : ''));
@@ -1795,8 +1830,8 @@ dash.loader('board', {
       dd.append(el('span', 'lv-day', String(d.date.getDate())), el('span', 'lv-wd', '週' + WD[dow]));
       if (isToday) dd.appendChild(el('span', 'lv-badge', '今天'));
       const off = el('div', 'lv-names');
-      if (d.off.length) offChips(off, d.off); else off.appendChild(el('span', 'hb-small', '—'));
-      row.append(dd, off, d.note ? noteBox(d.note) : el('div'));
+      if (d.names.length) offChips(off, d.names); else off.appendChild(el('span', 'hb-small', '—'));
+      row.append(dd, off, d.note ? noteBox(d.note, d.noteRuns) : el('div'));
       wrap.appendChild(row);
     });
     if (!wrap.children.length) wrap.appendChild(el('div', 'hb-msg', '這個月沒有登記休假或備註。'));

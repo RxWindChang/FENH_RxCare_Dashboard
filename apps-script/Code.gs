@@ -127,7 +127,11 @@ function board_() {
 
   // 休假：最新一張（滾動式紀錄，只取 A–E：日期、星期、休假×2、備註）
   const lv = pick(/^(\d{6})休假/);
-  if (lv.length) { const l = latest(lv); out.leave = { title: l.sh.getName(), values: read(l.sh, 5) }; }
+  if (lv.length) {
+    const l = latest(lv);
+    const values = read(l.sh, 5);
+    out.leave = { title: l.sh.getName(), values: values, marks: marks_(l.sh, values) };
+  }
 
   // 照護組會議：最新一張「yyyymm會議」（A–E）
   const mt = pick(/^(\d{6})會議/);
@@ -145,6 +149,43 @@ function board_() {
   const an = byPrefix('宣達事項');
   if (an) out.announcements = { title: an.getName(), values: read(an, 4) };
 
+  return out;
+}
+
+/**
+ * 刪除線／底線：回傳 { "列,欄": [[起, 迄, "s"|"u"|"su"], ...] }，位置以去掉前後空白後的文字計算。
+ * 整格套用與只套用部分文字都看得到；沒有格式的儲存格不列出。
+ */
+function marks_(sh, values) {
+  const out = {};
+  const nr = values.length;
+  const nc = values.reduce((m, r) => Math.max(m, r.length), 0);
+  if (!nr || !nc) return out;
+  const range = sh.getRange(1, 1, nr, nc);
+  const lines = range.getFontLines();
+  const rich = range.getRichTextValues();
+  for (let r = 0; r < nr; r++) {
+    for (let c = 0; c < nc; c++) {
+      const text = String((values[r] || [])[c] || '');
+      if (!text.trim()) continue;
+      const lead = text.length - text.replace(/^\s+/, '').length;
+      const len = text.trim().length;
+      const runs = [];
+      const whole = lines[r][c];
+      if (whole === 'line-through' || whole === 'underline') runs.push([0, len, whole === 'line-through' ? 's' : 'u']);
+      const rt = rich[r] && rich[r][c];
+      if (rt && rt.getText() === text) {
+        rt.getRuns().forEach((run) => {
+          const st = run.getTextStyle();
+          const f = (st.isStrikethrough() ? 's' : '') + (st.isUnderline() && !run.getLinkUrl() ? 'u' : '');
+          if (!f) return;
+          const a = Math.max(0, run.getStartIndex() - lead), b = Math.min(len, run.getEndIndex() - lead);
+          if (b > a) runs.push([a, b, f]);
+        });
+      }
+      if (runs.length) out[r + ',' + c] = runs;
+    }
+  }
   return out;
 }
 
