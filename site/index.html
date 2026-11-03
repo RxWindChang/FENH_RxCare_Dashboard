@@ -8,7 +8,7 @@
 <meta http-equiv="Cache-Control" content="no-cache">
 <script>/* 版本自動比對：開啟網頁或回到分頁時檢查 version.json，有新版就自動換成新版 */
 (function () {
-  var BUILD = '3ac692e810';
+  var BUILD = '0b4bac07d5';
   function check() {
     fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
       if (!j || !j.v || j.v === BUILD) return;
@@ -304,13 +304,13 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
 .ql{display:flex;flex-direction:column;align-items:flex-end}
 .ql-row{display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end}
 .ql-a{display:flex;flex-direction:column;align-items:center;gap:3px;width:58px;padding:6px 2px 5px;border-radius:10px;color:var(--color-fg-muted);text-decoration:none;font-size:10.5px;line-height:1.2;text-align:center;border:1px solid transparent}
-.ql-a svg{width:20px;height:20px;fill:none;stroke:#2f6fdb;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ql-a svg{width:20px;height:20px;fill:none;stroke:#c2702a;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .ql-a:hover,.ql-a:focus-visible{background:var(--color-panel);border-color:var(--color-border-line);color:var(--color-fg)}
 @media (max-width:760px){.ql{align-items:flex-start;width:100%}.ql-row{justify-content:flex-start}.ql-a{width:52px}}
-.ql-a.in svg{stroke:#c2702a}
+.ql-a.in svg{stroke:#2f6fdb}
 .ql-key{text-align:right;font-size:10.5px;color:var(--color-fg-muted);margin-top:2px}
-.ql-key i{display:inline-block;width:8px;height:8px;border-radius:50%;background:#2f6fdb;margin:0 4px 0 2px;vertical-align:0}
-.ql-key i.in{background:#c2702a}
+.ql-key i{display:inline-block;width:8px;height:8px;border-radius:50%;background:#c2702a;margin:0 4px 0 2px;vertical-align:0}
+.ql-key i.in{background:#2f6fdb}
 @media (max-width:760px){.ql-key{text-align:left}}
 .hb-today{margin:var(--cds-gap-xs) 0 0;color:var(--color-fg-muted);font-size:var(--cds-font-size-body);line-height:1.7}
 .hb-today b{color:var(--color-fg);font-weight:600}
