@@ -8,7 +8,7 @@
 <meta http-equiv="Cache-Control" content="no-cache">
 <script>/* 版本自動比對：開啟網頁或回到分頁時檢查 version.json，有新版就自動換成新版 */
 (function () {
-  var BUILD = '3fad619fb4';
+  var BUILD = '0b162bbdd3';
   function check() {
     fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
       if (!j || !j.v || j.v === BUILD) return;
@@ -312,6 +312,8 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
 .ql-key i{display:inline-block;width:8px;height:8px;border-radius:50%;background:#c2702a;margin:0 4px 0 2px;vertical-align:0}
 .ql-key i.in{background:#2f6fdb}
 @media (max-width:760px){.ql-key{text-align:left}}
+#icu-units{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:760px){#icu-units{grid-template-columns:minmax(0,1fr)}}
 .hb-today{margin:var(--cds-gap-xs) 0 0;color:var(--color-fg-muted);font-size:var(--cds-font-size-body);line-height:1.7}
 .hb-today b{color:var(--color-fg);font-weight:600}
 .hb-chip{display:inline-block;padding:1px 9px;margin:0 4px 2px 0;border-radius:999px;background:color-mix(in srgb,var(--color-fg) 8%,transparent);color:var(--color-fg);font-size:var(--cds-font-size-caption);line-height:1.7;white-space:nowrap}
@@ -867,6 +869,8 @@ dash.loader('indicators', {
           else o[c] = num(v);
         });
         // 重症件數尚未填（總件數 0）時，試算表算出的 0.0% 不是真的申報率，改成「未填」
+        // 單一單位的件數沒填時，該單位當月申報率也改成「未填」
+        ['3G', '4E', '5C1', '5F1', '5F2', '5H'].forEach((u) => { if (o[u + '件數'] == null) o[u + '申報率'] = null; });
         if (!o['重症申報總件數']) {
           o['重症申報總件數'] = null;
           Object.keys(o).forEach((k) => { if (/申報率$/.test(k)) o[k] = null; });
@@ -1289,7 +1293,7 @@ dash.calc('ppl_latest', {
       foot: [{ key: 'CKD每診人次', label: 'CKD 每診', tip: 'CKD 每診平均', fmt: (v, r) => v.toFixed(1) }, { key: 'CKD診次', label: '診次', tip: 'CKD 診次（週五）' }] },
   };
   ['3G', '4E', '5C1', '5F1', '5F2', '5H'].forEach((u) => {
-    CHARTS['unit-' + u] = { type: 'line', h: 140, pct: true, shared: true, ticks: 2, series: [{ key: u + '申報率', label: u + ' 申報率', c: 0 }] };
+    CHARTS['unit-' + u] = { type: 'line', h: 190, pct: true, shared: true, ticks: 2, series: [{ key: u + '申報率', label: u + ' 申報率', c: 0 }] };
   });
 
   const G = ['A群', 'B群', 'C群', 'PGY'];
