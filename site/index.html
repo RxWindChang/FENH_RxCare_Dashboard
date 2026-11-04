@@ -8,7 +8,7 @@
 <meta http-equiv="Cache-Control" content="no-cache">
 <script>/* 版本自動比對：開啟網頁或回到分頁時檢查 version.json，有新版就自動換成新版 */
 (function () {
-  var BUILD = '0b4bac07d5';
+  var BUILD = '3fad619fb4';
   function check() {
     fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
       if (!j || !j.v || j.v === BUILD) return;
@@ -866,6 +866,11 @@ dash.loader('indicators', {
           else if (c === 'CKD藥師門診備註') o[c] = (v || '').trim() || null;
           else o[c] = num(v);
         });
+        // 重症件數尚未填（總件數 0）時，試算表算出的 0.0% 不是真的申報率，改成「未填」
+        if (!o['重症申報總件數']) {
+          o['重症申報總件數'] = null;
+          Object.keys(o).forEach((k) => { if (/申報率$/.test(k)) o[k] = null; });
+        }
         return o;
       });
     return { columns, rows };
@@ -904,8 +909,10 @@ dash.calc('summary', {
     const avg = (k) => Math.round((sum(k) / recent.length) * 10) / 10;
     const last = recent[recent.length - 1];
     const prev = recent.length > 1 ? recent[recent.length - 2] : null;
-    const diff = (k) => (prev && last[k] != null && prev[k] != null ? Math.round((last[k] - prev[k]) * 10000) / 10000 : null);
-    const cap = sum('重症理論總量');
+    // 較前月：用這個欄位最近兩個有填的月份相比
+    const diff = (k) => { const f = recent.filter((r) => r[k] != null); return f.length > 1 ? Math.round((f[f.length - 1][k] - f[f.length - 2][k]) * 10000) / 10000 : null; };
+    // 期間申報率只計入重症已填報的月份，未填月份的理論量不列入分母
+    const cap = recent.reduce((a, r) => a + (r['重症申報總件數'] != null ? (r['重症理論總量'] || 0) : 0), 0);
     return [{
       期間起: recent[0]['月份'], 期間迄: last['月份'], 月數: recent.length,
       最新月份: last['月份'], 前一月份: prev ? prev['月份'] : null,
@@ -1402,8 +1409,12 @@ dash.calc('ppl_latest', {
     root.querySelectorAll('[data-latest]').forEach((el) => {
       if (!latest) { el.textContent = '—'; el.removeAttribute('data-where'); return; }
       el.classList.remove('dash-skeleton');
-      el.setAttribute('data-where', '月份=' + latest);
-      el.textContent = fmt(el.dataset.fmt, rows[rows.length - 1][el.dataset.field]);
+      // 取這個欄位最近一個「有填」的月份（例如重症尚未填報時，顯示上個月的數字）
+      const k = el.dataset.field;
+      let r = null; for (let i = rows.length - 1; i >= 0; i--) if (rows[i][k] != null) { r = rows[i]; break; }
+      el.setAttribute('data-where', '月份=' + (r ? r['月份'] : latest));
+      el.textContent = r ? fmt(el.dataset.fmt, r[k]) + (r['月份'] !== latest ? '（' + r['月份'].slice(5).replace(/^0/, '') + '月）' : '') : '—';
+      el.title = r && r['月份'] !== latest ? r['月份'] + ' 為最近已填報的月份' : '';
     });
 
     const sec = document.getElementById(current);
