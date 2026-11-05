@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#1f6f5c"/>
+  <text x="32" y="30" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="900" font-size="25" letter-spacing="-0.5" fill="#ffffff">VPA</text>
+  <rect x="7" y="43" width="50" height="8" rx="2" fill="#ffffff" fill-opacity="0.22"/>
+  <path d="M9 56 L13 38 Q16 45 21 47 L25 36 Q28 44 33 46 L37 35 Q40 43 46 46" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="48" cy="46.5" r="5" fill="#f2c14e" stroke="#1f6f5c" stroke-width="1.5"/>
+</svg>

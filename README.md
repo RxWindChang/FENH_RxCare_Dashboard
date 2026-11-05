@@ -32,6 +32,9 @@ Google 伺服器會到 GitHub 取最新網頁再送出（快取 10 分鐘），�
 |---|---|
 | `site/index.html` | 網頁本體（由 `src/build.py` 產生） |
 | `site/config.js` | Apps Script 網址 |
+| `site/resources.html` | 臨床資源頁（Dashboard 右上角「臨床資源」圖示進入），不需密碼、不含任何資料 |
+| `site/tdm/valproic-acid.html` | Valproic acid TDM 計算器（獨立靜態頁，可直接更新此檔） |
+| `site/tdm/vpa-icon.svg` | 計算器圖示 |
 | `apps-script/Code.gs` | 資料端點程式碼，貼到 Apps Script |
 | `.github/workflows/pages.yml` | 推送 `site/` 後自動發佈到 GitHub Pages |
 | `src/` | 建置用：執行環境外殼與建置腳本 |
@@ -64,3 +67,5 @@ repo「Settings」→「Pages」→ Source 選「GitHub Actions」。之後每�
 - 10 分鐘內累計 30 次密碼錯誤，端點會暫停登入 10 分鐘（`MAX_FAILS`、`LOCK_SECONDS`），用來防止被逐一猜密碼。
 - 試算表工作表改名時，同步修改 `Code.gs` 的 `SOURCES`。
 - 修改頁面：以 `python3 src/build.py <頁面檔>` 重新產生 `site/index.html`。
+- 「臨床資源」圖示目前直接加在 `site/index.html` 的快速連結列最右側；若之後用 `build.py` 從原始頁面檔重新產生，需在頁面檔的快速連結列補上同一個 `<a class="ql-a res" href="resources.html">`，以及 `.ql-a.res` 樣式。
+- 新增臨床工具：在 `site/resources.html` 對應區塊加一張卡片，工具頁放在 `site/` 下即可。

@@ -1,0 +1,662 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,"Segoe UI",sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Valproic Acid TDM Calculator</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"%3E %3Crect width="64" height="64" rx="14" fill="%231f6f5c"/%3E %3Ctext x="32" y="30" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="900" font-size="25" letter-spacing="-0.5" fill="%23ffffff"%3EVPA%3C/text%3E %3Crect x="7" y="43" width="50" height="8" rx="2" fill="%23ffffff" fill-opacity="0.22"/%3E %3Cpath d="M9 56 L13 38 Q16 45 21 47 L25 36 Q28 44 33 46 L37 35 Q40 43 46 46" fill="none" stroke="%23ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/%3E %3Ccircle cx="48" cy="46.5" r="5" fill="%23f2c14e" stroke="%231f6f5c" stroke-width="1.5"/%3E %3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<style>
+/* Layout: lab-requisition feel — form on the left, a sticky "report slip" on the right; collapses to one column on phones */
+:root{
+  --bg:#f3f5f4; --paper:#ffffff; --ink:#18231f; --muted:#5d6c66; --line:#d6dedb; --soft:#e8eeeb;
+  --accent:#1f6f5c; --accent-ink:#ffffff; --accent-soft:#dcefe8;
+  --ok:#2c7a4b; --ok-soft:#e1f2e7; --warn:#a8650b; --warn-soft:#fbefd9; --bad:#b4332b; --bad-soft:#f8e1de; --info:#2d5d8a; --info-soft:#e2ecf6;
+  --f-body:"Source Serif 4","Noto Sans TC","Microsoft JhengHei","PingFang TC",sans-serif;
+  --f-mono:"Source Serif 4","Noto Sans TC","Microsoft JhengHei","PingFang TC",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111816; --paper:#18211e; --ink:#e3ebe7; --muted:#97a8a1; --line:#2d3a35; --soft:#202b27;
+  --accent:#5cc3a6; --accent-ink:#0d1714; --accent-soft:#1c3a32;
+  --ok:#6dcb8f; --ok-soft:#1b3326; --warn:#e7ac52; --warn-soft:#3a2c14; --bad:#f0857b; --bad-soft:#3d1f1c; --info:#86b6e3; --info-soft:#1b2b3c; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111816; --paper:#18211e; --ink:#e3ebe7; --muted:#97a8a1; --line:#2d3a35; --soft:#202b27;
+  --accent:#5cc3a6; --accent-ink:#0d1714; --accent-soft:#1c3a32;
+  --ok:#6dcb8f; --ok-soft:#1b3326; --warn:#e7ac52; --warn-soft:#3a2c14; --bad:#f0857b; --bad-soft:#3d1f1c; --info:#86b6e3; --info-soft:#1b2b3c; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14.5px;line-height:1.55;font-variant-numeric:tabular-nums lining-nums;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
+.wrap{max-width:1240px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;border-bottom:2px solid var(--ink);padding-bottom:10px}
+header.top h1{margin:0;font-size:26px;font-weight:700;letter-spacing:.02em;text-wrap:balance}
+header.top h1 small{display:block;font-family:var(--f-mono);font-size:12px;font-weight:500;color:var(--muted);letter-spacing:.08em}
+.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.brand{font-weight:700;font-size:13px;letter-spacing:.14em;color:var(--accent);text-transform:uppercase}
+.hdr-btns{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+a.help{display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:var(--accent);border:1px solid var(--accent);border-radius:6px;padding:6px 12px;font-weight:600;background:var(--paper)}
+a.help:hover{background:var(--accent-soft)}
+.lb .req{color:var(--bad);font-weight:700;margin-right:auto;margin-left:2px}
+.iw input.missing{border-color:var(--bad);background:var(--bad-soft)}
+.reqnote{font-size:12px;color:var(--muted);margin:10px 0 0}
+.reqnote b{color:var(--bad)}
+footer.site{border-top:1px solid var(--line);padding-top:14px;margin-top:6px;text-align:center;font-size:13px;color:var(--muted);letter-spacing:.06em}
+button{font:inherit;cursor:pointer;border-radius:6px;border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:6px 12px}
+button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:700}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:18px;align-items:start}
+@media (max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}}
+fieldset{border:1px solid var(--line);background:var(--paper);border-radius:8px;margin:0;padding:14px 16px 16px;min-width:0}
+legend{font-weight:700;font-size:13px;padding:0 6px;color:var(--accent);letter-spacing:.04em}
+.form{display:flex;flex-direction:column;gap:12px}
+.row{display:grid;gap:12px 14px;align-items:end}
+.row+.row{margin-top:12px}
+.c4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.c3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.span2{grid-column:span 2}
+@media (max-width:620px){.c4{grid-template-columns:repeat(2,minmax(0,1fr))}.c4 .span2{grid-column:1/-1}.c3{grid-template-columns:minmax(0,1fr)}.c3 .span2{grid-column:auto}}
+label.f{display:flex;flex-direction:column;gap:5px;min-width:0}
+.lb{display:flex;justify-content:space-between;align-items:baseline;gap:6px;font-size:12px;font-weight:500;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+.lb em{font-style:normal;font-weight:400;font-size:11px;font-family:var(--f-mono);color:var(--muted);opacity:.85}
+.iw{position:relative;display:block}
+.iw input,.iw select{display:block;width:100%;height:38px;font:inherit;font-size:14px;font-variant-numeric:tabular-nums;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:0 10px}
+.iw input{padding-right:58px}
+.iw input[type=date],.iw input[type=time]{padding-right:10px;font-family:var(--f-mono);font-size:13.5px}
+.iw input[type=number]{-moz-appearance:textfield}
+.iw input::-webkit-outer-spin-button,.iw input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.iw input::placeholder{color:var(--muted);opacity:.7}
+.iw .unit{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-family:var(--f-mono);font-size:11.5px;color:var(--muted);pointer-events:none}
+.iw select{appearance:none;-webkit-appearance:none;padding-right:30px;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 15px) 16px,calc(100% - 10px) 16px;background-size:5px 5px,5px 5px;background-repeat:no-repeat;text-overflow:ellipsis}
+.iw input:hover,.iw select:hover{border-color:var(--muted)}
+.checks{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:6px 14px}
+.checks.wide{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.checks label{display:flex;gap:8px;align-items:flex-start;font-size:13.5px;cursor:pointer;line-height:1.4}
+.checks input{margin:2px 0 0;width:15px;height:15px;flex:none;accent-color:var(--accent)}
+.sub{font-size:12px;color:var(--muted);margin:2px 0 8px;font-weight:700;letter-spacing:.04em}
+.sub+.checks+.sub{margin-top:14px}
+.report{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);display:flex;flex-direction:column;gap:14px;min-width:0}
+@media (max-width:900px){.report{position:static}}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:14px}
+.card h2{margin:0 0 10px;font-size:14px;letter-spacing:.06em;color:var(--muted);font-weight:700}
+.levels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 16px}
+.lv{border-left:4px solid var(--line);padding:4px 0 4px 10px;min-width:0}
+.lv .k{font-size:12px;color:var(--muted)}
+.lv .v{font-family:var(--f-mono);font-size:24px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.2}
+.lv .v span{font-size:12px;font-weight:400;color:var(--muted)}
+.lv .t{font-size:12px;font-weight:700}
+.lv.ok{border-color:var(--ok)} .lv.ok .t{color:var(--ok)}
+.lv.lo{border-color:var(--info)} .lv.lo .t{color:var(--info)}
+.lv.hi{border-color:var(--bad)} .lv.hi .t{color:var(--bad)}
+.lv.na .t{color:var(--muted)}
+table.eq{width:100%;border-collapse:collapse;font-size:13px}
+.tbl{overflow-x:auto}
+table.eq th,table.eq td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--soft);vertical-align:top}
+table.eq th{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.04em}
+table.eq td.n{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+table.eq tr.primary td{background:var(--accent-soft);font-weight:700}
+table.eq td .icu{display:block;margin-top:3px;font-size:11.5px;font-weight:400;color:var(--muted)}
+table.eq tr.na td{color:var(--muted);opacity:.6}
+.pill{background:var(--soft);color:var(--muted)}
+.pill{display:inline-block;font-size:11px;padding:1px 7px;border-radius:99px;font-weight:700;white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)} .pill.lo{background:var(--info-soft);color:var(--info)} .pill.hi{background:var(--bad-soft);color:var(--bad)}
+.bar{position:relative;height:30px;margin:14px 0 22px}
+.bar .track{position:absolute;inset:12px 0 auto;height:6px;background:var(--soft);border-radius:3px}
+.bar .tz{position:absolute;top:12px;height:6px;background:var(--ok-soft);border:1px solid var(--ok);border-radius:3px}
+.bar .mk{position:absolute;top:2px;width:2px;height:26px;transform:translateX(-1px)}
+.bar .mk i{position:absolute;top:28px;left:50%;transform:translateX(-50%);font-style:normal;font-family:var(--f-mono);font-size:10px;white-space:nowrap;color:var(--muted)}
+.bar .rng{position:absolute;top:8px;height:14px;border:1.5px dashed var(--warn);border-radius:4px}
+.flags{display:flex;flex-direction:column;gap:8px}
+.flag{border-radius:6px;padding:8px 10px;font-size:13px;border:1px solid transparent}
+.flag b{display:block;font-size:12px;letter-spacing:.03em}
+.flag.bad{background:var(--bad-soft);color:var(--ink);border-color:var(--bad)} .flag.bad b{color:var(--bad)}
+.flag.warn{background:var(--warn-soft);border-color:var(--warn)} .flag.warn b{color:var(--warn)}
+.flag.info{background:var(--info-soft);border-color:var(--info)} .flag.info b{color:var(--info)}
+.flag.ok{background:var(--ok-soft);border-color:var(--ok)} .flag.ok b{color:var(--ok)}
+.soap-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.soap-head h2{margin:0}
+textarea#soap{width:100%;min-height:420px;font-family:var(--f-body);font-size:14px;line-height:1.5;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px;resize:vertical}
+.copied{font-size:12px;color:var(--ok);font-weight:700}
+.note{font-size:12px;color:var(--muted)}
+.example{font-size:12px;background:var(--warn-soft);color:var(--ink);border:1px dashed var(--warn);border-radius:6px;padding:6px 10px}
+details.refs{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px}
+details.refs summary{cursor:pointer;font-weight:700}
+details.refs ol{padding-left:20px;margin:8px 0 0;font-size:12.5px;color:var(--muted);display:flex;flex-direction:column;gap:4px}
+code{font-family:var(--f-mono);font-size:12px;background:var(--soft);padding:1px 4px;border-radius:3px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>Valproic Acid TDM Calculator<small>TOTAL → FREE VPA · ALBUMIN-ADJUSTED · SOAP</small></h1>
+    <div class="hdr-right"><div class="brand"><a href="../resources.html" style="color:inherit;text-decoration:none" title="回到臨床資源">← 臨床資源</a>　FEMH Pharmacy</div><div class="hdr-btns"><a class="help" href="https://claude.ai/artifact/JzE1GEvSSdwnPyQQDsex7X" target="_blank" rel="noopener" title="開啟使用說明書"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/><path d="M9 8h7M9 11.5h5"/></svg>使用說明</a>
+      <button type="button" id="btnExample">載入範例病人</button>
+      <button type="button" id="btnClear">清空</button>
+    </div></div>
+  </header>
+  <div class="example" id="exampleBanner">目前顯示的是<strong>範例病人</strong>（虛構資料），用來示範計算流程。請按「清空」後輸入實際病人資料。</div>
+
+  <div class="grid">
+    <form class="form" id="f" autocomplete="off">
+      <fieldset><legend>基本資料</legend>
+        <div class="row c4">
+          <label class="f"><span class="lb">年齡</span><span class="iw"><input id="age" type="number" min="0" step="1" inputmode="decimal"><span class="unit">歲</span></span></label>
+          <label class="f"><span class="lb">性別</span><span class="iw"><select id="sex"><option value="" selected disabled hidden>請選擇</option><option value="M">男</option><option value="F">女</option></select></span></label>
+          <label class="f"><span class="lb">身高</span><span class="iw"><input id="ht" type="number" min="0" step="0.1" inputmode="decimal"><span class="unit">cm</span></span></label>
+          <label class="f"><span class="lb">體重</span><span class="iw"><input id="wt" type="number" min="0" step="0.1" inputmode="decimal"><span class="unit">kg</span></span></label>
+        </div>
+      </fieldset>
+
+      <fieldset><legend>臨床相關資料</legend>
+        <div class="row c4">
+          <label class="f span2"><span class="lb">適應症</span><span class="iw"><select id="ind"><option value="epi">癲癇治療（局部 / 全身性強直陣攣發作）</option><option value="se">癲癇重積狀態</option><option value="ppx">癲癇預防（腦出血 / 神經外科術後）</option><option value="bp">雙極性疾患（躁期）</option><option value="other">其他</option></select></span></label>
+          <label class="f"><span class="lb">肝功能狀態</span><span class="iw"><select id="liver"><option value="none">無肝硬化</option><option value="A">肝硬化 Child-Pugh A</option><option value="B">肝硬化 Child-Pugh B</option><option value="C">肝硬化 Child-Pugh C</option><option value="unk">未界定</option></select></span></label>
+          <label class="f"><span class="lb">病人狀態</span><span class="iw"><select id="ward"><option value="ward">普通病房</option><option value="icu">加護病房</option></select></span></label>
+        </div>
+        <div class="checks" style="margin-top:14px">
+          <label><input type="checkbox" id="esrd"> 末期腎病 / 透析中</label>
+        </div>
+      </fieldset>
+
+      <fieldset><legend>VPA 用藥與採檢</legend>
+        <div class="row c3">
+          <label class="f"><span class="lb">劑型</span><span class="iw"><select id="form"><option value="iv">IV</option><option value="sol">口服液</option><option value="chrono">Chrono 緩釋錠</option><option value="tab">一般錠 / 腸溶錠</option></select></span></label>
+          <label class="f"><span class="lb">每次劑量</span><span class="iw"><input id="dose" type="number" min="0" step="50" inputmode="decimal"><span class="unit">mg</span></span></label>
+          <label class="f"><span class="lb">給藥頻次</span><span class="iw"><select id="freq"><option value="1">q24h（QD）</option><option value="2">q12h（BID）</option><option value="3" selected>q8h（TID）</option><option value="4">q6h（QID）</option></select></span></label>
+        </div>
+        <div class="row c3">
+          <label class="f"><span class="lb">本劑量已使用</span><span class="iw"><input id="days" type="number" min="0" step="1" inputmode="decimal"><span class="unit">天</span></span></label>
+          <label class="f span2"><span class="lb">採檢時間</span><span class="iw"><select id="trough"><option value="y">Trough（下次給藥前 1 小時內）</option><option value="n">非 trough / 不確定</option><option value="load">loading dose 後不久</option></select></span></label>
+        </div>
+        <div class="row c4">
+          <label class="f"><span class="lb">給藥日期<em>最近一劑</em></span><span class="iw"><input id="doseDate" type="date"></span></label>
+          <label class="f"><span class="lb">給藥時間</span><span class="iw"><input id="doseTime" type="time" step="300"></span></label>
+          <label class="f"><span class="lb">抽血日期</span><span class="iw"><input id="drawDate" type="date"></span></label>
+          <label class="f"><span class="lb">抽血時間</span><span class="iw"><input id="drawTime" type="time" step="300"></span></label>
+        </div>
+        <p class="note" id="dtNote" style="margin:10px 0 0"></p>
+      </fieldset>
+
+      <fieldset><legend>血中濃度與檢驗值</legend>
+        <div class="row c4">
+          <label class="f"><span class="lb">Total VPA <b class="req" title="必填">*</b></span><span class="iw"><input id="tvpa" required aria-required="true" type="number" min="0" step="0.1" inputmode="decimal"><span class="unit">mg/L</span></span></label>
+          <label class="f"><span class="lb">Albumin <b class="req" title="必填">*</b></span><span class="iw"><input id="alb" required aria-required="true" type="number" min="0" step="0.1" inputmode="decimal"><span class="unit">g/dL</span></span></label>
+          <label class="f"><span class="lb">BUN</span><span class="iw"><input id="bun" type="number" min="0" step="0.1" inputmode="decimal"><span class="unit">mg/dL</span></span></label>
+          <label class="f"><span class="lb">Creatinine</span><span class="iw"><input id="scr" type="number" min="0" step="0.01" inputmode="decimal"><span class="unit">mg/dL</span></span></label>
+          <label class="f"><span class="lb">Total bilirubin</span><span class="iw"><input id="tbil" type="number" min="0" step="0.01" inputmode="decimal"><span class="unit">mg/dL</span></span></label>
+          <label class="f"><span class="lb">ALT</span><span class="iw"><input id="alt" type="number" min="0" step="1" inputmode="decimal"><span class="unit">U/L</span></span></label>
+          <label class="f"><span class="lb">Platelet</span><span class="iw"><input id="plt" type="number" min="0" step="1" inputmode="decimal"><span class="unit">10³/µL</span></span></label>
+          <label class="f"><span class="lb">Ammonia<em>參考 31–123</em></span><span class="iw"><input id="nh3" type="number" min="0" step="1" inputmode="decimal"><span class="unit">µg/dL</span></span></label>
+        </div>
+        <p class="reqnote"><b>*</b> 為必填項目</p>
+      </fieldset>
+
+      <fieldset><legend>目標範圍</legend>
+        <div class="row c4">
+          <label class="f span2"><span class="lb">游離 VPA 參考範圍</span><span class="iw"><select id="frange"><option value="5-15">5–15 mg/L（曾郁茹藥師 2021；Webb 2025）</option><option value="4-12">4–12 mg/L（Sriboonruang 2011 泰國精神科；Wallenburg 2017）</option><option value="5-10">5–10 mg/L（Doré 2017 神經毒性切點；Fisch 2021）</option><option value="5-17">5–17 mg/L（Riker 2017；Liu 2023）</option><option value="5-25">5–25 mg/L（UW Medicine 檢驗；Webb 2025 加護病房 / 癲癇重積）</option></select></span></label>
+          <label class="f"><span class="lb">Total VPA 參考範圍</span><span class="iw"><select id="trange"><option value="auto">依適應症自動</option><option value="50-100">50–100 mg/L（癲癇）</option><option value="50-125">50–125 mg/L（躁期）</option></select></span></label>
+          <label class="f"><span class="lb">目標游離 VPA</span><span class="iw"><input id="ftarget" type="number" min="0" step="0.5" inputmode="decimal" placeholder="範圍中點"><span class="unit">mg/L</span></span></label>
+        </div>
+      </fieldset>
+
+      <fieldset><legend>臨床表現（近 72 小時）</legend>
+        <div class="sub">可能毒性</div>
+        <div class="checks">
+          <label><input type="checkbox" class="sx" data-t="嗜睡" data-en="somnolence" id="sx1"> 嗜睡</label>
+          <label><input type="checkbox" class="sx" data-t="意識障礙 / 意識混亂" data-en="confusion / altered consciousness" id="sx2"> 意識障礙 / 意識混亂</label>
+          <label><input type="checkbox" class="sx" data-t="精神運動遲滯" data-en="psychomotor slowing" id="sx9"> 精神運動遲滯</label>
+          <label><input type="checkbox" class="sx" data-t="震顫" data-en="tremor" id="sx3"> 震顫</label>
+          <label><input type="checkbox" class="sx" data-t="撲動性震顫" data-en="asterixis" id="sx10"> 撲動性震顫</label>
+          <label><input type="checkbox" class="sx" data-t="運動失調" data-en="ataxia" id="sx4"> 運動失調</label>
+          <label><input type="checkbox" class="sx" data-t="肌肉僵直" data-en="rigidity" id="sx5"> 肌肉僵直</label>
+          <label><input type="checkbox" class="sx" data-t="構音障礙" data-en="dysarthria" id="sx8"> 構音障礙</label>
+          <label><input type="checkbox" class="sx" data-t="跌倒" data-en="falls" id="sx11"> 跌倒</label>
+          <label><input type="checkbox" class="sx" data-t="噁心 / 嘔吐" data-en="nausea / vomiting" id="sx6"> 噁心 / 嘔吐</label>
+          <label><input type="checkbox" class="sx" data-t="低血壓" data-en="hypotension" id="sx7"> 低血壓</label>
+        </div>
+        <div class="sub">療效與遵從性</div>
+        <div class="checks wide">
+          <label><input type="checkbox" id="szb"> 仍有突破性癲癇發作 / 症狀未控制</label>
+          <label><input type="checkbox" id="nonadh"> 懷疑服藥遵從性不佳</label>
+        </div>
+      </fieldset>
+
+      <fieldset><legend>併用藥物</legend>
+        <div class="checks wide">
+          <label><input type="checkbox" id="carb"> Carbapenem 類（meropenem、imipenem、ertapenem）</label>
+          <label><input type="checkbox" id="asa"> Aspirin</label>
+          <label><input type="checkbox" id="asahi"> Aspirin &gt; 325 mg/day</label>
+          <label><input type="checkbox" id="propofol"> Propofol / 脂肪乳劑 / clevidipine</label>
+          <label><input type="checkbox" id="nsaid"> NSAIDs</label>
+          <label><input type="checkbox" id="pht"> Phenytoin</label>
+          <label><input type="checkbox" id="inducer"> Drug-metabolizing enzyme inducer（carbamazepine、phenobarbital、primidone、rifampin）</label>
+          <label><input type="checkbox" id="inducerNew"> 上述 inducer 或 phenytoin 近 2 週內開始或停用</label>
+          <label><input type="checkbox" id="tpm"> Topiramate</label>
+          <label><input type="checkbox" id="ltg"> Lamotrigine</label>
+          <label><input type="checkbox" id="wfn"> Warfarin</label>
+          <label><input type="checkbox" id="oc"> 含 estrogen 口服避孕藥</label>
+          <label><input type="checkbox" id="pbd"> 其他蛋白結合競爭藥物（oxcarbazepine、mycophenolate）</label>
+        </div>
+      </fieldset>
+    </form>
+
+    <aside class="report" aria-live="polite">
+      <div class="card">
+        <h2>濃度判讀</h2>
+        <div class="levels" id="levels"></div>
+        <div id="barWrap"></div>
+        <p class="note" id="primaryNote"></p>
+      </div>
+      <div class="card">
+        <h2>毒性閾值對照（估計 free VPA）</h2>
+        <div class="tbl"><table class="eq"><thead><tr><th>Free 閾值</th><th>相關不良反應</th><th>研究（地區）</th><th>採用值</th><th>最高估計</th></tr></thead><tbody id="toxBody"></tbody></table></div>
+        <p class="note">閾值來自小型觀察性研究，多數未經外部驗證，且研究間結論不一致（Lin 2022 系統性回顧）；僅作為風險分層參考。</p>
+      </div>
+      <div class="card">
+        <h2>各預測公式（free VPA, mg/L）</h2>
+        <div class="tbl"><table class="eq"><thead><tr><th>公式</th><th>輸入變數</th><th>預測值</th><th>分類</th></tr></thead><tbody id="eqBody"></tbody></table></div>
+        <p class="note">藍底列＝本次判讀採用的估計值。所有公式在外部驗證中都以低估為主，誤差區間約 ±13–15 mg/L，因此本工具同時列出各公式範圍，判讀時請把最高估計值納入安全考量，並以臨床表現為主。</p>
+      </div>
+      <div class="card">
+        <h2>臨床警示</h2>
+        <div class="flags" id="flags"></div>
+      </div>
+      <div class="card">
+        <div class="soap-head"><h2>SOAP 建議（可直接編修）</h2><div style="display:flex;gap:8px;align-items:center"><span class="copied" id="copied" hidden>已複製</span><button type="button" class="primary" id="btnCopy">複製 SOAP</button></div></div>
+        <textarea id="soap" spellcheck="false"></textarea>
+        <p class="note">本工具輸出為臨床藥師判讀輔助，劑量建議須結合病人臨床狀況、院內檢驗參考值與主治醫師共同決定。</p>
+      </div>
+    </aside>
+  </div>
+
+  <details class="refs">
+    <summary>計算方法與文獻依據</summary>
+    <ol>
+      <li><b>Hermida / Parent（albumin-adjusted）</b>：free fraction α 依 albumin 由 Parent 1993 指數式換算（Hermida 2005 Table 1，1.8–4.2 g/dL 線性內插；&gt;4.2 取 6.5%）。PfVPA = TVPA × α；normalized total C<sub>N</sub> = α × TVPA / 6.5。Hermida 2005 在 TVPA ≤75 mg/L 時誤差 ≤2.5 mg/L；曾郁茹藥師 2021 建議僅在 TVPA &lt;56.4 mg/L 且 BUN &lt;51.05 mg/dL 時使用（該子群 concordance 85%）。</li>
+      <li><b>曾郁茹藥師｜NTUH, 2021 三因子式</b>（JFMA 2021，臺大，僅內部推導、未外部驗證）：PfVPA = 8.319 + 0.369×TVPA + 0.105×BUN − 6.029×Alb(g/dL)，R² 0.84。</li>
+      <li><b>Doré 式</b>（Pharmacotherapy 2017;37:900–7，已核對原文 Table 3）：Y(µmol/L) = 103.667 + 0.362×TVPA(µmol/L) − 4.538×Alb(g/L)；mg/L × 6.93 = µmol/L。由 41 位病人推導（多為非 ICU、無肝硬化、90% eGFR &gt;50、albumin 20–43 g/L、TVPA 17–86 mg/L），R² 0.732；作者聲明未經驗證、未納入尿毒 / 肝病 / 交互作用，且可能不適用 ICU。同一資料中 Parent（Hermida）式平均低估 4.1 mg/L，Doré 式內部 bias 0。外部驗證：Liu 2023 ICU 一致率 73%；Webb 2025 ICU 一致率 61.9%、平均比 Fraser 式低 27.8%。</li>
+      <li><b>Fraser 式</b>（Liu, Crit Care Explor 2023）：Y = 10.74 + 0.34×TVPA − 4.60×Alb(g/dL) + 0.02×BUN + 2.14(propofol) + 1.51(aspirin)。內部驗證 concordance 73%；Webb 2025 外部驗證（Pharmacotherapy 2025;45:831–9，315 位 ICU 病人、556 組濃度）：bias −2.79 mg/L、95% LOA −18.9 至 13.4，分類一致率 71.0%（Doré 61.9%，p = 0.001），實際 free <25 mg/L 時 bias 0.34 mg/L、LOA −9.5 至 10.1。</li>
+      <li><b>Fraser 修正版</b>（Webb 2025 refit，無截距）：Y = 0.46×TVPA − 3.33×Alb(g/dL) + 0.12×BUN + 3.88(propofol) + 2.86(aspirin)。整體 bias −0.48 mg/L，一致率 70.3%，與原式無顯著差異；在實際 free >25 mg/L 區間低估較少，故本工具列入估計範圍上限的計算，但不作為主要估計。加入病人個別效應可將一致率提高到 78.1%，但需要至少一次實測 free，本院不適用。</li>
+      <li>劑量調整：free VPA 的清除接近線性，而 total 因飽和性蛋白結合呈非線性，故以估計 free 濃度做比例換算。減量依採用的估計值；加量則以各公式最高估計值計算，最高估計已超過上限時不建議加量。單次調整幅度上限 ±50%，達穩定狀態（約 3–5 天）後追蹤 total VPA、albumin、BUN 並重新估算。</li>
+      <li>Wallenburg E, et al. Ther Drug Monit 2017;39:269–72（free VPA &gt;12 mg/L 者 37%，其中 total 升高僅 6 人；77.6% 有毒性表現）。Doré 2017：free VPA 對神經症狀的 ROC AUC 0.776，total 0.642（無顯著意義）；free &gt;10 mg/L 敏感度 60%、特異度 91%，&gt;15 mg/L 敏感度 33%、特異度 100%，作者建議上限採 10 mg/L。Tseng YJ（曾郁茹藥師）, et al. PLoS One 2020（free VPA &gt;14.67 mg/L 與血小板低下相關，AUC 0.77；NH₃ 與 free 濃度無關）。Drisaldi A, et al. Neurocrit Care 2019；Riker RR, et al. Pharmacotherapy 2017；Fisch U, et al. Neurology 2021。Webb AJ, et al. Neurocrit Care 2025;43:1–483（ICU 病人 free VPA > 28 mg/L 與血小板低下、肝毒性相關）。</li>
+      <li><b>Lin K, et al. Clin Pharmacokinet 2022;61:1345–63</b>（系統性回顧，27 篇，無 RCT）：free 參考範圍尚無共識（2.9–7.2、4–12、5.3–59.2 mg/L）；毒性閾值彙整（高血氨 8.7、神經症狀 10、血小板低下 14.7、神經毒性 30 mg/L）；discordance 危險因子為低白蛋白、高齡、total &gt; 80 mg/L，個案報告中 aspirin 81–325 mg/day、oxcarbazepine、mycophenolate、CYP2C9*3 亦曾相關。</li>
+    </ol>
+  </details>
+  <footer class="site">亞東紀念醫院｜臨床藥學科｜藥事照護組</footer>
+</div>
+
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const ALB_TABLE=[[4.2,6.5],[4.1,6.8],[4.0,7.3],[3.9,7.9],[3.8,8.5],[3.7,9.1],[3.6,9.8],[3.5,10.5],[3.4,11.3],[3.3,12.1],[3.2,13.0],[3.1,14.0],[3.0,15.0],[2.9,16.2],[2.8,17.4],[2.7,18.7],[2.6,20.1],[2.5,21.6],[2.4,23.2],[2.3,24.9],[2.2,26.8],[2.1,28.9],[2.0,31.0],[1.9,33.3],[1.8,35.8]];
+function alphaFromAlb(a){
+  if(a>=4.2) return {v:6.5,ex:a>4.2?'hi':''};
+  if(a<1.8) return {v:128.4*Math.exp(-0.7109*a),ex:'lo'};
+  for(let i=0;i<ALB_TABLE.length-1;i++){const [a1,f1]=ALB_TABLE[i],[a2,f2]=ALB_TABLE[i+1];
+    if(a<=a1&&a>=a2){return {v:f1+(f2-f1)*(a1-a)/(a1-a2),ex:''}}}
+  return {v:NaN,ex:''};
+}
+const NH3_ULN=123, NH3_LLN=31;
+const TOX=[{en:'hyperammonemia',sh:'高血氨',v:8.7,ae:'高血氨（ammonia > 60 µmol/L）',st:'Itoh 2012（日本）',sig:'顯著，rs 0.58'},{en:'hyperammonemia',sh:'高血氨',v:8.9,ae:'高血氨',st:'曾郁茹藥師 2020（台灣）',sig:'未達顯著'},{en:'neurologic symptoms',sh:'神經症狀',v:10,ae:'神經症狀',st:'Doré 2017（加拿大）',sig:'AUC 0.78'},{en:'thrombocytopenia',sh:'血小板低下',v:14.7,ae:'血小板低下',st:'曾郁茹藥師 2020（台灣）',sig:'AUC 0.77'},{en:'hepatotoxicity',sh:'肝毒性',v:19.1,ae:'肝毒性（ALT > 3 倍）',st:'曾郁茹藥師 2020（台灣）',sig:'未達顯著'},{en:'thrombocytopenia/hepatotoxicity (ICU)',sh:'加護病房血小板低下 / 肝毒性',v:28,ae:'血小板低下、肝毒性（加護病房）',st:'Webb 2025（美國）',sig:'加護病房世代'},{en:'neurotoxicity',sh:'神經毒性上限',v:30,ae:'神經毒性上限',st:'Cramer 1986（美國）',sig:'劑量調升時的震顫'}];
+const num=id=>{const v=parseFloat($(id).value);return isFinite(v)?v:null};
+const chk=id=>$(id).checked;
+const f1=x=>x==null||!isFinite(x)?'—':(Math.round(x*10)/10).toFixed(1);
+const f0=x=>x==null||!isFinite(x)?'—':String(Math.round(x));
+const IND={epi:'癲癇治療',se:'癲癇重積狀態',ppx:'癲癇預防',bp:'雙極性疾患（躁期）',other:'其他適應症'};
+const LIVER={none:'無肝硬化',A:'肝硬化 Child-Pugh A',B:'肝硬化 Child-Pugh B',C:'肝硬化 Child-Pugh C',unk:'肝功能狀態未界定'};
+const FORM={iv:'IV',sol:'口服液',chrono:'Chrono 緩釋錠',tab:'一般錠 / 腸溶錠'};
+const STEP={iv:100,sol:100,chrono:250,tab:250};
+const FREQ={1:'q24h',2:'q12h',3:'q8h',4:'q6h'};
+const pad=n=>String(n).padStart(2,'0');
+const today=()=>{const t=new Date();return `${t.getFullYear()}-${pad(t.getMonth()+1)}-${pad(t.getDate())}`};
+function dt(dId,tId){const d=$(dId).value,t=$(tId).value;if(!d||!t)return null;const x=new Date(d+'T'+t);return isNaN(x)?null:x}
+const fmtDT=x=>x?`${x.getFullYear()}/${pad(x.getMonth()+1)}/${pad(x.getDate())} ${pad(x.getHours())}:${pad(x.getMinutes())}`:'';
+function cls(v,lo,hi){if(v==null||!isFinite(v))return'na';return v<lo?'lo':v>hi?'hi':'ok'}
+const CLS_T={lo:'低於範圍',ok:'範圍內',hi:'高於範圍',na:'—'};
+
+function compute(){
+  const d={age:num('age'),sex:$('sex').value,ht:num('ht'),wt:num('wt'),ward:$('ward').value,ind:$('ind').value,liver:$('liver').value,form:$('form').value,
+    dose:num('dose'),freq:+$('freq').value,days:num('days'),trough:$('trough').value,
+    tvpa:num('tvpa'),alb:num('alb'),bun:num('bun'),scr:num('scr'),tbil:num('tbil'),alt:num('alt'),plt:num('plt'),nh3:num('nh3')};
+  const [flo,fhi]=$('frange').value.split('-').map(Number);
+  let tr=$('trange').value; if(tr==='auto') tr=d.ind==='bp'?'50-125':'50-100';
+  const [tlo,thi]=tr.split('-').map(Number);
+  const ftarget=num('ftarget')??(flo+fhi)/2;
+  const daily=d.dose!=null?d.dose*d.freq:null;
+  const mgkg=daily!=null&&d.wt?daily/d.wt:null;
+  const bmi=d.ht&&d.wt?d.wt/Math.pow(d.ht/100,2):null;
+  const sx=[...document.querySelectorAll('.sx:checked')].map(e=>e.dataset.t);
+  const icu=d.ward==='icu'; const propofol=chk('propofol'); const asa=chk('asa')||chk('asahi');
+  const cirrBC=d.liver==='B'||d.liver==='C';
+  const noTox=sx.length===0&&!(d.plt!=null&&d.plt<100)&&!(d.alt!=null&&d.alt>120)&&!(d.nh3!=null&&d.nh3>NH3_ULN);
+  const softMode=chk('szb')&&noTox;
+  const tDose=dt('doseDate','doseTime'), tDraw=dt('drawDate','drawTime');
+  const elapsed=tDose&&tDraw?(tDraw-tDose)/3.6e6:null; const tau=24/d.freq;
+
+  const eq=[]; let al=null;
+  if(d.tvpa!=null&&d.alb!=null){
+    al=alphaFromAlb(d.alb);
+    eq.push({k:'hermida',ne:'Hermida/Parent',n:'Hermida / Parent',in:'TVPA、Alb',v:d.tvpa*al.v/100});
+    eq.push({k:'dore',ne:'Doré',n:'Doré 2017',in:'TVPA、Alb',v:Math.max((103.667+0.362*d.tvpa*6.93-4.538*d.alb*10)/6.93,0)});
+  }
+  if(d.tvpa!=null&&d.alb!=null&&d.bun!=null){
+    eq.push({k:'tseng',ne:'Tseng (NTUH)',n:'曾郁茹藥師｜NTUH, 2021',in:'TVPA、BUN、Alb',icu:'推導族群加護病房 48%（47/98）',v:Math.max(8.319+0.369*d.tvpa+0.105*d.bun-6.029*d.alb,0)});
+    eq.push({k:'fraser',ne:'Fraser',n:'Fraser 2023',in:'TVPA、Alb、BUN、propofol、aspirin',icu:'推導族群加護病房 100%（推導 115、驗證 147）',v:Math.max(10.74+0.34*d.tvpa-4.60*d.alb+0.02*d.bun+(propofol?2.14:0)+(asa?1.51:0),0)});
+    eq.push({k:'fraserm',ne:'modified Fraser',n:'Fraser 修正版 2025',in:'TVPA、Alb、BUN、propofol、aspirin（無截距）',icu:'推導族群加護病房 100%（n = 315）',v:Math.max(0.46*d.tvpa-3.33*d.alb+0.12*d.bun+(propofol?3.88:0)+(asa?2.86:0),0)});
+  }
+  const cn=al?d.tvpa*al.v/6.5:null;
+  const why=[], whyEn=[];
+  if(d.tvpa!=null&&d.tvpa>=56.4) why.push('total ≥56.4 mg/L');whyEn.push('total ≥56.4 mg/L');
+  if(d.bun!=null&&d.bun>=51.05) why.push('BUN ≥51.05 mg/dL');whyEn.push('BUN ≥51.05 mg/dL');
+  if(chk('esrd')) why.push('末期腎病');whyEn.push('ESRD');
+  if(icu) why.push('加護病房');whyEn.push('ICU');
+  if(propofol) why.push('propofol');whyEn.push('propofol');
+  if(chk('asahi')) why.push('高劑量 aspirin');whyEn.push('high-dose aspirin');
+  if(d.tbil!=null&&d.tbil>=2) why.push('高膽紅素');whyEn.push('hyperbilirubinemia');
+  if(cirrBC) why.push('Child B/C');whyEn.push('Child-Pugh B/C');
+  if(chk('pht')) why.push('phenytoin');whyEn.push('phenytoin');
+  if(chk('pbd')) why.push('蛋白結合競爭藥物');whyEn.push('competing protein-bound drugs');
+  const hermidaValid=d.tvpa!=null&&why.length===0;
+  const ICUOK=icu||propofol, OTHEROK=!cirrBC;
+  eq.forEach(e=>{e.ok=e.k==='hermida'?hermidaValid:(e.k==='fraser'||e.k==='fraserm')?ICUOK:OTHEROK});
+  let ap=eq.filter(e=>e.ok); const noModel=eq.length>0&&ap.length===0; if(noModel){ap=eq.slice();ap.forEach(e=>e.ok=true)}
+  const vals=ap.map(e=>e.v); const emin=vals.length?Math.min(...vals):null, emax=vals.length?Math.max(...vals):null;
+  let prim=null, primWhy='', primShort='', primMode='';
+  if(eq.length){
+    const by=k=>ap.find(e=>e.k===k);
+    if((icu||propofol)&&(by('fraser')||by('dore'))){prim=by('fraser')||by('dore');primMode='icu';primShort=`${icu?'加護病房':'使用 propofol'}，採 ${prim.n} 式`;primWhy=`${icu?'加護病房':'使用 propofol'}：採 ${prim.n}（ICU 族群推導；Webb 2025 外部驗證 315 位 ICU 病人分類一致率 71%，優於 Doré 式 61.9%；實際 free <25 mg/L 時最準，越高越低估）。`}
+    else if(hermidaValid&&by('hermida')){prim=by('hermida');primMode='hermida';primShort='符合 albumin 校正式適用條件，採 Hermida 式';primWhy='符合 albumin-adjusted 公式適用條件（TVPA <56.4 mg/L、BUN <51.05 mg/dL、普通病房，無尿毒 / 黃疸 / 高劑量 aspirin / Child B–C）：採 Hermida 式（曾郁茹藥師 2021 此子群分類一致率 85%）。'}
+    else{prim=ap.reduce((a,b)=>b.v>a.v?b:a);primMode=noModel?'none':'max';primShort=noModel?`無經驗證適用之模型（${why.join('、')}），取各模型最高值，僅供參考`:`超出 albumin 校正式適用條件（${why.join('、')}），取適用模型最高值`;primWhy=noModel?`目前情境（${why.join('、')}）沒有任何模型的推導或驗證族群涵蓋，以下取各模型最高值，僅能作為方向參考。`:`超出 albumin-adjusted 公式適用條件（${why.join('、')}）：適用模型在此情境多低估 free VPA，故採適用模型最高值（${prim.n}）作為偏安全的估計。`}
+  }
+  return {noTox,softMode,tDose,tDraw,elapsed,tau,d,flo,fhi,tlo,thi,ftarget,daily,mgkg,bmi,sx,icu,propofol,asa,cirrBC,eq,ap,noModel,al,cn,emin,emax,hermidaValid,why,whyEn,prim,primWhy,primShort,primMode};
+}
+
+function doseRec(r){
+  const {d,daily,prim,flo,fhi,ftarget,sx,emax}=r;
+  if(daily==null||!prim||!prim.v) return null;
+  const tox=sx.length>0, c=cls(prim.v,flo,fhi), step=STEP[d.form]||100;
+  const mk=(action,ratio,note,fixed,en)=>{ratio=Math.max(0.5,Math.min(1.5,ratio));let per=Math.round((daily*ratio/d.freq)/step)*step;if(per<step)per=step;
+    return {action,newPer:per,newDaily:per*d.freq,ratio,c,note,fixed,en:en||'',hold:c==='hi'&&tox}};
+  const keep=(note,en)=>({action:'維持',newPer:d.dose,newDaily:daily,ratio:1,c,note,en:en||''});
+  if(chk('carb')) return {action:'不調整',c,note:'',en:''};
+  if(d.trough==='load') return keep('採檢時機為 loading dose 後，暫不依此濃度調整，建議於穩定狀態 trough 重驗。','The level was drawn shortly after a loading dose and should not guide maintenance dosing; repeat a steady-state trough.');
+  if(d.days!=null&&d.days<3&&c!=='hi') return keep('尚未達穩定狀態，暫不調整。','Steady state has not yet been reached; no adjustment at this time.');
+  if(chk('nonadh')&&c==='lo') return keep('懷疑服藥遵從性不佳，先確認服藥情形再決定是否加量。','Nonadherence is suspected; verify adherence before considering a dose increase.');
+  if(r.cirrBC) return keep('Child-Pugh B/C 不建議以加量處理，應評估更換抗癲癇藥。','Dose escalation is not advised in Child-Pugh B/C cirrhosis; consider an alternative antiseizure medication.');
+  const SOFT='癲癇控制不佳且目前無毒性表現，估計 free 偏高時不主動減量，以審慎監測為主：較密集追蹤血氨、血小板數與肝功能，若出現嗜睡、意識改變、震顫或上述檢驗異常，再行減量。';
+  const SOFTEN='Seizures remain uncontrolled without evidence of toxicity; despite an elevated free estimate, empiric dose reduction is not recommended. Monitor closely (ammonia, platelet count, liver function) and reduce the dose if somnolence, altered mental status, tremor, or laboratory abnormalities develop.';
+  if(c==='hi'){
+    if(r.softMode&&prim.v<=28) return keep(SOFT,SOFTEN);
+    if(r.softMode) return mk('考慮小幅減量',0.8,'雖癲癇控制不佳，但估計 free VPA > 28 mg/L（ICU 研究中與血小板低下、肝毒性相關之閾值）。',true,'Although seizures remain uncontrolled, the estimated free concentration exceeds 28 mg/L, a threshold associated with thrombocytopenia and hepatotoxicity in ICU patients.');
+    return mk('減量',ftarget/prim.v,'','', '');
+  }
+  if(c==='ok'){
+    if(tox&&emax>fhi) return mk('考慮小幅減量',0.8,'估計值在範圍內但有毒性症狀，且最高估計已超過上限。',true,'The selected estimate is within range, but symptoms suggest toxicity and the highest estimate exceeds the upper limit.');
+    if(tox&&d.alb!=null&&d.alb<3.5&&emax>10) return mk('考慮小幅減量',0.8,'低白蛋白合併神經症狀，最高估計 free VPA > 10 mg/L（Doré 2017：此切點預測神經症狀特異度 91%）。',true,'Neurologic symptoms with hypoalbuminemia and a highest free estimate > 10 mg/L (91% specificity for neurologic adverse effects).');
+    if(chk('szb')&&emax<fhi){const rt=Math.min(ftarget/emax,1.25);if(rt>1.05) return mk('考慮小幅加量',rt,'依最高估計值保守換算。','','Calculated conservatively from the highest estimate.')}
+    return chk('szb')?(r.softMode&&emax>fhi?keep(SOFT+'不建議再加量，療效不足時考慮合併其他抗癲癇藥物。',SOFTEN+' Further dose escalation is not advised; consider adding another antiseizure medication.'):keep('最高估計已接近上限，不建議再加量；療效不足時考慮合併或更換抗癲癇藥物。','The highest estimate is near the upper limit; further escalation is not advised. Consider adding or switching to another antiseizure medication.')):keep('','');
+  }
+  if(chk('inducerNew')) return keep('Enzyme inducer 近 2 週內開始或停用，濃度仍在變動，建議 3–5 天後重驗再決定是否加量。','An enzyme inducer was started or stopped within the past 2 weeks; repeat the level in 3–5 days before increasing the dose.');
+  if(emax>=flo&&emax>ftarget) return keep('採用估計值低於範圍，但最高估計已達目標以上；公式不確定性大，暫不加量，依臨床反應決定。','The selected estimate is below range, but the highest estimate already exceeds the target; given equation uncertainty, defer dose escalation and follow clinical response.');
+  if(tox) return keep('雖估計值偏低但已有疑似毒性症狀，不建議加量，請先排除其他原因。','Although estimates are low, symptoms suggestive of toxicity are present; avoid escalation and evaluate alternative causes.');
+  return mk('加量',ftarget/emax,'以各公式最高估計值換算，避免高估加量空間。','','Calculated from the highest estimate to avoid overshooting.');
+}
+
+function buildFlags(r){
+  const {d}=r, F=[];
+  const add=(lv,t,b)=>F.push({lv,t,b});
+  if(chk('carb')) add('bad','Carbapenem 併用','Carbapenem 會在 24 小時內使 VPA 濃度大幅下降，增加劑量無法克服，停藥後影響可持續數天至 1–2 週。建議更換非 carbapenem 抗生素，若必須使用則改以其他抗癲癇藥（如 levetiracetam）暫時替代或加上。');
+  if(d.liver==='B'||d.liver==='C') add('bad',`肝硬化 Child-Pugh ${d.liver}`,'VPA 仿單將明顯肝功能不全列為禁忌。肝硬化時 albumin 低、膽紅素競爭結合位、VPA 代謝下降，free VPA 與高血氨風險皆上升；建議與主治醫師討論更換抗癲癇藥（如 levetiracetam）。');
+  else if(d.liver==='A') add('warn','肝硬化 Child-Pugh A','VPA 代謝能力下降且 free fraction 偏高，如需使用宜採較低劑量，密切追蹤肝功能、ammonia 與意識。');
+  else if(d.liver==='unk') add('info','肝功能狀態未界定','建議確認是否有肝硬化並評估 Child-Pugh 分級，會影響 VPA 是否適用與 free VPA 判讀。');
+  if(d.trough==='load') add('warn','採檢時機','loading dose 後短時間內 free fraction 可暫時升高，濃度不宜直接用於調整維持劑量。');
+  else if(d.trough==='n') add('info','非 trough 採檢','total 濃度判讀需考慮給藥時間；Webb 2025 發現採檢時間點對 Fraser 式的估計準確度影響不大；但 free 的晝夜波動大於 total（108% vs 59%，Lin 2022），劑量換算仍以 trough 為準。');
+  if(r.emax!=null&&r.emax>28) add('bad','估計 free VPA > 28 mg/L',`最高估計 ${f1(r.emax)} mg/L。ICU 研究顯示 free VPA > 28 mg/L 與血小板低下、肝毒性相關，而 total 濃度無此關聯（Webb, Neurocrit Care 2025）；且公式在高濃度區低估最明顯，實際值可能更高。`);
+  if(r.elapsed!=null){
+    if(r.elapsed<0) add('warn','給藥 / 抽血時間有誤','抽血時間早於給藥時間，請確認。');
+    else if(r.elapsed>r.tau+0.5) add('info','抽血距給藥超過給藥間隔',`抽血距最近一劑 ${f1(r.elapsed)} 小時，超過給藥間隔 ${r.tau} 小時，請確認是否有漏給或延遲給藥。`);
+    else if(d.trough==='y'&&r.elapsed<r.tau-1) add('warn','採檢時間與 trough 不符',`抽血距最近一劑 ${f1(r.elapsed)} 小時（給藥間隔 ${r.tau} 小時），並非下次給藥前 1 小時內，濃度會高於真正的 trough。`);
+  }
+  if(d.days!=null&&d.days<3) add('warn','尚未達穩定狀態','本劑量使用未滿 3 天，濃度可能尚未穩定。');
+  if(r.al&&r.al.ex==='lo') add('warn','Albumin < 1.8 g/dL','超出 Hermida 表格範圍，α 以指數外插估計，誤差更大。');
+  if(d.tvpa!=null&&d.tvpa>=151) add('bad','Total VPA ≥ 151 mg/L','達 UW Medicine 檢驗的臨界值（critical value），請立即評估毒性。');
+  if(d.tvpa!=null&&d.tvpa>=75) add('warn','Total VPA ≥ 75 mg/L','蛋白結合趨於飽和，free fraction 上升且難以預測；Hermida 式於此區間明顯低估（Hermida 2005）。');
+  else if(d.tvpa!=null&&d.tvpa>=56.4) add('warn','Total VPA ≥ 56.4 mg/L','超過 曾郁茹藥師 2021 建議的 albumin-adjusted 公式適用上限，預測準確度下降。');
+  if((d.bun!=null&&d.bun>=51.05)||chk('esrd')) add('warn','尿毒 / BUN ≥ 51.05 mg/dL','尿毒素競爭 albumin 結合位，公式會低估 free VPA；透析可移除高 free fraction 的 VPA，透析日需留意濃度下降與癲癇控制。');
+  if(d.tbil!=null&&d.tbil>=2) add('info','高膽紅素','內生性物質可能置換 VPA（Hermida 2005 提出；曾郁茹藥師 2021 未證實），解讀時保守。');
+  if(r.icu) add('info','加護病房病人','ICU 病人 free fraction 變異極大（Riker 2017 中位數 48%），total 與 free 分類不一致約 70%；Webb 2025 外部驗證中 free fraction 中位數 36%（範圍 7–100%）；所有公式在此族群誤差最大，請以估計範圍上限與臨床表現綜合判斷。');
+  if(r.propofol) add('info','Propofol / 脂肪乳劑','游離脂肪酸會置換 VPA，free fraction 上升。');
+  if(chk('asahi')) add('warn','Aspirin > 325 mg/day','明顯置換 VPA 並抑制其 β-氧化代謝，free VPA 上升。');
+  else if(chk('asa')){const lowAlb=d.alb!=null&&d.alb<3.5;add(lowAlb?'warn':'info',lowAlb?'Aspirin 合併低白蛋白':'Aspirin（≤ 325 mg/day）','個案報告中每日 81–325 mg 即可置換 VPA 並造成中毒（Lin 2022 回顧的 16 例中 47% 併用 aspirin）；但曾郁茹藥師 2021 世代中 aspirin 100 mg/day 未影響公式準確度。'+(lowAlb?'合併低白蛋白時請提高警覺，判讀偏向估計範圍上限。':'')+'註：Hermida 式只排除 >325 mg/day；Fraser 式已納入 aspirin 校正項。');}
+  if(chk('nsaid')) add('info','NSAIDs','高蛋白結合藥物可能置換 VPA。');
+  if(chk('pbd')) add('warn','Oxcarbazepine / mycophenolate','個案報告中曾與 free VPA 升高及中毒相關（Lin 2022），Hermida 式改判不適用，判讀偏向估計範圍上限。');
+  if(chk('pht')) add('warn','Phenytoin','雙向交互作用：phenytoin 誘導 VPA 代謝，VPA 置換並抑制 phenytoin；phenytoin 濃度判讀亦需校正。');
+  if(chk('inducer')) add('warn','Drug-metabolizing enzyme inducer','誘導 UGT 與 CYP 代謝，VPA 清除增加，total 偏低可部分歸因於此；CYP 路徑增加 4-ene-VPA 等肝毒性代謝物，肝毒性與高血氨風險不隨濃度反映。'+(chk('inducerNew')?'近 2 週內有變動，濃度可能尚未穩定。':''));
+  else if(chk('inducerNew')) add('warn','Enzyme inducer 近期變動','近 2 週內開始或停用 enzyme inducer 或 phenytoin，濃度可能尚未穩定。');
+  if(chk('tpm')) add('warn','Topiramate','併用增加高血氨性腦病變風險，請追蹤 ammonia 與意識。');
+  if(chk('ltg')) add('warn','Lamotrigine','VPA 抑制 lamotrigine 葡萄糖醛酸結合（glucuronidation），LTG 濃度約加倍；LTG 劑量需減半並緩慢調升，留意皮疹。');
+  if(chk('wfn')) add('info','Warfarin','蛋白結合置換，加上 VPA 可能影響血小板功能，追蹤 INR 與出血。');
+  if(chk('oc')) add('info','含 estrogen 避孕藥','可誘導 VPA 葡萄糖醛酸結合，濃度下降。');
+  if(d.nh3!=null&&d.nh3>NH3_ULN){
+    const ence=r.sx.some(s=>/意識|嗜睡/.test(s)), hiF=r.emax!=null&&r.emax>8.7;
+    add(ence||hiF?'bad':'warn','Ammonia 高於參考值'+(ence?'合併意識改變':hiF?'且估計 free > 8.7 mg/L':''), (ence?'疑似 VPA 引起之高血氨腦病變（可發生於濃度正常時）。考慮停用或減量 VPA，評估 L-carnitine 補充（依院內 protocol），排除其他原因。':`Ammonia ${d.nh3} µg/dL（參考 ${NH3_LLN}–${NH3_ULN}）。`)+'free 與高血氨的關係研究結果不一致：Itoh 2012（日本）free > 8.7 mg/L 為高血氨預測因子，曾郁茹藥師 2020 未達顯著。'+(hiF?`本次最高估計 ${f1(r.emax)} mg/L 已超過 8.7 mg/L。`:''));
+  }
+
+  if(d.plt!=null&&d.plt<100) add('warn','血小板 < 100 ×10³/µL','VPA 相關血小板低下與濃度相關；曾郁茹藥師 2020 free VPA > 14.67 mg/L 為預測因子。評估減量並追蹤出血。');
+  if(d.alt!=null&&d.alt>120) add('bad','ALT > 3× ULN','疑似肝毒性，建議停用或更換抗癲癇藥並追蹤肝功能。');
+  if(d.sex==='F'&&d.age!=null&&d.age>=12&&d.age<=50) add('warn','育齡女性','Valproate 具生殖毒性（致畸胎與神經發育影響），依 TFDA 警示不建議用於懷孕婦女；請確認未懷孕、有有效避孕，並評估替代治療。');
+  if(d.age!=null&&d.age>=70) add('info','年齡 ≥ 70 歲','老年人 free fraction 較高（Wallenburg 2017）。');
+  if(chk('nonadh')) add('info','服藥遵從性','若懷疑未規則服藥，total 濃度偏低多反映遵從性問題而非劑量不足。');
+  if(r.ap.length>1&&r.emax-r.emin>5) add('warn','公式間分歧大','適用模型相差 '+f1(r.emax-r.emin)+' mg/L，單一估計值可信度低；劑量決策請參考估計範圍上限與臨床表現。');
+  if(!F.length) add('ok','無特殊警示','未發現影響判讀的因素。');
+  return F;
+}
+
+function render(){
+  const r=compute(), {d,flo,fhi,tlo,thi}=r;
+  ['tvpa','alb'].forEach(k=>$(k).classList.toggle('missing',$(k).value===''));
+  const tc=cls(d.tvpa,tlo,thi), pc=r.prim?cls(r.prim.v,flo,fhi):'na';
+  const lv=[
+    {k:'Total VPA',v:d.tvpa,u:'mg/L',c:tc,sub:`參考 ${tlo}–${thi}`},
+    {k:r.prim?'估計 free VPA（'+r.prim.n+'）':'估計 free VPA',v:r.prim?r.prim.v:null,u:'mg/L',c:pc,sub:`參考 ${flo}–${fhi}`},
+    {k:'估計 free fraction',v:d.tvpa&&r.prim?r.prim.v/d.tvpa*100:null,u:'%',c:'na',sub:'正常約 5–10%'},
+    {k:'Normalized total (C<sub>N</sub>)',v:r.cn,u:'mg/L',c:cls(r.cn,tlo,thi),sub:'albumin 4.2 g/dL 時的等效 total'}
+  ];
+  $('levels').innerHTML=lv.map(x=>`<div class="lv ${x.c}"><div class="k">${x.k}</div><div class="v">${f1(x.v)} <span>${x.u}</span></div><div class="t">${x.c==='na'?'<span class="note">'+x.sub+'</span>':CLS_T[x.c]+' <span class="note">'+x.sub+'</span>'}</div></div>`).join('');
+  if(r.prim&&r.prim.v!=null){
+    const max=Math.max(fhi*2,(r.emax||0)*1.15,r.prim.v*1.15,10);
+    const p=v=>Math.max(0,Math.min(100,v/max*100));
+    let h=`<div class="bar" role="img" aria-label="估計 free VPA 位置"><div class="track"></div><div class="tz" style="left:${p(flo)}%;width:${p(fhi)-p(flo)}%"></div>`;
+    if(r.ap.length>1) h+=`<div class="rng" style="left:${p(r.emin)}%;width:${Math.max(p(r.emax)-p(r.emin),0.5)}%" title="各公式範圍"></div>`;
+    h+=`<div class="mk" style="left:${p(flo)}%;background:var(--ok)"><i>${flo}</i></div><div class="mk" style="left:${p(fhi)}%;background:var(--ok)"><i>${fhi}</i></div>`;
+    h+=`<div class="mk" style="left:${p(r.prim.v)}%;background:var(--ink);width:3px"><i style="color:var(--ink);font-weight:600;top:-14px">${f1(r.prim.v)}</i></div></div>`;
+    $('barWrap').innerHTML=h+`<p class="note">綠色區段＝free VPA 參考範圍；虛線框＝適用模型估計範圍（${f1(r.emin)}–${f1(r.emax)} mg/L）；黑線＝本次採用的估計值。</p>`;
+  } else $('barWrap').innerHTML='';
+  $('dtNote').textContent=r.elapsed!=null&&r.elapsed>=0?`抽血距最近一劑 ${f1(r.elapsed)} 小時；給藥間隔 ${r.tau} 小時${r.elapsed>=r.tau-1&&r.elapsed<=r.tau+0.5?'，符合 trough 採檢。':'。'}`:'';
+  const pv=r.prim?r.prim.v:null, mx=r.emax;
+  const tp=(v,t)=>v==null?'<span class="note">—</span>':v>t?'<span class="pill hi">超過</span>':'<span class="pill ok">未超過</span>';
+  $('toxBody').innerHTML=TOX.map(t=>`<tr class="${(pv!=null&&pv>t.v)?'':(mx!=null&&mx>t.v)?'':'na'}"><td class="n">${t.v} mg/L</td><td>${t.ae}</td><td>${t.st}<span class="icu">${t.sig}</span></td><td>${tp(pv,t.v)}</td><td>${tp(mx,t.v)}</td></tr>`).join('');
+  $('primaryNote').textContent=r.primWhy||'請至少輸入 Total VPA 與 albumin。';
+  const rows=r.eq.map(e=>`<tr class="${r.prim&&r.prim.k===e.k?'primary':''}${e.ok?'':' na'}"><td>${e.n}</td><td>${e.in}${e.icu?`<span class="icu">${e.icu}</span>`:''}</td><td class="n">${f1(e.v)}</td><td>${e.ok?`<span class="pill ${cls(e.v,flo,fhi)}">${CLS_T[cls(e.v,flo,fhi)]}</span>`:'<span class="pill">不適用</span>'}</td></tr>`);
+  $('eqBody').innerHTML=rows.join('')||'<tr><td colspan="4" class="note">輸入 Total VPA、albumin（與 BUN）後顯示。</td></tr>';
+  const F=buildFlags(r);
+  $('flags').innerHTML=F.map(x=>`<div class="flag ${x.lv}"><b>${x.t}</b>${x.b}</div>`).join('');
+  $('soap').value=soap(r,F);
+}
+
+const IND_EN={epi:'epilepsy',se:'status epilepticus',ppx:'seizure prophylaxis',bp:'bipolar disorder (acute mania)',other:'other indication'};
+const LIVER_EN={none:'No cirrhosis',A:'Child-Pugh A cirrhosis',B:'Child-Pugh B cirrhosis',C:'Child-Pugh C cirrhosis',unk:'Hepatic status not determined'};
+const FORM_EN={iv:'IV',sol:'oral solution',chrono:'extended-release tablet',tab:'tablet'};
+const ACT_EN={'減量':'Decrease the dose','考慮小幅減量':'Consider a modest dose reduction','加量':'Increase the dose','考慮小幅加量':'Consider a modest dose increase'};
+const REFS={
+ tseng21:'Tseng YJ, et al. Factors to influence the accuracy of albumin adjusted free valproic acid concentration. J Formos Med Assoc. 2021 Apr;120(4):1114-1120. doi: 10.1016/j.jfma.2020.09.004.',
+ hermida:'Hermida J, Tutor JC. A theoretical method for normalizing total serum valproic acid concentration in hypoalbuminemic patients. J Pharmacol Sci. 2005 Apr;97(4):489-93. doi: 10.1254/jphs.fpe04007x.',
+ dore:'Doré M, et al. Clinical Importance of Monitoring Unbound Valproic Acid Concentration in Patients with Hypoalbuminemia. Pharmacotherapy. 2017 Aug;37(8):900-907. doi: 10.1002/phar.1965.',
+ liu23:'Liu JT, et al. Derivation and Validation of a New Equation for Estimating Free Valproate Concentration in Critically Ill Adult Patients. Crit Care Explor. 2023 Oct 18;5(10):e0987. doi: 10.1097/CCE.0000000000000987.',
+ webb25:'Webb AJ, et al. External validation of the Fraser equation for estimation of free valproate concentrations in critically ill adults. Pharmacotherapy. 2025 Dec;45(12):831-839. doi: 10.1002/phar.70079.',
+ lin22:'Lin K, et al. Clinical pharmacokinetic monitoring of free valproic acid levels: a systematic review. Clin Pharmacokinet. 2022 Oct;61(10):1345-1363. doi: 10.1007/s40262-022-01171-w.',
+ brown22:'Brown CS, et al. Evaluation of Free Valproate Concentration in Critically Ill Patients. Crit Care Explor. 2022 Sep 7;4(9):e0746. doi: 10.1097/CCE.0000000000000746.',
+ tseng20:'Tseng YJ, et al. Safety range of free valproic acid serum concentration in adult patients. PLoS One. 2020 Sep 2;15(9):e0238201. doi: 10.1371/journal.pone.0238201.'
+};
+const EQREF={hermida:'hermida',dore:'dore',tseng:'tseng21',fraser:'liu23',fraserm:'webb25'};
+function flagEn(t){
+  const M=[[/^估計 free VPA > 28/,'estimated free concentration > 28 mg/L'],[/^肝硬化 Child-Pugh (.)/,m=>`Child-Pugh ${m[1]} cirrhosis`],[/^採檢時機/,'level drawn shortly after a loading dose'],[/^給藥 \/ 抽血時間有誤/,'inconsistent dose and sampling times'],[/^採檢時間與 trough 不符/,'sample not drawn at true trough'],[/^尚未達穩定狀態/,'not yet at steady state'],[/^尿毒/,'uremia / BUN ≥ 51.05 mg/dL'],[/^Aspirin > 325/,'aspirin > 325 mg/day'],[/^Aspirin 合併低白蛋白/,'aspirin with hypoalbuminemia'],[/^Oxcarbazepine/,'concomitant oxcarbazepine / mycophenolate'],[/^Topiramate/,'concomitant topiramate'],[/^Lamotrigine/,'concomitant lamotrigine'],[/^Ammonia 高於參考值合併意識改變/,'hyperammonemia with altered mental status'],[/^Ammonia 高於參考值且/,'hyperammonemia with estimated free > 8.7 mg/L'],[/^Ammonia/,'hyperammonemia'],[/^血小板/,'thrombocytopenia (< 100 ×10³/µL)'],[/^ALT/,'ALT > 3× ULN'],[/^育齡女性/,'woman of childbearing potential']];
+  for(const [re,v] of M){const m=t.match(re);if(m) return typeof v==='function'?v(m):v;}
+  return t;
+}
+function soap(r,F){
+  const {d,flo,fhi,tlo,thi}=r; const L=[];
+  const rec=doseRec(r);
+  const cited=[]; const cite=k=>{let i=cited.indexOf(k);if(i<0){cited.push(k);i=cited.length-1;}return `[${i+1}]`;};
+  const sxEn=[...document.querySelectorAll('.sx:checked')].map(e=>e.dataset.en);
+  const neuro=[...document.querySelectorAll('.sx:checked')].some(e=>!['sx6','sx7'].includes(e.id));
+  const carb=chk('carb');
+  const sexEn=d.sex==='F'?'female':d.sex==='M'?'male':'patient (sex not specified)';
+  L.push('【Valproic Acid TDM Evaluation】');
+  {const t=new Date();L.push(`Date: ${t.getFullYear()}/${pad(t.getMonth()+1)}/${pad(t.getDate())}`);}
+  L.push('');
+  L.push('S:');
+  L.push(`- ${d.age??'—'}-year-old ${sexEn} in the ${d.ward==='icu'?'ICU':'general ward'}, receiving valproic acid for ${IND_EN[d.ind]}. ${LIVER_EN[d.liver]}${chk('esrd')?'; ESRD on dialysis':''}.`);
+  L.push(`- ${sxEn.length?'Signs suggestive of toxicity: '+sxEn.join(', ')+'.':'No clinical signs of valproic acid toxicity.'}${chk('szb')?' Breakthrough seizures / inadequate symptom control persist.':''}${chk('nonadh')?' Nonadherence is suspected.':''}`);
+  L.push('');
+  L.push('O:');
+  L.push(`- Height ${f1(d.ht)} cm, weight ${f1(d.wt)} kg${r.bmi?` (BMI ${f1(r.bmi)})`:''}.`);
+  L.push(`- Valproic acid ${FORM_EN[d.form]} ${f0(d.dose)} mg ${FREQ[d.freq]} (${f0(r.daily)} mg/day; ${f1(r.mgkg)} mg/kg/day), day ${d.days??'—'} of the current regimen.${r.tDose?' Last dose '+fmtDT(r.tDose)+';':''}${r.tDraw?' sample drawn '+fmtDT(r.tDraw)+(r.elapsed!=null&&r.elapsed>=0?` (${f1(r.elapsed)} h post-dose; dosing interval ${r.tau} h)`:'')+';':''} ${{y:'trough sample',n:'non-trough / timing uncertain',load:'drawn shortly after a loading dose'}[d.trough]}.`);
+  L.push(`- Total valproic acid ${f1(d.tvpa)} mg/L (reference ${tlo}–${thi} mg/L). Free valproic acid assay not available at this institution.`);
+  const lab=[['Alb',d.alb,'g/dL'],['BUN',d.bun,'mg/dL'],['Cr',d.scr,'mg/dL'],['T-bil',d.tbil,'mg/dL'],['ALT',d.alt,'U/L'],['PLT',d.plt,'×10³/µL'],['NH3',d.nh3,'µg/dL']].filter(x=>x[1]!=null).map(x=>`${x[0]} ${x[1]} ${x[2]}`);
+  L.push(`- Labs: ${lab.join(', ')||'—'}.`);
+  const dd=[['carb','carbapenem'],['asahi','aspirin > 325 mg/day'],['asa','aspirin'],['propofol','propofol / lipid emulsion'],['nsaid','NSAIDs'],['pht','phenytoin'],['inducer','drug-metabolizing enzyme inducer'],['tpm','topiramate'],['ltg','lamotrigine'],['wfn','warfarin'],['oc','estrogen-containing oral contraceptive'],['pbd','oxcarbazepine / mycophenolate']].filter(x=>chk(x[0])).map(x=>x[1]);
+  if(chk('asahi')){const i=dd.indexOf('aspirin');if(i>-1)dd.splice(i,1)}
+  L.push(`- Relevant concomitant medications: ${dd.join(', ')||'none'}.`);
+  L.push('');
+  L.push('A:');
+  const SYM={lo:'↓',ok:'√',hi:'↑',na:'－'}, LAB={lo:'Below range ',ok:'Within range',hi:'Above range ',na:'—'};
+  const st=c=>`${SYM[c]} ${LAB[c]}`, nv=v=>f1(v).padStart(5,' ');
+  if(d.tvpa==null||d.alb==null){L.push('  ※ Insufficient data (total valproic acid and albumin are required).');}
+  else{
+    const tc=cls(d.tvpa,tlo,thi);
+    const ddi=[];
+    if(carb) ddi.push('Carbapenem: clinically significant interaction. Valproic acid concentrations may fall by 60–100% within 24 h, and the effect cannot be overcome by dose escalation. No estimation equation has been validated in this setting; the current level and estimates should not guide dosing.');
+    if(chk('inducer')||chk('inducerNew')) ddi.push(`Drug-metabolizing enzyme inducer: induction of UGT and CYP pathways increases clearance and may partly explain a low total level${chk('inducerNew')?'; the inducer was started or stopped within 2 weeks, so concentrations may not be at steady state':''}. CYP-mediated formation of hepatotoxic metabolites (e.g., 4-ene-VPA) means hepatotoxicity and hyperammonemia risk may not track concentrations.`);
+    if(chk('pht')) ddi.push('Phenytoin: enzyme induction plus competition for albumin binding; equations may underestimate the free fraction, so the highest applicable estimate was used.');
+    if(ddi.length){L.push('【Drug Interactions】');ddi.forEach(x=>L.push(`  ※ ${x}`));L.push('');}
+    L.push('【Measured Concentration】');
+    L.push(`  Total valproic acid ${nv(d.tvpa)} mg/L  ${st(tc)} (ref ${tlo}–${thi})`);
+    L.push(`  Albumin ${d.alb} g/dL｜BUN ${d.bun??'—'} mg/dL`);
+    if(r.prim&&!carb){
+      const pc=cls(r.prim.v,flo,fhi);
+      L.push('');
+      L.push(`【Estimated Free Valproic Acid】ref ${flo}–${fhi} mg/L`);
+      const list=[r.prim,...r.ap.filter(e=>e.k!==r.prim.k)];
+      list.forEach(e=>{const c=cls(e.v,flo,fhi);L.push(`  ${e===r.prim?'◎':'○'} ${nv(e.v)} mg/L  ${st(c)}  ${e.ne} ${cite(EQREF[e.k])}${e===r.prim?' (selected)':''}`);});
+      const MS={icu:()=>`ICU patient${r.propofol&&!r.icu?' / propofol':''}; the ${r.prim.ne} equation, derived in critically ill adults, was selected ${cite('webb25')}. In ICU patients, total and free classifications are discordant in about 70% of cases ${cite('brown22')}.`,hermida:()=>`Criteria for the albumin-adjusted equation are met (total < 56.4 mg/L, BUN < 51.05 mg/dL, non-ICU) ${cite('tseng21')}; the Hermida equation was selected.`,max:()=>`Criteria for the albumin-adjusted equation are not met (${r.whyEn.join(', ')}); the highest applicable estimate was selected because all equations tend to underestimate in this setting.`,none:()=>`No validated equation applies (${r.whyEn.join(', ')}); the highest estimate is shown for reference only.`}; const ms=MS[r.primMode]();
+      L.push(`  → ${ms}${r.emax>fhi&&pc!=='hi'?` The highest estimate (${f1(r.emax)} mg/L) exceeds the upper limit; an elevated free concentration cannot be excluded.`:''}`);
+      const ev=[];
+      if(tc!==pc) ev.push(`Discordant classification between total and estimated free concentrations (${SYM[tc]} vs ${SYM[pc]})${pc==='hi'||(tc==='lo'&&pc==='ok')?'; dose escalation based on the total level may result in excessive free exposure.':'.'}`);
+      if(sxEn.length){
+        const hi=pc==='hi'||r.emax>fhi||(neuro&&d.alb<3.5&&r.emax>10);
+        const s1=sxEn.join(', '); const cap=s1.charAt(0).toUpperCase()+s1.slice(1);
+        ev.push(`${cap}: ${hi?'consistent with an elevated free concentration; valproic acid toxicity is suspected'+(neuro&&d.alb<3.5?` (in hypoalbuminemia, free > 10 mg/L predicts neurologic adverse effects with 91% specificity ${cite('dore')})`:'')+'.':'not fully explained by the estimates; evaluate disease progression, other CNS depressants, and hyperammonemia.'}`);
+      }
+      if(r.softMode&&(pc==='hi'||r.emax>fhi)) ev.push('Seizures remain uncontrolled without neurologic toxicity, liver injury, thrombocytopenia, or hyperammonemia; close monitoring is preferred over empiric dose reduction.');
+      {const seen=new Set(),ex=TOX.filter(t=>r.emax>t.v&&!seen.has(t.en)&&seen.add(t.en));if(ex.length) ev.push(`Exceeds reported toxicity thresholds: ${ex.map(t=>`${t.en} ${t.v}`).join(', ')} mg/L (largely not externally validated) ${cite('lin22')}.`);}
+      const probs=F.filter(x=>(x.lv==='bad'||x.lv==='warn')&&!/公式間分歧|Total VPA ≥|Albumin < 1.8|Carbapenem|inducer|Phenytoin/.test(x.t)).map(x=>flagEn(x.t));
+      if(probs.length) ev.push(`Other issues: ${probs.join('; ')}.`);
+      if(ev.length){L.push('');L.push('【Clinical Assessment】');ev.forEach(x=>L.push(`  ※ ${x}`));}
+    } else if(carb&&sxEn.length){L.push('');L.push('【Clinical Assessment】');L.push(`  ※ ${sxEn.join(', ')}: evaluate disease progression, other CNS depressants, and hyperammonemia.`);}
+  }
+  L.push('');
+  L.push('P:');
+  let n=1; const P=t=>L.push(`${n++}. ${t}`), S=t=>L.push(`   ‧ ${t}`);
+  const reg=`valproic acid ${FORM_EN[d.form]}`;
+  const ddiP=[];
+  if(carb) ddiP.push('Carbapenem: recommend switching to a non-carbapenem antibiotic. If no alternative is available, add or switch to another antiseizure medication (e.g., levetiracetam); increasing the valproic acid dose is not recommended. The interaction may persist for 1–2 weeks after discontinuation.');
+  if(chk('inducer')||chk('inducerNew')) ddiP.push(`Enzyme inducer: ${chk('inducerNew')?'concentrations may continue to change for 1–2 weeks after the inducer is started or stopped; repeat the level in 3–5 days before adjusting. ':''}Monitor liver function and ammonia regardless of the concentration.`);
+  if(ddiP.length){P('Drug interaction');ddiP.forEach(S);}
+  const regimen=[];
+  if(r.cirrBC) regimen.push(`Child-Pugh ${d.liver}: discuss discontinuing valproic acid with the primary team and consider an antiseizure medication with less hepatic burden (e.g., levetiracetam).`);
+  if(carb) regimen.push('No valproic acid dose adjustment based on the current level.');
+  else if(rec){
+    if(rec.action==='維持') regimen.push(`Continue ${reg} ${f0(d.dose)} mg ${FREQ[d.freq]} (${f0(r.daily)} mg/day).${rec.en?' '+rec.en:''}`);
+    else{
+      if(rec.hold) regimen.push('Hold 1–2 doses given suspected toxicity with an estimated free concentration above range, then resume at the new dose.');
+      regimen.push(`${ACT_EN[rec.action]}: ${reg} ${f0(d.dose)} mg → ${f0(rec.newPer)} mg ${FREQ[d.freq]} (${f0(r.daily)} → ${f0(rec.newDaily)} mg/day${d.wt?'; '+f1(rec.newDaily/d.wt)+' mg/kg/day':''})${rec.fixed?`, an approximately ${Math.round((1-rec.newDaily/r.daily)*100)}% reduction`:`, proportionally targeting a free concentration of ${f1(r.ftarget)} mg/L (maximum change ±50% per step)`}.${rec.en?' '+rec.en:''}`);
+    }
+  }
+  if(regimen.length){P('Regimen');regimen.forEach(S);}
+  P('Goal');
+  S(`Free valproic acid ${flo}–${fhi} mg/L (target ≈ ${f1(r.ftarget)} mg/L); total ${tlo}–${thi} mg/L for reference only.`);
+  S('Because free concentrations cannot be measured here, base dosing decisions primarily on clinical response (seizure control, mental status, tremor, ataxia), using the estimates as supportive data and accounting for the upper bound of the estimated range.');
+  P('Next level');
+  {
+    const base=r.tDraw?new Date(r.tDraw):new Date(); base.setHours(0,0,0,0);
+    const changed=rec&&rec.action&&rec.action!=='維持'&&rec.action!=='不調整';
+    let add=null, why='';
+    if(carb){why='1–2 weeks after carbapenem discontinuation';}
+    else if(changed){add=4;why='day 4 after the dose change, at steady state';}
+    else if(d.days!=null&&d.days<3){add=4-d.days;why='day 4 of the current regimen, at steady state';}
+    else {add=7;why='in about 1 week for a stable regimen; sooner if albumin changes or symptoms develop';}
+    const dt2=add!=null?(()=>{const x=new Date(base);x.setDate(x.getDate()+add);return `${x.getFullYear()}/${pad(x.getMonth()+1)}/${pad(x.getDate())}`})():'';
+    S(`${dt2?dt2+' ('+why+')':why.charAt(0).toUpperCase()+why.slice(1)}: obtain a total valproic acid trough within 1 h before the next dose, together with serum albumin and BUN, to re-estimate the free concentration.`);
+  }
+  P('Monitoring');
+  S('Laboratory: serum ammonia (especially with altered mental status), platelet count, and liver function (aminotransferases, bilirubin) at least weekly during hospitalization; more often if abnormal.');
+  S('Clinical: mental status, somnolence, tremor, ataxia, and seizure frequency.');
+  const saf=[];
+  if(d.nh3!=null&&d.nh3>NH3_ULN&&r.sx.some(s=>/意識|嗜睡/.test(s))) saf.push('Possible valproate-induced hyperammonemic encephalopathy: consider L-carnitine per institutional protocol and dose reduction or interruption of valproic acid.');
+  if(d.plt!=null&&d.plt<100) saf.push('Thrombocytopenia: consider dose reduction, assess coagulation before invasive procedures, and trend platelet counts.');
+  if(d.alt!=null&&d.alt>120) saf.push('ALT > 3 times the upper limit of normal: recommend discontinuing valproic acid and switching to an alternative antiseizure medication.');
+  if(chk('ltg')) saf.push('Lamotrigine: confirm the dose has been reduced for concomitant valproic acid; monitor for rash.');
+  if(chk('pht')) saf.push('Phenytoin: interpret phenytoin levels with albumin correction as well.');
+  if(chk('tpm')) saf.push('Topiramate: monitor serum ammonia.');
+  if(chk('asa')||chk('asahi')) saf.push('Aspirin: may increase the free fraction in hypoalbuminemia; reassess the indication.');
+  if((d.bun!=null&&d.bun>=51.05)||chk('esrd')) saf.push('Renal impairment / dialysis: the free fraction is increased; interpret using the upper bound of the estimates. Monitor seizure control on dialysis days and give doses after dialysis if needed.');
+  if(d.sex==='F'&&d.age!=null&&d.age>=12&&d.age<=50) saf.push('Woman of childbearing potential: confirm she is not pregnant and is using effective contraception, and consider long-term alternatives (TFDA warning on valproate reproductive toxicity; not recommended in pregnancy).');
+  if(saf.length){P('Safety');saf.forEach(S);}
+  P('Follow-up');
+  S('Pharmacy will continue to follow and will reassess when the next level and laboratory results are available. Please contact the Pharmaceutical Care Section with any questions.');
+  if(cited.length){
+    L.push('');
+    L.push('References:');
+    cited.forEach((k,i)=>L.push(`${i+1}. ${REFS[k]}`));
+  }
+  L.push('');
+  L.push('This evaluation is intended to support the care team; please apply clinical judgment.');
+  return L.join('\n').replace(/\bTVPA\b/g,'total valproic acid').replace(/\bVPA\b/g,'valproic acid');
+}
+
+const EXAMPLE={doseTime:'05:00',drawTime:'12:30',age:72,sex:'M',ht:168,wt:60,ward:'ward',ind:'epi',liver:'none',form:'iv',dose:500,freq:'3',days:4,trough:'y',tvpa:48,alb:2.6,bun:28,scr:1.1,tbil:0.6,alt:22,plt:148,nh3:78,frange:'5-15',trange:'auto',ftarget:'',sx1:true};
+function setAll(o){
+  document.querySelectorAll('#f input,#f select').forEach(el=>{
+    if(el.type==='checkbox') el.checked=!!o[el.id];
+    else if(el.id in o) el.value=o[el.id];
+    else if(el.tagName==='SELECT') el.selectedIndex=0;
+    else el.value='';
+  });
+  ['doseDate','drawDate'].forEach(k=>{if(!$(k).value)$(k).value=today()});
+  if(!('freq' in o)) $('freq').value='3';
+  render();
+}
+$('btnExample').addEventListener('click',()=>{frTouched=false;setAll(EXAMPLE);$('exampleBanner').hidden=false});
+$('btnClear').addEventListener('click',()=>{frTouched=false;setAll({frange:'5-15',trange:'auto'});$('exampleBanner').hidden=true});
+let frTouched=false;
+$('frange').addEventListener('change',()=>{frTouched=true});
+$('ind').addEventListener('change',()=>{if(!frTouched){$('frange').value=$('ind').value==='bp'?'4-12':'5-15';}});
+$('f').addEventListener('input',render);
+$('f').addEventListener('change',render);
+$('f').addEventListener('submit',e=>e.preventDefault());
+$('btnCopy').addEventListener('click',()=>{
+  const t=$('soap').value, ok=()=>{$('copied').hidden=false;setTimeout(()=>$('copied').hidden=true,1600)};
+  try{navigator.clipboard.writeText(t).then(ok,()=>{$('soap').select();ok()})}catch(e){$('soap').select();ok()}
+});
+setAll(EXAMPLE);
+})();
+</script>
+
+</body>
+</html>

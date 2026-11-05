@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<title>臨床資源｜藥事照護組</title>
+<link rel="icon" type="image/svg+xml" href="tdm/vpa-icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Same tokens as the Dashboard so the two pages read as one site */
+:root{
+  --font:"Inter","Noto Sans TC",system-ui,-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif;
+  --bg:#f7f7f5;--panel:#ffffff;--fg:#1f2328;--muted:#6b7078;--line:#e3e3df;
+  --tdm:#1f6f5c;--tdm-soft:#e3f1ec;
+  color-scheme:light;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font);-webkit-font-smoothing:antialiased;font-feature-settings:"tnum" 1}
+.wrap{max-width:960px;margin:0 auto;padding-block:28px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:28px}
+header{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:14px}
+h1{margin:0;font-size:24px;font-weight:700;letter-spacing:-.01em}
+.sub{margin:4px 0 0;color:var(--muted);font-size:13px}
+.back{display:inline-flex;align-items:center;gap:6px;color:var(--muted);text-decoration:none;font-size:13px;padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.back:hover,.back:focus-visible{color:var(--fg);border-color:var(--muted)}
+section{display:flex;flex-direction:column;gap:12px}
+.sec-h{display:flex;align-items:baseline;gap:10px}
+.sec-h h2{margin:0;font-size:15px;font-weight:700;letter-spacing:.06em;color:var(--tdm)}
+.sec-h span{font-size:12px;color:var(--muted)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));gap:12px}
+.card{display:flex;gap:14px;align-items:flex-start;padding:16px;background:var(--panel);border:1px solid var(--line);border-radius:12px;text-decoration:none;color:inherit;min-width:0}
+.card:hover,.card:focus-visible{border-color:var(--tdm);box-shadow:0 0 0 1px var(--tdm) inset;outline:none}
+.card img{width:44px;height:44px;flex:none;border-radius:10px}
+.card-t{font-weight:700;font-size:16px}
+.card-d{margin-top:4px;font-size:13px;line-height:1.55;color:var(--muted)}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.tags b{font-weight:500;font-size:11px;color:var(--tdm);background:var(--tdm-soft);padding:2px 8px;border-radius:99px}
+footer{border-top:1px solid var(--line);padding-top:14px;text-align:center;color:var(--muted);font-size:12px;letter-spacing:.06em}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>臨床資源</h1>
+      <p class="sub">藥事照護組臨床工具與參考資料</p>
+    </div>
+    <a class="back" href="./">← 回到 Dashboard</a>
+  </header>
+
+  <section aria-labelledby="sec-tdm">
+    <div class="sec-h"><h2 id="sec-tdm">TDM</h2><span>Therapeutic drug monitoring</span></div>
+    <div class="cards">
+      <a class="card" href="tdm/valproic-acid.html">
+        <img src="tdm/vpa-icon.svg" alt="">
+        <div>
+          <div class="card-t">Valproic acid</div>
+          <div class="card-d">以 total valproic acid、albumin 與病人情境推估 free 濃度，比較多個預測模型並產生英文 SOAP 建議。</div>
+          <div class="tags"><b>Free VPA 估計</b><b>毒性閾值</b><b>SOAP</b></div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <footer>亞東紀念醫院｜臨床藥學科｜藥事照護組</footer>
+</div>
+</body>
+</html>
