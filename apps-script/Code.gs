@@ -95,11 +95,13 @@ function page_() {
       cache.putAll(parts, 600);
     } catch (err) { /* 快取失敗時略過 */ }
   }
-  return HtmlService.createHtmlOutput(html)
+  const out = HtmlService.createHtmlOutput(html)
     .setTitle('亞東藥學部 藥事照護組 Dashboard')
-    .setFaviconUrl(PAGE_URL + 'icon-32.png?v=2')
     .addMetaTag('viewport', 'width=device-width, initial-scale=1')
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+  // 分頁小圖示：網址必須以 .png 結尾（不能帶 ?v= 參數）；設定失敗也不影響網頁顯示
+  try { out.setFaviconUrl(PAGE_URL + 'favicon-v2.png'); } catch (err) {}
+  return out;
 }
 
 /** 臨床資源頁與工具頁：不含任何資料，不需密碼。網頁內以 window.EXEC_URL 判斷連結要指回這個網址。 */
