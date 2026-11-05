@@ -36,6 +36,8 @@ const MAX_FAILS = 30;
 const LOCK_SECONDS = 600;
 
 function doGet(e) {
+  // 沒有帶密碼參數＝直接用瀏覽器開這個網址：回傳 Dashboard 網頁本身（給連不到 github.io 的電腦使用）
+  if (!e || !e.parameter || e.parameter.p == null) return page_();
   const cache = CacheService.getScriptCache();
   const fails = Number(cache.get('fails') || 0);
   if (fails >= MAX_FAILS) return json_({ ok: false, error: 'locked' });
@@ -57,6 +59,42 @@ function doGet(e) {
   try { text = build_(); } catch (err) { return json_({ ok: false, error: String(err && err.message || err) }); }
   if (CACHE_SECONDS > 0) cachePut_(cache, text);
   return ContentService.createTextOutput(text).setMimeType(ContentService.MimeType.JSON);
+}
+
+/**
+ * 備用網址：由 Google 伺服器去 GitHub 取最新的 Dashboard 網頁，再從 script.google.com 送給瀏覽器。
+ * 網頁內容永遠與 GitHub 版相同，更新網站後這裡不用改；網頁本身不含任何資料或密碼。
+ */
+const PAGE_URL = 'https://rxwindchang.github.io/FENH_RxCare_Dashboard/';
+function page_() {
+  const cache = CacheService.getScriptCache();
+  let html = null;
+  const n = Number(cache.get('page_n') || 0);
+  if (n) {
+    const keys = []; for (let i = 0; i < n; i++) keys.push('page_' + i);
+    const got = cache.getAll(keys);
+    if (!keys.some((k) => got[k] == null)) html = keys.map((k) => got[k]).join('');
+  }
+  if (!html) {
+    const t = Date.now();
+    const res = UrlFetchApp.fetch(PAGE_URL + '?t=' + t, { muteHttpExceptions: true });
+    if (res.getResponseCode() !== 200) return HtmlService.createHtmlOutput('<p>暫時無法取得網頁（' + res.getResponseCode() + '），請稍後再試。</p>');
+    html = res.getContentText('UTF-8');
+    const cfg = UrlFetchApp.fetch(PAGE_URL + 'config.js?t=' + t, { muteHttpExceptions: true }).getContentText('UTF-8');
+    // 這裡沒有 config.js 檔案，改成直接內嵌
+    html = html.replace(/<script>[^<]*?\n?document\.write\('<script src="config\.js[^<]*<\\\/script>'\);<\/script>/, '<script>' + cfg + '<\/script>');
+    if (html.indexOf('config.js?v=') >= 0) html = html.replace(/document\.write\('<script src="config\.js\?v=' \+ Date\.now\(\) \+ '"><\\\/script>'\);/, cfg);
+    try {
+      const size = 90000, parts = {}, m = Math.ceil(html.length / size);
+      for (let i = 0; i < m; i++) parts['page_' + i] = html.slice(i * size, (i + 1) * size);
+      parts['page_n'] = String(m);
+      cache.putAll(parts, 600);
+    } catch (err) { /* 快取失敗時略過 */ }
+  }
+  return HtmlService.createHtmlOutput(html)
+    .setTitle('亞東藥學部 藥事照護組 Dashboard')
+    .addMetaTag('viewport', 'width=device-width, initial-scale=1')
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
 
 /** 讀取所有試算表，組成網頁要的資料（JSON 字串）。 */
@@ -231,6 +269,7 @@ function cacheGet_(cache) {
 function authorize() {
   for (const name in SOURCES) SpreadsheetApp.openById(SOURCES[name].id).getName();
   SpreadsheetApp.openById(BOARD_ID).getName();
+  UrlFetchApp.fetch(PAGE_URL, { muteHttpExceptions: true }); // 備用網址需要「連線到外部服務」權限
   Logger.log('授權完成。');
 }
 
