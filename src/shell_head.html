@@ -57,6 +57,7 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
 @media (prefers-reduced-motion: reduce){.dash-skeleton{animation:none}}
 .ph-banner{max-width:1280px;margin:16px auto 0;padding:12px 16px;border-radius:10px;background:color-mix(in srgb,var(--color-bad) 12%,var(--color-panel));color:var(--color-fg);font-family:var(--font-anthropic-sans);font-size:14px;box-sizing:border-box}
 .ph-banner[hidden]{display:none}
+.ph-retry{font:inherit;font-size:13px;margin-left:6px;padding:2px 10px;border-radius:999px;border:1px solid var(--color-border-line);background:var(--color-panel);color:var(--color-fg);cursor:pointer}
 .ph-gate{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--color-bg);z-index:10;padding:16px}
 .ph-gate[hidden]{display:none}
 .ph-gate-box{width:100%;max-width:340px;background:var(--color-panel);border:1px solid var(--color-border-line);border-radius:14px;padding:28px 24px;box-sizing:border-box;font-family:var(--font-anthropic-sans)}
@@ -77,11 +78,16 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
   const colors = ['#2f6fdb', '#e07b2b', '#2f9e6e', '#c2448f', '#7a5cd6', '#8a8f2a', '#d24b4b', '#3aa0c4'];
   const get = (id) => state[id] || { status: 'loading', data: [], refreshing: false, meta: [] };
   const notify = () => subs.forEach((fn) => { try { fn(); } catch (e) { console.error(e); } });
-  const banner = (msg) => {
+  const banner = (msg, retry) => {
     const b = document.getElementById('ph-banner');
     if (!b) return;
     b.textContent = msg || '';
     b.hidden = !msg;
+    if (msg && retry) {
+      const a = document.createElement('button'); a.type = 'button'; a.textContent = '重試'; a.className = 'ph-retry';
+      a.addEventListener('click', () => { banner(''); load(lastPw, false); });
+      b.append(' ', a);
+    }
   };
   const setAll = (status, message) => {
     Object.keys(loaders).forEach((id) => { state[id] = { status, data: [], message, meta: [] }; });
@@ -111,7 +117,7 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
     if (show) { const i = document.getElementById('ph-pw'); if (i) { i.value = ''; i.focus(); } }
   };
 
-  let loading = false, shownT = 0;
+  let loading = false, shownT = 0, lastPw = null;
   function syncLine(payload, busy) {
     const t = document.getElementById('ph-sync');
     if (!t) return;
@@ -150,6 +156,7 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
     }
     const typed = !!pw;
     pw = pw || store.get();
+    lastPw = pw;
     if (!pw) return gate(true);
     // 已登入過：先用這台裝置上的資料立刻顯示；未滿 30 分鐘就不再讀取
     const cached = !typed && dataCache.get();
@@ -162,14 +169,28 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
     if (loading) return;
     loading = true;
     syncLine(cached && cached.payload, true);
-    let payload;
-    try {
-      const res = await fetch(cfg.endpoint + '?p=' + encodeURIComponent(pw) + (force ? '&fresh=1' : ''), { cache: 'no-store' });
-      payload = await res.json();
-    } catch (e) {
+    let payload, why = '';
+    // 連線失敗時自動再試一次（Google 伺服器偶爾會短暫忙碌）
+    for (let attempt = 0; attempt < 2 && !payload; attempt++) {
+      if (attempt) await new Promise((r) => setTimeout(r, 2000));
+      let res;
+      try {
+        res = await fetch(cfg.endpoint + '?p=' + encodeURIComponent(pw) + (force ? '&fresh=1' : ''), { cache: 'no-store' });
+      } catch (e) {
+        why = navigator.onLine === false ? '這台裝置目前沒有網路。'
+          : '連不到 Google 的資料伺服器（script.google.com）。若是院內電腦，可能是院內網路或防毒／廣告阻擋外掛擋住了，請改用手機網路或關閉阻擋外掛再試。（代碼 NET）';
+        continue;
+      }
+      const text = await res.text().catch(() => '');
+      try { payload = JSON.parse(text); }
+      catch (e) {
+        why = 'Google 的資料伺服器暫時沒有正常回應，可能是同時開啟的人太多，請稍候 1 分鐘再試。（代碼 ' + (res.status || '') + (/^\s*</.test(text) ? '-HTML' : '') + '）';
+      }
+    }
+    if (!payload) {
       loading = false;
-      if (shown) { syncLine(cached.payload); banner('暫時無法連線，顯示的是上次讀取的資料。'); return; }
-      gate(false); setAll('error', String(e)); banner('無法連線到資料來源，請稍後重新整理。'); return notify();
+      if (shown) { syncLine(cached.payload); banner('暫時無法更新，顯示的是上次讀取的資料。' + why, true); return; }
+      gate(false); setAll('error', why); banner('無法讀取資料：' + why, true); return notify();
     }
     loading = false;
     if (payload && payload.error === 'unauthorized') { store.clear(); return gate(true, '密碼已更換或錯誤，請重新輸入。'); }
