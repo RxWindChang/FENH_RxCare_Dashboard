@@ -95,7 +95,7 @@ function page_() {
   }
   return HtmlService.createHtmlOutput(html)
     .setTitle('亞東藥學部 藥事照護組 Dashboard')
-    .setFaviconUrl(PAGE_URL + 'icon-32.png')
+    .setFaviconUrl(PAGE_URL + 'icon-32.png?v=2')
     .addMetaTag('viewport', 'width=device-width, initial-scale=1')
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
