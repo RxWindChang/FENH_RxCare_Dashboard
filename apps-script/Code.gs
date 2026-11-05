@@ -68,12 +68,14 @@ function doGet(e) {
  * 網頁內容永遠與 GitHub 版相同，更新網站後這裡不用改；網頁本身不含任何資料或密碼。
  */
 const PAGE_URL = 'https://rxwindchang.github.io/FENH_RxCare_Dashboard/';
+// 網頁快取的版本代號：改動這裡就會立刻改抓 GitHub 最新網頁（不必等 10 分鐘）
+const PAGE_CACHE = 'page_v2';
 function page_() {
   const cache = CacheService.getScriptCache();
   let html = null;
-  const n = Number(cache.get('page_n') || 0);
+  const n = Number(cache.get(PAGE_CACHE + '_n') || 0);
   if (n) {
-    const keys = []; for (let i = 0; i < n; i++) keys.push('page_' + i);
+    const keys = []; for (let i = 0; i < n; i++) keys.push(PAGE_CACHE + '_' + i);
     const got = cache.getAll(keys);
     if (!keys.some((k) => got[k] == null)) html = keys.map((k) => got[k]).join('');
   }
@@ -88,8 +90,8 @@ function page_() {
     if (html.indexOf('config.js?v=') >= 0) html = html.replace(/document\.write\('<script src="config\.js\?v=' \+ Date\.now\(\) \+ '"><\\\/script>'\);/, cfg);
     try {
       const size = 90000, parts = {}, m = Math.ceil(html.length / size);
-      for (let i = 0; i < m; i++) parts['page_' + i] = html.slice(i * size, (i + 1) * size);
-      parts['page_n'] = String(m);
+      for (let i = 0; i < m; i++) parts[PAGE_CACHE + '_' + i] = html.slice(i * size, (i + 1) * size);
+      parts[PAGE_CACHE + '_n'] = String(m);
       cache.putAll(parts, 600);
     } catch (err) { /* 快取失敗時略過 */ }
   }
@@ -106,7 +108,7 @@ function subpage_(name) {
   const sp = SUBPAGES[name];
   if (!sp) return HtmlService.createHtmlOutput('<p>找不到這個頁面。</p>');
   const cache = CacheService.getScriptCache();
-  const key = 'sub_' + name;
+  const key = PAGE_CACHE + '_sub_' + name;
   let html = null;
   const n = Number(cache.get(key + '_n') || 0);
   if (n) {
