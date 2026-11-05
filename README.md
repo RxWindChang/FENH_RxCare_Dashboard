@@ -26,6 +26,8 @@ Apps Script 網頁應用程式（比對密碼）──讀取──▶ 照護組�
 Google 伺服器會到 GitHub 取最新網頁再送出（快取 10 分鐘），所以更新網站後不用另外處理。
 第一次啟用需執行一次 `authorize`（允許「連線到外部服務」），並發布新版本。
 
+臨床資源頁與工具頁也能經由備用網址開啟：`/exec?page=resources`（臨床資源）、`/exec?page=vpa`（Valproic acid 計算器）。這些頁面不含資料、不需密碼；Dashboard 不是在 github.io 開啟時，「臨床資源」圖示會自動改連到 `/exec?page=resources`。新增工具頁時，同步在 `Code.gs` 的 `SUBPAGES` 加一筆。
+
 ## 檔案
 
 | 路徑 | 用途 |

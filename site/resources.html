@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex, nofollow, noarchive">
 <meta name="referrer" content="no-referrer">
 <title>臨床資源｜藥事照護組</title>
-<link rel="icon" type="image/svg+xml" href="tdm/vpa-icon.svg">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E %3Crect width='64' height='64' rx='14' fill='%231f6f5c'/%3E %3Ctext x='32' y='30' text-anchor='middle' font-family='Arial, Helvetica, sans-serif' font-weight='900' font-size='25' letter-spacing='-0.5' fill='%23ffffff'%3EVPA%3C/text%3E %3Crect x='7' y='43' width='50' height='8' rx='2' fill='%23ffffff' fill-opacity='0.22'/%3E %3Cpath d='M9 56 L13 38 Q16 45 21 47 L25 36 Q28 44 33 46 L37 35 Q40 43 46 46' fill='none' stroke='%23ffffff' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E %3Ccircle cx='48' cy='46.5' r='5' fill='%23f2c14e' stroke='%231f6f5c' stroke-width='1.5'/%3E %3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -49,14 +49,14 @@ footer{border-top:1px solid var(--line);padding-top:14px;text-align:center;color
       <h1>臨床資源</h1>
       <p class="sub">藥事照護組臨床工具與參考資料</p>
     </div>
-    <a class="back" href="./">← 回到 Dashboard</a>
+    <a class="back" id="back" href="./">← 回到 Dashboard</a>
   </header>
 
   <section aria-labelledby="sec-tdm">
     <div class="sec-h"><h2 id="sec-tdm">TDM</h2><span>Therapeutic drug monitoring</span></div>
     <div class="cards">
-      <a class="card" href="tdm/valproic-acid.html">
-        <img src="tdm/vpa-icon.svg" alt="">
+      <a class="card" data-page="vpa" href="tdm/valproic-acid.html">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E %3Crect width='64' height='64' rx='14' fill='%231f6f5c'/%3E %3Ctext x='32' y='30' text-anchor='middle' font-family='Arial, Helvetica, sans-serif' font-weight='900' font-size='25' letter-spacing='-0.5' fill='%23ffffff'%3EVPA%3C/text%3E %3Crect x='7' y='43' width='50' height='8' rx='2' fill='%23ffffff' fill-opacity='0.22'/%3E %3Cpath d='M9 56 L13 38 Q16 45 21 47 L25 36 Q28 44 33 46 L37 35 Q40 43 46 46' fill='none' stroke='%23ffffff' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E %3Ccircle cx='48' cy='46.5' r='5' fill='%23f2c14e' stroke='%231f6f5c' stroke-width='1.5'/%3E %3C/svg%3E" alt="">
         <div>
           <div class="card-t">Valproic acid</div>
           <div class="card-d">以 total valproic acid、albumin 與病人情境推估 free 濃度，比較多個預測模型並產生英文 SOAP 建議。</div>
@@ -68,5 +68,11 @@ footer{border-top:1px solid var(--line);padding-top:14px;text-align:center;color
 
   <footer>亞東紀念醫院｜臨床藥學科｜藥事照護組</footer>
 </div>
+<script>
+/* 經由 Apps Script 備用網址開啟時，連結改指回同一個 /exec 網址 */
+(function(){var x=window.EXEC_URL;if(!x)return;
+var b=document.getElementById('back');b.href=x;b.target='_top';
+document.querySelectorAll('a[data-page]').forEach(function(a){a.href=x+'?page='+a.dataset.page;a.target='_top';});})();
+</script>
 </body>
 </html>

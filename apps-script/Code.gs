@@ -37,6 +37,8 @@ const LOCK_SECONDS = 600;
 
 function doGet(e) {
   // 沒有帶密碼參數＝直接用瀏覽器開這個網址：回傳 Dashboard 網頁本身（給連不到 github.io 的電腦使用）
+  // ?page=resources / ?page=vpa：臨床資源頁與 TDM 計算器（同樣由 GitHub 取得後轉送，給連不到 github.io 的電腦）
+  if (e && e.parameter && e.parameter.page) return subpage_(String(e.parameter.page));
   if (!e || !e.parameter || e.parameter.p == null) return page_();
   const cache = CacheService.getScriptCache();
   const fails = Number(cache.get('fails') || 0);
@@ -93,6 +95,39 @@ function page_() {
   }
   return HtmlService.createHtmlOutput(html)
     .setTitle('亞東藥學部 藥事照護組 Dashboard')
+    .addMetaTag('viewport', 'width=device-width, initial-scale=1')
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+}
+
+/** 臨床資源頁與工具頁：不含任何資料，不需密碼。網頁內以 window.EXEC_URL 判斷連結要指回這個網址。 */
+const SUBPAGES = { resources: { path: 'resources.html', title: '臨床資源｜藥事照護組' }, vpa: { path: 'tdm/valproic-acid.html', title: 'Valproic Acid TDM Calculator' } };
+function subpage_(name) {
+  const sp = SUBPAGES[name];
+  if (!sp) return HtmlService.createHtmlOutput('<p>找不到這個頁面。</p>');
+  const cache = CacheService.getScriptCache();
+  const key = 'sub_' + name;
+  let html = null;
+  const n = Number(cache.get(key + '_n') || 0);
+  if (n) {
+    const keys = []; for (let i = 0; i < n; i++) keys.push(key + '_' + i);
+    const got = cache.getAll(keys);
+    if (!keys.some((k) => got[k] == null)) html = keys.map((k) => got[k]).join('');
+  }
+  if (!html) {
+    const res = UrlFetchApp.fetch(PAGE_URL + sp.path + '?t=' + Date.now(), { muteHttpExceptions: true });
+    if (res.getResponseCode() !== 200) return HtmlService.createHtmlOutput('<p>暫時無法取得網頁（' + res.getResponseCode() + '），請稍後再試。</p>');
+    html = res.getContentText('UTF-8');
+    try {
+      const size = 90000, parts = {}, m = Math.ceil(html.length / size);
+      for (let i = 0; i < m; i++) parts[key + '_' + i] = html.slice(i * size, (i + 1) * size);
+      parts[key + '_n'] = String(m);
+      cache.putAll(parts, 600);
+    } catch (err) { /* 快取失敗時略過 */ }
+  }
+  const exec = ScriptApp.getService().getUrl();
+  html = html.replace('<head>', '<head><script>window.EXEC_URL=' + JSON.stringify(exec) + ';<\/script>');
+  return HtmlService.createHtmlOutput(html)
+    .setTitle(sp.title)
     .addMetaTag('viewport', 'width=device-width, initial-scale=1')
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }

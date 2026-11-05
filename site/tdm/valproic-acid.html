@@ -8,7 +8,7 @@
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,"Segoe UI",sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Valproic Acid TDM Calculator</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"%3E %3Crect width="64" height="64" rx="14" fill="%231f6f5c"/%3E %3Ctext x="32" y="30" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="900" font-size="25" letter-spacing="-0.5" fill="%23ffffff"%3EVPA%3C/text%3E %3Crect x="7" y="43" width="50" height="8" rx="2" fill="%23ffffff" fill-opacity="0.22"/%3E %3Cpath d="M9 56 L13 38 Q16 45 21 47 L25 36 Q28 44 33 46 L37 35 Q40 43 46 46" fill="none" stroke="%23ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/%3E %3Ccircle cx="48" cy="46.5" r="5" fill="%23f2c14e" stroke="%231f6f5c" stroke-width="1.5"/%3E %3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E %3Crect width='64' height='64' rx='14' fill='%231f6f5c'/%3E %3Ctext x='32' y='30' text-anchor='middle' font-family='Arial, Helvetica, sans-serif' font-weight='900' font-size='25' letter-spacing='-0.5' fill='%23ffffff'%3EVPA%3C/text%3E %3Crect x='7' y='43' width='50' height='8' rx='2' fill='%23ffffff' fill-opacity='0.22'/%3E %3Cpath d='M9 56 L13 38 Q16 45 21 47 L25 36 Q28 44 33 46 L37 35 Q40 43 46 46' fill='none' stroke='%23ffffff' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E %3Ccircle cx='48' cy='46.5' r='5' fill='%23f2c14e' stroke='%231f6f5c' stroke-width='1.5'/%3E %3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Noto+Sans+TC:wght@400;500;700&display=swap">
 <style>
@@ -134,7 +134,7 @@ code{font-family:var(--f-mono);font-size:12px;background:var(--soft);padding:1px
 <div class="wrap">
   <header class="top">
     <h1>Valproic Acid TDM Calculator<small>TOTAL → FREE VPA · ALBUMIN-ADJUSTED · SOAP</small></h1>
-    <div class="hdr-right"><div class="brand"><a href="../resources.html" style="color:inherit;text-decoration:none" title="回到臨床資源">← 臨床資源</a>　FEMH Pharmacy</div><div class="hdr-btns"><a class="help" href="https://claude.ai/artifact/JzE1GEvSSdwnPyQQDsex7X" target="_blank" rel="noopener" title="開啟使用說明書"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/><path d="M9 8h7M9 11.5h5"/></svg>使用說明</a>
+    <div class="hdr-right"><div class="brand"><a id="backRes" href="../resources.html" style="color:inherit;text-decoration:none" title="回到臨床資源">← 臨床資源</a>　FEMH Pharmacy</div><div class="hdr-btns"><a class="help" href="https://claude.ai/artifact/JzE1GEvSSdwnPyQQDsex7X" target="_blank" rel="noopener" title="開啟使用說明書"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/><path d="M9 8h7M9 11.5h5"/></svg>使用說明</a>
       <button type="button" id="btnExample">載入範例病人</button>
       <button type="button" id="btnClear">清空</button>
     </div></div>
@@ -658,5 +658,6 @@ setAll(EXAMPLE);
 })();
 </script>
 
+<script>(function(){var x=window.EXEC_URL;if(!x)return;var b=document.getElementById('backRes');b.href=x+'?page=resources';b.target='_top';})();</script>
 </body>
 </html>
