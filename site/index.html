@@ -8,7 +8,7 @@
 <meta http-equiv="Cache-Control" content="no-cache">
 <script>/* 版本自動比對：開啟網頁或回到分頁時檢查 version.json，有新版就自動換成新版 */
 (function () {
-  var BUILD = '9f73c1aeeb';
+  var BUILD = 'f3b4806e1b';
   function check() {
     fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
       if (!j || !j.v || j.v === BUILD) return;
@@ -1494,6 +1494,12 @@ dash.calc('ppl_latest', {
   dash.onData(render);
 })();
 </script>
+<script>/* script.google 備用網址：網頁在 googleusercontent 網域內，相對連結會失效，臨床資源改指回 Apps Script 的 ?page=resources */
+(function () {
+  if (!/googleusercontent\.com$/.test(location.hostname)) return;
+  var ep = (window.DASH_CONFIG || {}).endpoint, a = document.getElementById('ql-res');
+  if (ep && a) { a.href = ep + '?page=resources'; a.target = '_blank'; }
+})();</script>
 
 <script>
 dash.loader('board', {
