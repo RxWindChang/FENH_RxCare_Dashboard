@@ -20,10 +20,7 @@
   --f-body:"Source Serif 4","Noto Sans TC","Microsoft JhengHei","PingFang TC",sans-serif;
   --f-mono:"Source Serif 4","Noto Sans TC","Microsoft JhengHei","PingFang TC",sans-serif;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#111816; --paper:#18211e; --ink:#e3ebe7; --muted:#97a8a1; --line:#2d3a35; --soft:#202b27;
-  --accent:#5cc3a6; --accent-ink:#0d1714; --accent-soft:#1c3a32;
-  --ok:#6dcb8f; --ok-soft:#1b3326; --warn:#e7ac52; --warn-soft:#3a2c14; --bad:#f0857b; --bad-soft:#3d1f1c; --info:#86b6e3; --info-soft:#1b2b3c; color-scheme:dark}}
+/* 一律使用淺色配色（不隨裝置深色模式改變） */
 :root[data-theme="dark"]{
   --bg:#111816; --paper:#18211e; --ink:#e3ebe7; --muted:#97a8a1; --line:#2d3a35; --soft:#202b27;
   --accent:#5cc3a6; --accent-ink:#0d1714; --accent-soft:#1c3a32;
