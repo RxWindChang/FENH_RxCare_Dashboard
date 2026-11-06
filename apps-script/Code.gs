@@ -105,7 +105,7 @@ function page_() {
 }
 
 /** 臨床資源頁與工具頁：不含任何資料，不需密碼。網頁內以 window.EXEC_URL 判斷連結要指回這個網址。 */
-const SUBPAGES = { resources: { path: 'resources.html', title: '臨床資源｜藥事照護組' }, vpa: { path: 'tdm/valproic-acid.html', title: 'Valproic Acid TDM Calculator' }, vpaguide: { path: 'tdm/valproic-acid-guide.html', title: 'VPA TDM Calculator 使用說明書' } };
+const SUBPAGES = { resources: { path: 'resources.html', title: '臨床資源｜藥事照護組' }, vpa: { path: 'tdm/valproic-acid.html', title: 'Valproic Acid TDM Calculator' }, vpaguide: { path: 'tdm/valproic-acid-guide.html', title: 'VPA TDM Calculator 使用說明書' }, amdc: { path: 'dose/amdc.html', title: 'Anti-Microbial Dose Calculator (AMDC)' } };
 function subpage_(name) {
   const sp = SUBPAGES[name];
   if (!sp) return HtmlService.createHtmlOutput('<p>找不到這個頁面。</p>');
