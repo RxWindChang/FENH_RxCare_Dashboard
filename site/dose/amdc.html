@@ -652,7 +652,7 @@ const VAN_TDM = (c) => {
   return `<div class="tdmx"><ul><li><b>Trough level</b> 請於給藥前 0–30 min 抽測（just before dosing）。</li><li><b>Peak level</b> 請於輸注完成後 1 小時抽測（1-h after the end of infusion）。</li></ul>
 <div class="calcs"><span>AUC 線上計算：</span><a class="calc" href="${VAN_PAT}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h2M12 11h2M16 11h0M8 15h2M12 15h2M8 18h2M12 18h4"/></svg>Japan PAT Calc, v4.1c</a><a class="doc" href="${VAN_PAT_DOC}" target="_blank" rel="noopener" title="Japan PAT Calc 繁體中文使用說明書" aria-label="Japan PAT Calc 繁體中文使用說明書"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M9 8h7M9 11.5h5"/></svg>說明書</a><a class="calc" href="${VAN_CLINCALC}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h2M12 11h2M8 15h2M12 15h2M8 18h2M12 18h4"/></svg>ClinCalc - Vanco</a></div></div>`;
 };
-add({ id: 'van', tdmFn: VAN_TDM, ref: 'ASHP/IDSA 2020・UpToDate', rrRef: 'UpToDate・SG', tdmIcon: 1, auc: 1, g: 'Vancomycin', b: 'Vancomycin (Vanco)', zh: '安克', st: '500 mg/vial', cls: 'bac', sub: 'gpc', rt: 'inj', kw: 'glycopeptide mrsa vanco', wt: 'TBW', rd: 250, mx: 2500,
+add({ id: 'van', tdmFn: VAN_TDM, aucLad: 1, ref: 'ASHP/IDSA 2020・UpToDate', rrRef: 'UpToDate・SG', tdmIcon: 1, auc: 1, g: 'Vancomycin', b: 'Vancomycin (Vanco)', zh: '安克', st: '500 mg/vial', cls: 'bac', sub: 'gpc', rt: 'inj', kw: 'glycopeptide mrsa vanco', wt: 'TBW', rd: 250, mx: 2500,
   L: [K(7.5, '每次 AD', { rng: [7.5, 10], rd: 50, t: 'ESRD-iHD 維持劑量，依 pre-HD 濃度調整' }), K(15, 'q48h', { t: '依濃度' }), K(15, 'q24h'), K(10, 'q12h'), K(15, 'q12h'), K(20, 'q12h'), K(15, 'q8h'), K(20, 'q8h', { hd: 1 })],
   R: [[90, 5, 6], [50, 4, 5], [20, 2, 2], [0, 1, 1, 'Loading 後依濃度給藥']],
   rr: { HD: [0, 0, '血液透析者的建議抽血時間為「透析前」，C pre-HD 的建議區間為 15–25 μg/mL。Loading 25 mg/kg；之後每次 AD 7.5–10 mg/kg（四捨五入至 50 mg）'], PD: [1, 1, 'Loading 25 mg/kg，依濃度追加'], CRRT: [3, 4, 'Loading 25 mg/kg，維持 7.5–10 mg/kg q12h'], SLED: [2, 2, 'SLED 結束後 15 mg/kg，24 h 後監測濃度'] },
@@ -720,10 +720,10 @@ add({ id: 'tgc', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Tigecycline', b: 'Tygaci
   inf: { dil: { NS: '室溫 24 h、冷藏 48 h', D5W: '同 NS', LR: '相容' }, v: [100], t: [0.5, 1], ti: 1, c: [0, 1] },
   nt: ['需依 Child-Pugh 分級調整：Child-Pugh A/B 不需調整；C 維持劑量減半。請於左側「進階」輸入 Child-Pugh。'] });
 
-add({ id: 'minoiv', ref: 'PI', rrRef: 'UpToDate・SG', ind: ['標準劑量', 'CRAB／S. maltophilia 高劑量'], g: 'Minocycline', b: 'Menocik', zh: '美諾幸', st: '100 mg/vial', cls: 'bac', sub: 'tm', rt: 'inj', kw: 'tetracycline crab stenotrophomonas',
-  L: [T(100, 'q12h'), T(200, 'q12h', { hd: 1, t: 'CRAB／S. maltophilia 高劑量' })],
-  R: [[60, 0, 1], [0, 0, 0, '腎功能不全：每日總量不超過 200 mg（仿單）']],
-  rr: SAME(0, 0, '每日不超過 200 mg'), ld: 'Loading 200 mg',
+add({ id: 'minoiv', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Minocycline', b: 'Menocik', zh: '美諾幸', st: '100 mg/vial', cls: 'bac', sub: 'tm', rt: 'inj', kw: 'tetracycline crab stenotrophomonas',
+  L: [T(100, 'q12h', { t: '腎功能不全時（每日總量 ≤200 mg）' }), T(200, 'q12h', { t: '本院標準劑量：CRAB／S. maltophilia（IDSA AMR Guidance 2024）' })],
+  R: [[60, 1, 1], [0, 0, 0, '腎功能不全：每日總量不超過 200 mg（仿單）']],
+  rr: SAME(0, 0, '每日不超過 200 mg'),
   tox: ['前庭毒性（頭暈、眩暈）', '肝毒性', '色素沉著、光敏感', 'DRESS', '加重氮血症'],
   inf: { dil: { NS: '依廠牌仿單', D5W: '依廠牌仿單', LR: '依廠牌仿單' }, v: [100, 250, 500], t: [1], ti: 0, note: '輸注 ≥60 min；勿與含鈣溶液同管' } });
 
@@ -1094,6 +1094,7 @@ function patient() {
   if (c.aki && b > 0 && p > 0 && h > 0) {
     const base = cg(c.cgW[1], b), mean = (p + c.scr) / 2, dS = c.scr - p;
     c.ke = Math.max(0, (b * base / mean) * (1 - (24 * dS) / (h * 1.5)));
+    c.akiProg = dS > 0; /* Scr 上升中＝AKI in progress */
   }
   const opts = renalOptions(c);
   let pick = S.crPick;
@@ -1134,8 +1135,9 @@ const modeKey = (d) => S.mode[d.id] || (d.modeDefault ? d.modeDefault(C) : d.mod
 const ctxFor = (d, c) => ({ ...c, sev: d.col === 1 ? 'mild' : 'sev' });
 const imKey = (d) => (d.im ? (S.im[d.id] && d.im.includes(S.im[d.id]) ? S.im[d.id] : d.imDef || 'std') : 'std');
 const IMLAB = { std: '標準輸注', pif: '延長輸注 pIF', cif: '持續輸注 cIF' };
-const eff = (d) => {
+const eff = (d, c = C) => {
   let r = d;
+  if (d.aucLad && c && c.ok !== false && c.rrt === 'none' && c.cr > 0) { const v = vancoLadder(d, c); if (v) r = { ...r, ...v }; }
   if (d.modes) { const m = d.modes.find((x) => x.k === modeKey(d)) || d.modes[0]; r = { ...d, ...m }; }
   const im = imKey(d);
   if (im !== 'std') { r = { ...r, _m: im }; if (im === 'pif' && d.pif) r = { ...r, L: d.pif.L, R: d.pif.R, rr: d.pif.rr || r.rr, nt: [...(d.pif.nt || []), ...(r.nt || [])] }; }
@@ -1151,7 +1153,7 @@ function bandLabel(R, i, unit) {
 }
 
 function pick(d0, c0) {
-  const d = eff(d0), notes = []; let idx = null, band = '', rrtText = null, mark = '';
+  const d = eff(d0, c0), notes = []; let idx = null, band = '', rrtText = null, mark = '';
   const c = ctxFor(d, c0);
   const sevI = d.col === 1 ? 1 : 2;
   const normal = d.R[0][sevI];
@@ -1177,7 +1179,12 @@ function pick(d0, c0) {
     const bi = d.rf.findIndex((r) => c.cr >= r[0]); const b = d.rf[bi < 0 ? d.rf.length - 1 : bi];
     band = bandLabel(d.rf, bi < 0 ? d.rf.length - 1 : bi, 'CrCl'); if (b[1] < 1) mark = mark || 'RF';
   }
-  if (d.auc && c.rrt === 'none' && idx >= 0 && !mark) {
+  if (d._lad && c.rrt === 'none') {
+    band = `CrCl ${r0(c.cr)}`;
+    if (d._lad.aki) { mark = 'AKI'; notes.push(`KeGFR 顯示 AKI 進展中（Scr 上升）：建議採目標 AUC₂₄ 450 之劑量，並於 24–48 h 內以 TDM 及 Scr 趨勢重新評估。`); }
+    notes.push(`AUC 估算：CL_vanco ≈ CrCl × 0.06 = ${r1(d._lad.cl)} L/h（CrCl 上限 150）；先依目標 AUC 求每日總量，再切成每劑為 250 mg 倍數之給藥間隔（每劑 ≤2,500 mg 且 ≤20 mg/kg TBW）。實際劑量以 TDM（Bayesian AUC）調整。`);
+    if (c.cr < 20) notes.push('CrCl <20：估算誤差大，建議 loading 後依濃度給藥。');
+  } else if (d.auc && c.rrt === 'none' && idx >= 0 && !mark) {
     let best = idx, bd = 1e9;
     d.L.forEach((t, i) => { if (!/^q\d+h$/.test(t.f)) return; const a = vancoAUC(d, t, c); if (a == null) return; const dd = Math.abs(a - 500); if (dd < bd) { bd = dd; best = i; } });
     if (best !== idx) notes.push('依估算 AUC₂₄ 最接近 500 mg·h/L 之階層作為建議。');
@@ -1188,12 +1195,33 @@ function pick(d0, c0) {
   if (rrtText) status = 'rt';
   else if (idx === -1) status = 'no';
   else if (idx == null) status = 'rt';
-  else if (idx < normal || mark === 'RF') status = 'adj';
+  else if (idx < normal || mark === 'RF' || mark === 'AKI') status = 'adj';
   else if (idx > normal) status = 'up';
   return { d, idx, notes, band, rrtText, normal, status, mark };
 }
 
 const PERDAY = { q4h: 6, q6h: 4, q8h: 3, q12h: 2, q24h: 1, q36h: 2 / 3, q48h: 0.5, q72h: 1 / 3 };
+/* Vancomycin：以目標 AUC（450／500／550）推算每日總量，再切成每劑 250 mg 倍數之給藥間隔 */
+function vancoLadder(d, c) {
+  const cl = Math.min(c.cr, 150) * 0.06, W = c.wt; if (!(cl > 0) || !(W > 0)) return null;
+  const maxPer = Math.min(2500, Math.ceil(20 * W / 250) * 250);
+  const ivs = [['q8h', 3], ['q12h', 2], ['q24h', 1], ['q48h', 0.5]].filter(([f]) => (f !== 'q8h' || c.cr >= 50) && (f !== 'q48h' || c.cr < 30));
+  const cand = [];
+  ivs.forEach(([f, n], oi) => { for (let per = 500; per <= maxPer; per += 250) cand.push({ f, n, oi, per, day: per * n, auc: per * n / cl }); });
+  if (!cand.length) return null;
+  const pickT = (T, pool, f0) => pool.map((x) => ({ x, s: Math.abs(x.auc - T) + (f0 && x.f !== f0 ? 15 : 0) - x.oi * 0.01 }))
+    .sort((a, b) => a.s - b.s)[0]?.x;
+  /* 中間階：最接近 AUC 500；差距 ≤10 時取較長間隔 */
+  /* AKI 進展中（KeGFR、Scr 上升）：建議階改為 AUC 450，上下階為 500／400 */
+  const Tc = c.aki && c.akiProg ? 450 : 500;
+  const best0 = [...cand].sort((a, b) => Math.abs(a.auc - Tc) - Math.abs(b.auc - Tc))[0];
+  const mid = cand.filter((x) => Math.abs(x.auc - Tc) <= Math.abs(best0.auc - Tc) + 10).sort((a, b) => b.oi - a.oi)[0];
+  const dn = pickT(Tc - 50, cand.filter((x) => x.auc < mid.auc - 1), mid.f), up = pickT(Tc + 50, cand.filter((x) => x.auc > mid.auc + 1), mid.f);
+  const mk = (x, T) => ({ fn: () => x.per, f: x.f, bl: `目標 AUC ${T}`, hd: x.auc > 600 ? 1 : 0,
+    sub: `每日總量 ${x.day.toLocaleString('en-US')} mg（目標 AUC ${T} → ${Math.round(T * cl).toLocaleString('en-US')} mg/day）；估算 AUC₂₄ ≈ ${r0(x.auc)} mg·h/L${x.auc > 600 ? '（>600，AKI 風險上升）' : ''}；每劑 ${r1(x.per / W)} mg/kg（TBW ${r1(W)} kg）` });
+  const L = [dn && mk(dn, Tc - 50), mk(mid, Tc), up && mk(up, Tc + 50)].filter(Boolean), mi = dn ? 1 : 0;
+  return { L, R: [[0, mi, mi]], arc: d.arc && { i: mi, t: d.arc.t }, rf: null, _lad: { cl, mi, aki: Tc === 450 } };
+}
 function vancoAUC(d, t, c) {
   if (c.rrt !== 'none' || t.k == null || !PERDAY[t.f]) return null;
   const W = dosingWeight(d, c)[1]; let mg = roundTo(t.k * W, d.rd || 10); const cap = t.mx || d.mx; if (cap && mg > cap) mg = cap;
@@ -1418,9 +1446,10 @@ function renderDetail() {
   const selT0 = sel != null && sel >= 0 ? L[sel] : null;
   const colI = d.col === 1 ? 1 : 2, bandMap = {};
   const addB = (i, t) => { if (i == null || i < 0) return; (bandMap[i] = bandMap[i] || []).push(t); };
-  if (d.R.length > 1 || !d.rf) d.R.forEach((r, bi) => addB(r[colI], bandLabel(d.R, bi, d.basis === 'egfr' ? 'eGFR' : 'CrCl')));
+  if (d._lad) L.forEach(({ t, i }) => addB(i, t.bl));
+  else if (d.R.length > 1 || !d.rf) d.R.forEach((r, bi) => addB(r[colI], bandLabel(d.R, bi, d.basis === 'egfr' ? 'eGFR' : 'CrCl')));
   if (d.rf) d.rf.forEach((r, bi) => { if (d.R.length === 1) (bandMap[d.R[0][colI]] = bandMap[d.R[0][colI]] || []).push(`${bandLabel(d.rf, bi, 'CrCl')}${r[1] < 1 ? `（×${Math.round(r[1] * 100)}%）` : ''}`); });
-  if (d.rr && !d.rrt) Object.entries(d.rr).forEach(([k, e]) => { if (Array.isArray(e)) addB(e[colI - 1], RRTNAME[k]); });
+  if (d.rr && !d.rrt && !d._lad) Object.entries(d.rr).forEach(([k, e]) => { if (Array.isArray(e)) addB(e[colI - 1], RRTNAME[k]); });
   const refOf = (i) => { const bs = bandMap[i] || []; const onlyRRT = bs.length && bs.every((b) => /^(iHD|PD|CRRT|SLED)$/.test(b)); return d._m === 'pif' ? 'UpToDate' : onlyRRT ? (d.rrRef || d.ref || '') : (d.ref || ''); };
   const banned = new Set(d.ban ? d.ban(CC) : []);
   const LA = L.filter(({ i }) => !banned.has(i)), pos = LA.findIndex((x) => x.i === p.idx);
@@ -1429,7 +1458,7 @@ function renderDetail() {
   const visible = LA.filter(({ i }) => S.showAll || p.idx == null || p.idx < 0 || best(i) || near(i) || LA.length <= 4);
   h += '<div class="ladder">' + [...visible].reverse().map(({ t, i, x }) => {
     const cls = best(i) ? 'best' : near(i) ? 'near' : 'dim';
-    const lv = best(i) ? (p.mark === 'ARC' ? '建議（ARC）' : p.mark === 'AKI-48h' ? '建議（AKI 48h）' : '最適建議') : near(i) ? (i > p.idx ? '上一階' : '下一階') : `階層 ${i + 1}`;
+    const lv = best(i) ? (p.mark === 'ARC' ? '建議（ARC）' : p.mark === 'AKI-48h' ? '建議（AKI 48h）' : p.mark === 'AKI' ? '建議（AKI 進展中）' : '最適建議') : near(i) ? (i > p.idx ? '上一階' : '下一階') : `階層 ${i + 1}`;
     return `<button class="tier ${cls} ${S.tierSel === i ? 'sel' : ''}" data-i="${i}"><span class="lv">${lv}</span><span><span class="dose">${esc(x.main)}${d._m === 'pif' ? `<span class="xb">${d.pifH}-h pIF</span>` : t.x ? `<span class="xb">${esc(t.x)}</span>` : ''}${x.po ? `<span class="poc">→ ${esc(x.po)}</span>` : ''}${t.hd ? '<span class="hdt">高劑量</span>' : ''}</span>${x.sub ? `<div class="why">${esc(x.sub)}</div>` : ''}${t.t ? `<div class="why">${esc(t.t)}</div>` : ''}</span><span class="bands">${(bandMap[i] || []).length ? esc((bandMap[i] || []).join('・')) : '<span style="opacity:.6">—</span>'}${refOf(i) ? `<i>${esc(refOf(i))}</i>` : ''}</span></button>`;
   }).join('') + '</div>';
   if (LA.length > visible.length || S.showAll) h += `<button class="morebtn" id="moreBtn">${S.showAll ? '只顯示建議與上下一階' : `顯示完整劑量階梯（${LA.length} 階）`}</button>`;
