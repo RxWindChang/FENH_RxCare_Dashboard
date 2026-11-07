@@ -436,10 +436,17 @@ add({ id: 'cro', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'ceph', naD: [83, 1000]
   inf: { dil: { NS: '室溫 48 h、冷藏 10 d', D5W: '室溫 48 h、冷藏 10 d' }, v: [50, 100], t: [0.5], ti: 0, note: '禁用含鈣溶液（LR、Ringer）同管輸注' },
   nt: ['肝腎功能皆嚴重不全：每日不超過 2,000 mg。'] });
 
-add({ id: 'ctx', ref: 'PI・SG', rrRef: 'UpToDate・SG', blg: 'ceph', naD: [24, 500], ind: ['一般感染', 'CNS 感染'], g: 'Cefotaxime', b: 'Claforan', zh: '可活能', st: '500 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: '3rd generation cephalosporin',
-  L: [T(1000, 'q24h'), T(1000, 'q12h'), T(2000, 'q24h'), T(1000, 'q8h'), T(2000, 'q12h'), T(2000, 'q8h'), T(2000, 'q6h'), T(2000, 'q4h', { hd: 1, t: 'CNS 感染' })],
-  R: [[50, 3, 6], [10, 1, 4], [0, 0, 2]],
-  rr: { HD: [2, 2, 'after dialysis (AD) 給藥'], PD: [0, 0], CRRT: [4, 5], SLED: [4, 4, '資料有限'] },
+add({ id: 'ctx', ref: 'UpToDate・PI', rrRef: 'UpToDate・SG', blg: 'ceph', naD: [24, 500], g: 'Cefotaxime', b: 'Claforan', zh: '可活能', st: '500 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: '3rd generation cephalosporin meningitis',
+  modes: [
+    { k: 'gen', lab: '一般感染（1–2 g Q6–8H）',
+      L: [T(1000, 'q24h'), T(2000, 'q24h'), T(1000, 'q8h', { t: '輕中度感染' }), T(2000, 'q12h'), T(2000, 'q8h'), T(2000, 'q6h', { t: '重症／菌血症／需較高劑量' })],
+      R: [[50, 4, 4], [10, 3, 3], [0, 1, 1]],
+      rr: { HD: [1, 1, '透析日於 after dialysis (AD) 給藥'], PD: [0, 0], CRRT: [3, 3], SLED: [3, 3, '資料有限'] } },
+    { k: 'cns', lab: 'CNS 感染／腦膜炎（2,000 mg Q4H）',
+      L: [T(2000, 'q24h'), T(2000, 'q12h'), T(2000, 'q8h'), T(2000, 'q6h'), T(2000, 'q4h', { t: 'CNS 感染：每日 12 g（IDSA 細菌性腦膜炎 8–12 g/day Q4–6H）' })],
+      R: [[50, 4, 4], [10, 2, 2], [0, 1, 1]],
+      rr: { HD: [1, 1, '透析日於 after dialysis (AD) 給予其中一劑'], PD: [1, 1, '資料有限'], CRRT: [3, 3], SLED: [3, 3, '資料有限'] } }],
+  nt: ['先依適應症決定每劑劑量（一般 2,000 mg Q8H；CNS 2,000 mg Q4H），再依腎功能延長給藥間隔：CrCl 10–50 約減為常規每日量 50–67%，CrCl <10 約 33–50%（仿單：CrCl <20 劑量減半）。'],
   aki: 'w', tox: [BL_TOX_NEURO, '快速推注：心律不整'],
   inf: { dil: { NS: '室溫 24 h、冷藏 5 d', D5W: '室溫 24 h' }, v: [50, 100], t: [0.5], ti: 0 } });
 
