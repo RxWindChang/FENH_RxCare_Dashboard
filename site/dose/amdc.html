@@ -1569,7 +1569,6 @@ function segInit(id, key, cb) {
 }
 function init() {
   Object.entries(EX).forEach(([k, v]) => $(k).value = v);
-  $('icu').checked = true;
   ['age', 'ht', 'wt', 'scr', 'cys', 'ucr', 'uvol', 'uhr', 'eff', 'bscr', 'pscr', 'phr', 'sofa'].forEach((id) => $(id).addEventListener('input', update));
   ['icu', 'aki', 'akiHold', 'ecmo', 'cs', 'neuro', 'cp'].forEach((id) => $(id).addEventListener('change', () => { $('akiBox').hidden = !$('aki').checked; update(); }));
   $('rrt').addEventListener('change', () => { $('effBox').hidden = $('rrt').value !== 'CRRT'; update(); });
