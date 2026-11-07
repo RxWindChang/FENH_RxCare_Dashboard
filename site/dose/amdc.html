@@ -178,6 +178,7 @@ details.more[open] summary{margin-bottom:8px}
 .tier .hdt{display:inline-block;margin-left:6px;font-size:10.5px;padding:1px 6px;border-radius:99px;background:var(--danger-soft);color:var(--danger);font-family:var(--f-sans);font-weight:600;vertical-align:2px}
 .tier.best .hdt{background:#fff;color:var(--danger)}
 .tier .xb{display:inline-block;margin-left:6px;font-size:10.5px;padding:1px 6px;border-radius:99px;background:var(--info-soft);color:var(--info);font-family:var(--f-sans);font-weight:600;vertical-align:2px}
+.tier .ps{margin-left:6px;font-size:12.5px;font-weight:400;opacity:.75}
 .tier.no{background:var(--danger-soft);border-color:var(--danger);cursor:default}
 .morebtn{border:0;background:transparent;color:var(--accent);cursor:pointer;font-size:12.5px;padding:4px 2px;text-align:left}
 .box{margin-top:12px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);overflow:hidden}
@@ -363,7 +364,7 @@ add({ id: 'oxa', naOpen: 1, ref: 'PI', rrRef: 'UpToDate・SG', blg: 'pen', naD: 
   aki: 'w', tox: ['肝炎（膽汁滯留型）', '間質性腎炎', '長期高劑量：嗜中性球低下（每週 CBC）', '低血鉀'],
   inf: { dil: { NS: '室溫 24 h、冷藏 7 d', D5W: '室溫 24 h' }, v: [50, 100], t: [0.5, 1], ti: 0 } });
 
-add({ id: 'peng', ref: 'SG', rrRef: 'UpToDate・SG', blg: 'pen', naD: [38.6, 1], ind: ['一般 Streptococcus 感染', '神經梅毒／心內膜炎／腦膜炎'], g: 'Penicillin G sodium', b: 'Penicillin', zh: '芐基青黴素鈉', st: '3 MU/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'pcn neurosyphilis', unit: 'MU',
+add({ id: 'peng', ref: 'SG', rrRef: 'UpToDate・SG', blg: 'pen', naD: [38.6, 1], ind: ['一般 Streptococcus 感染', '神經梅毒／心內膜炎／腦膜炎'], g: 'Penicillin G sodium', b: 'Penicillin', zh: '', st: '3 MU/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'pcn neurosyphilis', unit: 'MU',
   L: [T(1, 'q6h'), T(2, 'q6h'), T(2, 'q4h'), T(3, 'q4h'), T(4, 'q4h', { hd: 1, t: '神經梅毒／心內膜炎／腦膜炎' })],
   R: [[50, 2, 4], [10, 1, 3, '約 75% 劑量'], [0, 0, 1, '約 20–50% 劑量']],
   rr: { HD: [0, 1, '透析日於 after dialysis (AD) 給藥'], PD: [0, 1], CRRT: [2, 3], SLED: [2, 2, '資料有限'] },
@@ -430,9 +431,9 @@ add({ id: 'flx', ref: 'PI（日本）', rrRef: 'UpToDate・SG', blg: 'ceph', ind
 
 add({ id: 'cro', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'ceph', naD: [83, 1000], g: 'Ceftriaxone', b: 'Rocephin (Sintrix)', zh: '信得瑞', st: '1 g/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: '3rd generation cephalosporin',
   modes: [
-    { k: 'gen', lab: '一般感染', L: [T(1000, 'q12h'), T(2000, 'q24h'), T(2000, 'q12h')], R: NA(0, 0, '無需依腎功能調整'), rr: SAME(0, 0, '不被透析移除') },
+    { k: 'gen', lab: '一般感染', L: [T(1000, 'q12h', { ps: '(2,000 mg/day)' }), T(2000, 'q12h', { ps: '(4,000 mg/day)' })], R: NA(0, 0, '無需依腎功能調整'), rr: SAME(0, 0, '不被透析移除') },
     { k: 'cns', lab: 'CNS 感染／併 ampicillin 治療 E. faecalis', L: [T(2000, 'q12h', { hd: 1 })], R: NA(0, 0, '限定 2,000 mg Q12H'), rr: SAME(0, 0, '限定 2,000 mg Q12H') }],
-  aki: 'w', tox: ['膽泥／假性膽結石', 'ESRD 合併高劑量：腦病變', '免疫性溶血', '不可與含鈣溶液同管輸注'],
+  aki: 'w', tox: ['膽泥 (biliary sludge)／假性膽結石 (pseudolithiasis)', 'ESRD 合併高劑量：腦病變', '免疫性溶血', '不可與含鈣溶液同管輸注'],
   inf: { dil: { NS: '室溫 48 h、冷藏 10 d', D5W: '室溫 48 h、冷藏 10 d' }, v: [50, 100], t: [0.5], ti: 0, note: '禁用含鈣溶液（LR、Ringer）同管輸注' },
   nt: ['肝腎功能皆嚴重不全：每日不超過 2,000 mg。'] });
 
@@ -526,7 +527,7 @@ add({ id: 'azavi', ref: 'PI（FDA/EMA）', rrRef: 'UpToDate・SG', blg: 'nov', n
   inf: { dil: { NS: '冷藏 24 h + ≤30°C 12 h', D5W: '冷藏 24 h + ≤30°C 6 h', LR: '冷藏 24 h + ≤30°C 12 h' }, v: [50, 100, 250], t: [3], ti: 0, fixed: 1, c: [1.5, 40], note: '一律 3-h 輸注（仿單）。溶解 10 mL SWFI（aztreonam 131.2 mg/mL），30 分鐘內完成稀釋' },
   nt: ['臺灣已核准，健保不給付（自費）。', '劑量依 US FDA（2025）與 EMA SmPC，兩者一致：Loading 2,670 mg (2,000/670 mg)，維持 2,000 mg (1,500/500 mg) q6h，皆 3-h 輸注。', 'MBL-producing Enterobacterales 首選之一（IDSA 2024）。'] });
 
-add({ id: 'etp', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'carb', naD: [137, 1000], g: 'Ertapenem', b: 'Invanz', zh: '厄他培南', st: '1,000 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'carbapenem esbl',
+add({ id: 'etp', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'carb', naD: [137, 1000], g: 'Ertapenem', b: 'Invanz', zh: '益滿治', st: '1,000 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'carbapenem esbl',
   L: [T(500, 'q24h'), T(1000, 'q24h')],
   R: [[31, 1, 1], [0, 0, 0]],
   rr: { HD: [0, 0, '若於 HD 前 6 h 內給藥，AD補 150 mg'], PD: [0, 0], CRRT: [0, 1, '500–1,000 mg q24h'], SLED: [1, 1, '1,000 mg q24h (Sethi 2018)'] },
@@ -917,7 +918,7 @@ add({ id: 'vorpo', ref: 'PI', rrRef: 'UpToDate・SG', tdmIcon: 1, g: 'Voriconazo
 
 add({ id: 'pos', ref: 'PI', rrRef: 'UpToDate・SG', tdmIcon: 1, g: 'Posaconazole', b: 'Posanol', zh: '波賽特', st: '100 mg/DR tab', cls: 'fun', sub: 'azole', rt: 'po', kw: 'triazole mucor prophylaxis',
   L: [T(300, 'q24h'), T(400, 'q24h', { hd: 1, t: 'TDM 指引下' })], R: NA(0, 0, '無需依腎功能調整'), rr: SAME(0, 0), ld: 'Loading 300 mg（3#）', ldm: 'q12h × 2 劑（第 1 天），第 2 天起 300 mg（3#）QD',
-  tdm: 'Trough：預防 ≥0.7 mg/L；治療 ≥1–1.25 mg/L。', tox: [...AZ_TOX, '假性醛固酮過多症（高血壓、低血鉀）'], ex: 'ECMO：高脂溶性，迴路吸附可能明顯，建議 TDM。', nt: ['與食物併服。'] });
+  tdm: 'Trough：預防 ≥0.7 mg/L；治療 ≥1–1.25 mg/L。', tox: [...AZ_TOX, '假性醛固酮過多症 (pseudohyperaldosteronism)（高血壓、低血鉀）'], ex: 'ECMO：高脂溶性，迴路吸附可能明顯，建議 TDM。', nt: ['與食物併服。'] });
 
 const ISA = { tdmIcon: 1, cls: 'fun', sub: 'azole', kw: 'triazole isavuconazonium mucor aspergillus', L: [T(200, 'q24h')], R: NA(0, 0, '無需依腎功能調整（不含 SBECD）'), rr: SAME(0, 0),
   ld: (c, i, d) => d.rt === 'po' ? 'Loading 200 mg（2#）' : 'Loading 200 mg', ldm: 'q8h × 6 劑（共 48 h），第 3 天起 200 mg QD（末次 loading 後 12–24 h 開始）', tox: ['QTc 縮短（家族性短 QT 禁用）', '肝毒性', '輸注反應'], tdm: '本院可檢測。建議第 5–7 天測 trough，目標約 2–5 mg/L（>5 mg/L 與肝毒性、GI 不良反應相關）；重症、ECMO、肥胖、治療失敗或疑似毒性時尤其建議。' };
@@ -1466,7 +1467,7 @@ function renderDetail() {
   h += '<div class="ladder">' + [...visible].reverse().map(({ t, i, x }) => {
     const cls = best(i) ? 'best' : near(i) ? 'near' : 'dim';
     const lv = best(i) ? (p.mark === 'ARC' ? '建議（ARC）' : p.mark === 'AKI-48h' ? '建議（AKI 48h）' : p.mark === 'AKI' ? '建議（AKI 進展中）' : '最適建議') : near(i) ? (i > p.idx ? '上一階' : '下一階') : `階層 ${i + 1}`;
-    return `<button class="tier ${cls} ${S.tierSel === i ? 'sel' : ''}" data-i="${i}"><span class="lv">${lv}</span><span><span class="dose">${esc(x.main)}${d._m === 'pif' ? `<span class="xb">${d.pifH}-h pIF</span>` : t.x ? `<span class="xb">${esc(t.x)}</span>` : ''}${x.po ? `<span class="poc">→ ${esc(x.po)}</span>` : ''}${t.hd ? '<span class="hdt">高劑量</span>' : ''}</span>${x.sub ? `<div class="why">${esc(x.sub)}</div>` : ''}${t.t ? `<div class="why">${esc(t.t)}</div>` : ''}</span><span class="bands">${(bandMap[i] || []).length ? esc((bandMap[i] || []).join('・')) : '<span style="opacity:.6">—</span>'}${refOf(i) ? `<i>${esc(refOf(i))}</i>` : ''}</span></button>`;
+    return `<button class="tier ${cls} ${S.tierSel === i ? 'sel' : ''}" data-i="${i}"><span class="lv">${lv}</span><span><span class="dose">${esc(x.main)}${d._m === 'pif' ? `<span class="xb">${d.pifH}-h pIF</span>` : t.x ? `<span class="xb">${esc(t.x)}</span>` : ''}${t.ps ? `<span class="ps">${esc(t.ps)}</span>` : ''}${x.po ? `<span class="poc">→ ${esc(x.po)}</span>` : ''}${t.hd ? '<span class="hdt">高劑量</span>' : ''}</span>${x.sub ? `<div class="why">${esc(x.sub)}</div>` : ''}${t.t ? `<div class="why">${esc(t.t)}</div>` : ''}</span><span class="bands">${(bandMap[i] || []).length ? esc((bandMap[i] || []).join('・')) : '<span style="opacity:.6">—</span>'}${refOf(i) ? `<i>${esc(refOf(i))}</i>` : ''}</span></button>`;
   }).join('') + '</div>';
   if (LA.length > visible.length || S.showAll) h += `<button class="morebtn" id="moreBtn">${S.showAll ? '只顯示建議與上下一階' : `顯示完整劑量階梯（${LA.length} 階）`}</button>`;
   { const bn = typeof d.banNote === 'function' ? d.banNote(CC) : d.banNote; if (banned.size && bn) h += `<p class="al w" style="margin-top:6px">${esc(bn)}</p>`; }
