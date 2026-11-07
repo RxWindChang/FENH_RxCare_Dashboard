@@ -417,7 +417,7 @@ add({ id: 'cmz', ref: 'PI（日本）', rrRef: 'UpToDate・SG', blg: 'ceph', naD
   L: [T(1000, 'q48h'), T(1000, 'q24h'), T(2000, 'q24h'), T(1000, 'q12h'), T(1000, 'q8h'), T(2000, 'q12h', { t: '仿單每日上限 4,000 mg' })],
   R: [[50, 4, 5], [30, 3, 4], [10, 1, 2], [0, 0, 1]],
   rr: { HD: [1, 1, '500–1,000 mg q24h，after dialysis (AD) 給藥'], PD: [1, 1, '資料有限'], CRRT: [3, 4, '資料有限'], SLED: [3, 3, '資料有限'] },
-  aki: 'w', tox: ['MTT 側鏈：Hypoprothrombinemia／出血（監測 PT/INR，必要時補充 vitamin K）', 'Disulfiram-like reaction（避免酒精）', BL_TOX_NEURO],
+  aki: 'w', tox: ['N-MTT 側鏈：可能增加出血或 Hypoprothrombinemia 風險（監測 PT/INR，必要時補充 vitamin K）', 'Disulfiram-like reaction（避免酒精）', BL_TOX_NEURO],
   inf: { dil: { NS: '建議配製後儘速使用', D5W: '建議配製後儘速使用' }, v: [100], t: [0.5, 1], ti: 0 },
   nt: ['ESBL-E 非重症感染之 carbapenem-sparing 選項（日本經驗：1,000 mg q8h）。'] });
 
@@ -425,7 +425,7 @@ add({ id: 'flx', ref: 'PI（日本）', rrRef: 'UpToDate・SG', blg: 'ceph', ind
   L: [T(1000, 'q24h'), T(1000, 'q12h'), T(1000, 'q8h'), T(1000, 'q6h', { t: '仿單重症上限 4,000 mg/day' })],
   R: [[80, 2, 3], [50, 2, 2], [10, 1, 1], [0, 0, 0, '500–1,000 mg q24h']],
   rr: { HD: [0, 0, '500–1,000 mg q24h，after dialysis (AD) 給藥'], PD: [0, 0], CRRT: [1, 1, '資料有限'], SLED: [1, 1, '資料有限'] },
-  aki: 'w', tox: ['NMTT 側鏈：Hypoprothrombinemia（PT/INR）', 'Disulfiram-like reaction', BL_TOX_NEURO],
+  aki: 'w', tox: ['N-MTT 側鏈：可能增加出血或 Hypoprothrombinemia 風險（監測 PT/INR）', 'Disulfiram-like reaction', BL_TOX_NEURO],
   inf: { dil: { NS: '建議配製後儘速使用', D5W: '建議配製後儘速使用' }, v: [100], t: [0.5, 1], ti: 0 },
   nt: ['腎劑量參考 Andrassy 1991、日本《透析患者への投薬ガイドブック》。'] });
 
@@ -433,7 +433,7 @@ add({ id: 'cro', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'ceph', naD: [83, 1000]
   modes: [
     { k: 'gen', lab: '一般感染', L: [T(1000, 'q12h', { ps: '(2,000 mg/day)' }), T(2000, 'q12h', { ps: '(4,000 mg/day)' })], R: NA(0, 0, '無需依腎功能調整'), rr: SAME(0, 0, '不被透析移除') },
     { k: 'cns', lab: 'CNS 感染／併 ampicillin 治療 E. faecalis', L: [T(2000, 'q12h', { hd: 1 })], R: NA(0, 0, '限定 2,000 mg Q12H'), rr: SAME(0, 0, '限定 2,000 mg Q12H') }],
-  aki: 'w', tox: ['假性膽結石 (pseudolithiasis)', 'ESRD 合併高劑量：腦病變', '免疫性溶血', '不可與含鈣溶液同管輸注'],
+  aki: 'w', tox: ['假性膽結石 (pseudolithiasis)', 'ESRD 合併高劑量：腦病變 (encephalopathy)', '免疫性溶血', '不可與含鈣溶液同管輸注'],
   inf: { dil: { NS: '室溫 48 h、冷藏 10 d', D5W: '室溫 48 h、冷藏 10 d' }, v: [50, 100], t: [0.5], ti: 0, note: '禁用含鈣溶液（LR、Ringer）同管輸注' },
   nt: ['肝腎功能皆嚴重不全：每日不超過 2,000 mg。'] });
 
@@ -467,7 +467,7 @@ add({ id: 'fep', ref: 'PI・UpToDate', rrRef: 'UpToDate・SG', blg: 'ceph', pifS
   arc: { i: 5, t: 'ARC：2,000 mg Q8H，建議改 pIF（3–4 h）或 cIF。' }, im: ['std', 'pif', 'cif'], pifH: 3, cifBag: 12,
   pif: { L: [T(1000, 'q24h'), T(1000, 'q12h'), T(2000, 'q12h'), T(2000, 'q8h', { hd: 1 })], R: [[50, 3, 3], [30, 2, 2], [15, 1, 1], [0, 0, 0]],
     rr: { HD: [0, 0, 'AD 給藥'], PD: [0, 0, '比照 CrCl <15'], CRRT: [2, 2, 'CVVHDF 1 L/h 為基準'], SLED: [2, 2, '資料有限'] }, nt: ['UpToDate：Dosing for prolonged infusions of beta-lactams（Graphic 99434 v11）：3–4 h 輸注（部分研究用 3 h）。'] },
-  aki: 'w', tox: ['Cefepime 誘發神經毒性 (CIN)：腦病變、肌抽躍 (myoclonus)、NCSE；腎功能不全、劑量未調整、既有 CNS 疾病為危險因子；可考慮 TDM（trough >20 mg/L 風險增加）'],
+  aki: 'w', tox: ['Cefepime 誘發神經毒性 (CIN)：腦病變 (encephalopathy)、肌抽躍 (myoclonus)、NCSE；腎功能不全、劑量未調整、既有 CNS 疾病為危險因子；可考慮 TDM（trough >20 mg/L 風險增加）'],
   nx: 'Cefepime 神經毒性風險：神經重症病人若出現意識變化，應鑑別 NCSE（EEG），並檢視劑量是否依腎功能調整。',
   inf: { dil: { NS: '1–40 mg/mL：室溫 24 h、冷藏 7 d', D5W: '室溫 24 h、冷藏 7 d' }, v: [50, 100], t: [0.5, 3, 4], ti: 0, c: [1, 40] },
   nt: [EI_NOTE] });
@@ -475,7 +475,7 @@ add({ id: 'fep', ref: 'PI・UpToDate', rrRef: 'UpToDate・SG', blg: 'ceph', pifS
 add({ id: 'cps', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'ceph', naD: [68.5, 1000], ind: ['2,000 mg Q12H', '4,000 mg Q12H（高劑量）'], g: 'Cefoperazone/Sulbactam', b: 'Brosym', zh: '博益欣', st: '4,000 mg/vial (2,000 mg/2,000 mg)', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'sulperazon crab',
   L: [T(1000, 'q12h'), T(2000, 'q12h'), T(4000, 'q12h', { hd: 1 }), T(4000, 'q8h', { hd: 1, t: 'CRAB-VAP' })],
   R: NA(1, 2, '本院暫以不依腎功能調整呈現'), rr: SAME(1, 2, '本院暫以不依腎功能調整呈現'),
-  tox: ['高劑量：注意出血徵象與hypoprothrombinemia，監測 PT/INR，必要時補充 vitamin K（NMTT 側鏈）', 'Disulfiram-like reaction（避免酒精）', '肝腎功能皆不全：cefoperazone ≤2,000 mg/day'],
+  tox: ['高劑量：注意出血徵象與hypoprothrombinemia，監測 PT/INR，必要時補充 vitamin K（N-MTT 側鏈）', 'Disulfiram-like reaction（避免酒精）', '肝腎功能皆不全：cefoperazone ≤2,000 mg/day'],
   inf: { dil: { NS: '室溫 24 h', D5W: '室溫 24 h', LR: '需先以 SWFI 溶解再稀釋' }, v: [100], t: [0.5, 1], ti: 0, note: '勿與 aminoglycoside 同管混合' },
   nt: ['使用高劑量（4,000 mg q12h 以上）時需注意出血徵象或 hypoprothrombinemia。'] });
 
@@ -489,7 +489,7 @@ add({ id: 'cpt', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'ceph', g: 'Ceftaroline
     { k: 'q12', lab: 'q12h：其他感染', L: [T(200, 'q12h'), T(300, 'q12h'), T(400, 'q12h'), T(600, 'q12h')],
       R: [[51, 3, 3], [31, 2, 2], [15, 1, 1], [0, 0, 0]], rr: CPT_RR,
       arc: { i: 3, t: 'ARC (CrCl >150)：建議改用 600 mg q8h。' } }],
-  aki: 'w', tox: ['使用 >2 週（尤其 q8h 高劑量）：嗜中性球低下，每週 CBC', '嗜酸性肺炎', 'Coombs 陽性／溶血'],
+  aki: 'w', tox: ['使用 >2 週（尤其 q8h 高劑量）：嗜中性球低下，每週 CBC', 'Eosinophilic pneumonia', "Coombs' test 呈陽性，可能合併溶血 (hemolysis)"],
   inf: { dil: { NS: '室溫 6 h、冷藏 24 h', D5W: '室溫 6 h、冷藏 24 h', LR: '相容' }, v: [50, 100, 250], t: [1, 2], ti: 0 },
   nt: ['給藥間隔依感染類型選擇：q8h（嚴重 MRSA 菌血症／肺炎，或與 daptomycin 等合併治療 VRE），q12h（其他感染）；每劑劑量依腎功能決定（>50：600 mg；31–50：400 mg；15–30：300 mg；<15／HD：200 mg）。'] });
 
@@ -499,7 +499,7 @@ add({ id: 'fdc', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'ceph', novel: 1, g: 'C
   rr: { HD: [0, 0, 'after dialysis (AD) 給藥'], PD: [0, 0, '參考 CrCl <15'], SLED: [4, 4, '資料有限'],
     CRRT: (c) => { const e = c.eff; if (!e) return [3, 3, '請輸入 CRRT effluent rate 以精確選擇（≤2 L/h 1,500 mg q12h；2.1–3 L/h 2,000 mg q12h；3.1–4 L/h 1,500 mg q8h；≥4.1 L/h 2,000 mg q8h）'];
       const i = e <= 2 ? 2 : e <= 3 ? 3 : e <= 4 ? 4 : 5; return [i, i, `依 effluent ${e} L/h（仿單）`]; } },
-  aki: 'w', tox: ['肝功能異常', 'CRAB 感染之死亡率訊號（CREDIBLE-CR）'],
+  aki: 'w', tox: ['肝功能異常', 'CREDIBLE-CR trial 指出，相較於對照組，cefiderocol 於 CRAB infection 的死亡率似乎較高'],
   inf: { dil: { NS: '室溫 6 h；冷藏 24 h（之後室溫 6 h 內用完）', D5W: '同 NS' }, v: [100, 250], t: [3], ti: 0, fixed: 1, note: '本院規定一律 3-h 延長輸注（仿單 3 h）' } });
 
 add({ id: 'cza', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'ceph', novel: 1, g: 'Ceftazidime/Avibactam', b: 'Zavicefta', zh: '贊飛得', st: '2,500 mg/vial (2,000 mg/500 mg)', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'avycaz kpc oxa-48 cre', cf: 0.8,
@@ -552,7 +552,7 @@ add({ id: 'mem', ref: 'PI・UpToDate', rrRef: 'UpToDate・SG', blg: 'carb', noDi
   im: ['std', 'pif', 'cif'], pifH: 3, cifBag: 6,
   pif: { L: MEM_L, R: [[50, 5, 7], [25, 4, 6], [10, 1, 4], [0, 0, 2]], rr: { HD: [0, 2, 'AD 給藥'], PD: [0, 2], CRRT: [4, 6, 'CVVHDF 1 L/h 為基準'], SLED: [4, 6, '資料有限'] }, nt: ['UpToDate：Dosing for prolonged infusions of beta-lactams（Graphic 99434 v11）：3 h 輸注；高劑量用於 CNS 或危及生命感染。'] },
   arc: { i: 7, t: 'ARC：2,000 mg Q8H，3-h 延長輸注（或持續輸注），建議 TDM。' },
-  aki: 'w', tox: ['癲癇（低於 imipenem）', CARBA_VPA],
+  aki: 'w', tox: ['癲癇', CARBA_VPA],
   nx: CARBA_VPA,
   inf: { dil: { NS: '室溫依廠牌約 1–6 h（院內 Kabi 廠 6 h）；冷藏 15–24 h', D5W: '室溫 1 h 內使用' }, v: [50, 100], t: [0.5, 3], ti: 0, c: [1, 20], note: 'pIF 3 h 需於安定時間內完成，每劑新鮮配製' } });
 
@@ -564,7 +564,7 @@ add({ id: 'ipm', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'carb', pifStart: '維�
   pif: { L: [T(250, 'q12h'), T(500, 'q12h'), T(250, 'q6h'), T(500, 'q8h'), T(500, 'q6h'), T(750, 'q8h'), T(1000, 'q6h', { hd: 1 })],
     R: [[71, 4, 6], [41, 3, 5], [21, 2, 4], [6, 0, 1], [0, -1, -1, 'CrCl <6 未透析：不建議']],
     rr: { HD: [0, 1, 'AD 給藥'], PD: [0, 1], CRRT: [4, 4, 'CVVHDF 1 L/h 為基準'], SLED: [4, 4, '資料有限'] }, nt: ['UpToDate：Dosing for prolonged infusions of beta-lactams（Graphic 99434 v11）：體重 >70 kg 之劑量；3 h 輸注（Imipenem 室溫安定約 4 h，不適合持續輸注）。'] },
-  aki: 'w', tox: ['癲癇風險為 carbapenem 中最高（腎功能不全、CNS 病變、高劑量）', CARBA_VPA, '快速輸注：噁心嘔吐'],
+  aki: 'w', tox: ['癲癇（腎功能不全、CNS 病變、高劑量）', CARBA_VPA, '快速輸注：噁心嘔吐'],
   nx: 'Imipenem 癲癇閾值下降最明顯；CNS 感染或神經重症病人建議改用 meropenem。' + CARBA_VPA,
   inf: { dil: { NS: '≤5 mg/mL：室溫 4 h、冷藏 24 h', D5W: '室溫 4 h' }, v: [100, 250], t: [0.5, 1, 3], ti: 0, c: [0, 5] } });
 
@@ -602,7 +602,7 @@ add({ id: 'cfm', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'ceph', g: 'Cefixime', 
   R: [[61, 2, 2], [21, 1, 1, '75% 劑量'], [0, 0, 0, '50% 劑量']],
   rr: { HD: [1, 1, '仿單：75% 劑量'], PD: [0, 0, '50% 劑量'], CRRT: [1, 1], SLED: [1, 1] }, aki: 'w' });
 /* ================= Fluoroquinolones ================= */
-const FQ_TOX = ['QTc 延長（併用其他延長 QT 藥物、低 K/Mg）', '肌腱炎／肌腱斷裂（老年、類固醇）', '血糖異常（低血糖尤需注意）', 'CNS：譫妄、癲癇閾值下降', '主動脈瘤／剝離風險', '重症肌無力惡化'];
+const FQ_TOX = ['QTc 延長（併用其他延長 QT 藥物、低 K/Mg）', '肌腱炎／肌腱斷裂（老年、類固醇）', '血糖異常（低血糖尤需注意）', 'CNS：譫妄、癲癇閾值下降', '主動脈瘤／剝離風險', '應避免用於重症肌無力者'];
 const FQ_NX = 'Fluoroquinolone 降低癲癇閾值、可致譫妄；神經重症病人需評估風險效益。';
 const FQ_PO = '與含 Ca/Mg/Al/Fe/Zn 製劑（制酸劑、鐵劑、管灌營養）間隔：服藥前 2 h 或服藥後 6 h。';
 
@@ -640,10 +640,10 @@ const NEMO_R = [[30, 1, 1, '輕中度腎功能不全無需調整'], [0, 0, 0, 'C
 const NEMO_RR = { HD: [0, 0, '無資料；參考重度腎功能不全研究建議 500 mg q48h（doi:10.1111/bcp.14881），透析日於 after dialysis (AD) 給藥'], PD: [0, 0, '資料有限'], CRRT: [1, 1, '資料有限'], SLED: [0, 0, '資料有限'] };
 add({ id: 'nemopo', ref: 'BJCP 2021', rrRef: 'UpToDate・SG', g: 'Nemonoxacin', b: 'Taigexyn', zh: '太捷信', st: '250 mg/cap', cls: 'bac', sub: 'fq', rt: 'po', kw: 'nemo non-fluorinated quinolone cap',
   L: [T(500, 'q48h'), T(500, 'q24h', { t: '社區型肺炎 7–10 天' })], R: NEMO_R, rr: NEMO_RR, aki: 'w',
-  tox: ['QTc 延長', '肝功能異常、皮疹', '血糖異常', 'CNS 副作用'], nx: FQ_NX, nt: [FQ_PO, '非氟化 quinolone，具抗 MRSA 活性；適應症為成人社區型肺炎。', '腎劑量文獻：Br J Clin Pharmacol 2021;87(12)，doi:10.1111/bcp.14881— 10 位重度腎功能不全者單劑 500 mg PK 研究，Monte Carlo 模擬以 500 mg q48h 最佳；250 mg q24h 與 500 mg LD→250 mg q24h 均不足。'] });
+  tox: ['QTc 延長', '肝功能異常、皮疹', '血糖異常', 'CNS 副作用', '應避免用於重症肌無力者'], nx: FQ_NX, nt: [FQ_PO, '非氟化 quinolone，具抗 MRSA 活性；適應症為成人社區型肺炎。', '腎劑量文獻：Br J Clin Pharmacol 2021;87(12)，doi:10.1111/bcp.14881— 10 位重度腎功能不全者單劑 500 mg PK 研究，Monte Carlo 模擬以 500 mg q48h 最佳；250 mg q24h 與 500 mg LD→250 mg q24h 均不足。'] });
 add({ id: 'nemoiv', ref: 'BJCP 2021', rrRef: 'UpToDate・SG', g: 'Nemonoxacin', b: 'Taigexyn', zh: '太捷信', st: '500 mg/250 mL/bag', cls: 'bac', sub: 'fq', rt: 'inj', kw: 'nemo non-fluorinated quinolone',
   L: [T(500, 'q48h'), T(500, 'q24h', { t: '社區型肺炎' })], R: NEMO_R, rr: NEMO_RR, aki: 'w',
-  tox: ['輸注部位反應', 'QTc 延長', '肝功能異常', '血糖異常'], nx: FQ_NX,
+  tox: ['輸注部位反應', 'QTc 延長', '肝功能異常', '血糖異常', '應避免用於重症肌無力者'], nx: FQ_NX,
   inf: { rb: 250, t: [1.5], ti: 0, dil: { '預混軟袋': '室溫保存' }, note: '預混輸液，輸注 90 min' },
   nt: ['腎劑量文獻：Br J Clin Pharmacol 2021;87(12)，doi:10.1111/bcp.14881為口服單劑研究，IV 劑型係外推。'] });
 
@@ -690,7 +690,7 @@ add({ id: 'dap', ref: 'PI・UpToDate', rrRef: 'UpToDate・SG', g: 'Daptomycin', 
   rr: { HD: [1, 1, 'AD 給藥 TIW；高劑量於 72 h 間隔前增量需審慎並監測 CPK'], PD: [1, 1], CRRT: [1, 1, '高流量 CRRT 仍可視情形給予 QD 的 dosing interval（Soraluce 2018；Xu 2017）'], SLED: [1, 1] },
   ban: (c) => (c.rrt === 'CRRT' ? [2] : ['HD', 'PD', 'SLED'].includes(c.rrt) || (c.rrt === 'none' && c.cr < 30) ? [2, 3] : []), banNote: (c) => (c.rrt === 'CRRT' ? '' : 'CrCl <30 mL/min 或 ESRD 並接受 RRT（iHD、PD、SLED）：daptomycin dosing interval 一律為 QOD。'),
   aki: 'w', ob: '肥胖（BMI ≥30）：以 AdjBW 計算，降低 CPK 上升風險（Märtson 2025）。',
-  tox: ['CPK：高劑量（10–12 mg/kg）每週監測 2 次；CPK >5×ULN 伴症狀或 >10×ULN 停藥', '暫停 statin（HMG-CoA reductase inhibitor）', '嗜酸性肺炎', '周邊神經病變', '干擾 PT/INR 檢驗（假性延長）'],
+  tox: ['CPK：高劑量（10–12 mg/kg）每週監測 2 次；CPK >5×ULN 伴症狀或 >10×ULN 停藥', '暫停 statin（HMG-CoA reductase inhibitor）', 'Eosinophilic pneumonia', '周邊神經病變', '干擾 PT/INR 檢驗（假性延長）'],
   inf: { dil: { NS: '室溫 12 h、冷藏 48 h', LR: '相容' }, v: [50, 100], t: [0.033, 0.5], ti: 1, note: '可 IV push 2 min 或輸注 30 min；不可使用含 dextrose 溶液' },
   nt: ['本院主要用於嚴重／複雜性 MRSA、VRE 感染：10–12 mg/kg/dose，四捨五入至 50 mg 以利抽取。', '不可用於肺炎（被 surfactant 失活）。'] });
 
@@ -771,7 +771,7 @@ add({ id: 'pmb', ref: 'Consensus 2019', rrRef: 'UpToDate・SG', g: 'Polymyxin B'
   tox: ['腎毒性（低於 colistin）', '神經毒性、神經肌肉阻斷', '皮膚色素沉著', '組織胺樣反應', '不適用於下泌尿道感染'],
   inf: { dil: { D5W: '冷藏 72 h', NS: '相容' }, v: [250, 500], t: [1, 1.5], ti: 0, note: '1 mg = 10,000 IU' } });
 
-const AG_TOX = ['腎毒性（與 trough 及療程相關）', '耳毒性／前庭毒性（累積劑量相關，不可逆）', '神經肌肉阻斷'];
+const AG_TOX = ['腎毒性（與 trough 及療程相關）', '耳毒性／前庭毒性（累積劑量相關，不可逆）', '神經肌肉阻斷', '應避免用於重症肌無力者'];
 add({ id: 'amk', ref: 'SG・UpToDate', rrRef: 'UpToDate・SG', ind: ['一般（15 mg/kg）', '重症首劑（25 mg/kg）'], g: 'Amikacin', b: 'Aminfec', zh: '安炎', st: '250 mg/2 mL/vial（CDC 供應 500 mg）', cls: 'bac', sub: 'tm', rt: 'inj', kw: 'aminoglycoside', wt: 'AG', rd: 25,
   L: [K(7.5, 'q48–72h／AD', { t: '依濃度' }), K(15, 'q48h'), K(15, 'q36h'), K(15, 'q24h'), K(20, 'q24h'), K(25, 'q24h', { hd: 1, t: '重症首劑 25–30 mg/kg' })],
   R: [[60, 3, 5], [40, 2, 2], [20, 1, 1], [0, 0, 0, '改傳統劑量 + TDM']],
@@ -829,8 +829,8 @@ add({ id: 'mtz', ref: 'PI・SG', rrRef: 'UpToDate・SG', naD: [310.4, 500], g: '
       nt: ['CNS／腦膿瘍：500 mg Q6–8H（IDSA 細菌性腦膜炎指引 2004：30 mg/kg/day 分 Q6–12H；Sanford：7.5 mg/kg Q6H；每日上限 4,000 mg）。'] }],
   rr: { HD: [1, 1, '透析日於 after dialysis (AD) 給藥'], PD: [1, 1], CRRT: [1, 1], SLED: [1, 1] },
   hook: (c, i) => c.cp === 'C' ? { i: 0, n: 'Child-Pugh C：劑量減 50%（仿單）' } : null,
-  tox: ['神經毒性：腦病變、小腦症狀（MRI dentate nucleus）、周邊神經病變（>4 週、累積劑量）', 'Disulfiram-like reaction', 'Warfarin 作用增強', 'QTc 延長'],
-  nx: 'Metronidazole 腦病變可類似神經惡化（構音障礙、步態不穩、意識改變）；長期使用者需鑑別。',
+  tox: ['神經毒性：腦病變 (encephalopathy)、小腦症狀（MRI dentate nucleus）、周邊神經病變（>4 週、累積劑量）', 'Disulfiram-like reaction', 'Warfarin 作用增強', 'QTc 延長'],
+  nx: 'Metronidazole 腦病變 (encephalopathy)可類似神經惡化（構音障礙、步態不穩、意識改變）；長期使用者需鑑別。',
   inf: { rb: 100, t: [0.5, 1], ti: 1, dil: { '預混輸液': '勿冷藏' }, note: '預混輸液' } });
 
 add({ id: 'neo', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Neomycin', b: 'Neomycin', zh: '紐奧黴素', st: '250 mg/cap', cls: 'bac', sub: 'tm', rt: 'po', kw: 'hepatic encephalopathy bowel prep',
@@ -860,7 +860,7 @@ add({ id: 'rfb', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Rifabutin', b: 'Mycobuti
   tox: ['葡萄膜炎（併 clarithromycin／azole）', '嗜中性球低下', '肝毒性'], nt: [TB_NOTE] });
 add({ id: 'rina', ref: 'TB 指引', rrRef: 'UpToDate・SG', g: 'Rifampicin/Isoniazid', b: 'Rina', zh: '利肺', st: '300/150 mg/cap', cls: 'bac', sub: 'tb', rt: 'po', kw: 'rifinah tb combination',
   L: [X('2# QD 空腹', { t: '≥50 kg（RIF 600/INH 300 mg）' })], R: NA(0, 0, '無需依腎功能調整'), rr: SAME(0, 0), nt: ['<50 kg 需另行調配 RIF 450 mg。', TB_NOTE] });
-add({ id: 'akurit', ref: 'TB 指引', rrRef: 'UpToDate・SG', g: 'RHZE 四合一', b: 'AKuriT-4', zh: '立剋核-4', st: 'R150/H75/Z400/E275 mg/tab', cls: 'bac', sub: 'tb', rt: 'po', kw: 'tb combination fixed dose',
+add({ id: 'akurit', ref: 'TB 指引', rrRef: 'UpToDate・SG', g: 'HERZ 四合一', b: 'AKuriT-4', zh: '立剋核-4', st: 'R150/H75/Z400/E275 mg/tab', cls: 'bac', sub: 'tb', rt: 'po', kw: 'tb combination fixed dose',
   L: [X('', { fn: (c, W) => (W < 38 ? 2 : W < 55 ? 3 : W <= 70 ? 4 : 5), u: '#', f: 'QD', t: '30–37 kg 2#；38–54 kg 3#；55–70 kg 4#；≥71 kg 5#' })],
   R: [[30, 0, 0], [0, -1, -1, 'CrCl <30：複方不適用（PZA/EMB 需改每週 3 次），請改單方']], rr: { HD: [-1, -1, '改單方'], PD: [-1, -1], CRRT: [-1, -1], SLED: [-1, -1] }, nt: [TB_NOTE] });
 add({ id: 'sm', ref: 'SG', rrRef: 'UpToDate・SG', g: 'Streptomycin', b: 'Streptomycin', zh: '鏈黴素', st: '1,000 mg/vial', cls: 'bac', sub: 'tb', rt: 'inj', kw: 'aminoglycoside tb plague', wt: 'LEAN', rd: 50,
@@ -906,7 +906,7 @@ add({ id: 'voriv', ref: 'PI', rrRef: 'UpToDate・SG', naD: [217.6, 200], tdmIcon
   hook: (c, i) => (c.cp === 'A' || c.cp === 'B') ? { i: 0, n: `Child-Pugh ${c.cp}：Loading 不變，維持劑量減 50%（約 2 mg/kg q12h）` } : c.cp === 'C' ? { i: 0, n: 'Child-Pugh C：無資料，審慎使用並密切 TDM' } : null,
   tdm: 'Trough 1–5.5 mg/L（第 3–5 天；invasive aspergillosis 2–5）；CYP2C19 基因型影響大。',
   ob: '肥胖：多數情況以 IBW；危及生命之侵襲性黴菌感染可用 AdjBW，並以 TDM 調整（Eljaaly 2016）。',
-  tox: ['視覺異常、幻覺／腦病變（高濃度）', '肝毒性', 'QTc 延長', '光敏感、皮膚鱗狀細胞癌（長期）', '骨膜炎／氟中毒（長期）'],
+  tox: ['視覺異常、幻覺／腦病變 (encephalopathy)（高濃度）', '肝毒性', 'QTc 延長', '光敏感、皮膚鱗狀細胞癌（長期）', '骨膜炎／氟中毒（長期）'],
   ex: 'ECMO：迴路吸附明顯，loading 與維持劑量常需提高，依 TDM 調整。',
   inf: { dil: { NS: '冷藏 24 h', D5W: '冷藏 24 h', LR: '相容' }, v: [100, 250], t: [1, 2], ti: 1, c: [0.5, 5], note: '以 19 mL SWFI 溶解（10 mg/mL）；輸注速率 ≤3 mg/kg/h' } });
 add({ id: 'vorpo', ref: 'PI', rrRef: 'UpToDate・SG', tdmIcon: 1, g: 'Voriconazole', b: 'Vfend', zh: '黴飛', st: '200 mg/tab', cls: 'fun', sub: 'azole', rt: 'po', kw: 'triazole aspergillus', wt: 'VORI', rd: 100,
