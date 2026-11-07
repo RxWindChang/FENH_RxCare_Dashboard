@@ -383,7 +383,7 @@ add({ id: 'bpg', ref: 'CDC 2021', rrRef: 'UpToDate・SG', blg: 'pen', g: 'Benzat
   nt: ['神經梅毒、眼梅毒、耳梅毒之主要治療為 penicillin G 水溶液 IV 3–4 MU Q4H ×10–14 天（CDC STI Treatment Guidelines 2021）。', 'Bicillin L-A 缺貨，院內以 Extencilline 替代。'] });
 
 add({ id: 'tzp', naOpen: 1, ref: 'PI・UpToDate', rrRef: 'UpToDate・SG', blg: 'pen', pifStart: '維持劑量於首劑後 4 h 開始（CrCl <20、iHD、PD：6 h 後）', naD: [128, 2250], g: 'Piperacillin/Tazobactam', b: 'Tazocin (Tapimycin)', zh: '達比黴素', st: '2,250 mg/vial (2,000 mg/250 mg)', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'pip tazo tazocin pipera',
-  ind: ['社區型感染', '院內感染（nosocomial）／P. aeruginosa'], 
+  ind: ['社區型感染', '院內感染（nosocomial）／P. aeruginosa'], indDef: 2, 
   L: [T(2250, 'q12h'), T(2250, 'q8h'), T(2250, 'q6h'), T(4500, 'q12h'), T(3375, 'q6h'), T(4500, 'q6h', { hd: 1, t: '院內感染／P. aeruginosa' })],
   R: [[40, 4, 5], [20, 2, 4], [0, 1, 2]],
   rr: { HD: [3, 3, 'iHD：4,500 mg Q12H（透析日於 AD 給藥）'], PD: [0, 1], CRRT: [4, 5, '3,375–4,500 mg Q6–8H'], SLED: [2, 4] },
@@ -392,7 +392,7 @@ add({ id: 'tzp', naOpen: 1, ref: 'PI・UpToDate', rrRef: 'UpToDate・SG', blg: '
     rr: { HD: [0, 1, 'AD 給藥'], PD: [0, 1], CRRT: [2, 3, 'CVVHDF 1 L/h 為基準'], SLED: [2, 3, '資料有限'] }, nt: ['UpToDate：Dosing for prolonged infusions of beta-lactams（Graphic 99434 v11）：CrCl >20 Q8H；≤20、iHD、PD Q12H；CRRT Q8H；皆 4 h 輸注。'] },
   arc: { i: 5, t: 'ARC：建議 4,500 mg Q6H，或改 pIF／cIF，並考慮 TDM。' },
   aki: 'w', ob: '肥胖：不建議常規加量；重症肥胖病人建議延長輸注 + TDM（Märtson, Lancet ID 2025）。',
-  tox: ['長期使用（>10–14 天）：嗜中性球低下、血小板低下', '併用 vancomycin：AKI 風險上升', BL_TOX_NEURO, '低血鉀、出血傾向'],
+  tox: ['長期使用（>10–14 天）：嗜中性球低下、血小板低下', BL_TOX_NEURO, '低血鉀、出血傾向'],
   inf: { dil: { NS: '室溫 24 h、冷藏 48 h', D5W: '室溫 24 h、冷藏 48 h' }, v: [50, 100, 150], t: [0.5, 4], ti: 0 },
   nt: [EI_NOTE] });
 
