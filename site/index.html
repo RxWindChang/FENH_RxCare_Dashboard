@@ -8,7 +8,7 @@
 <meta http-equiv="Cache-Control" content="no-cache">
 <script>/* 版本自動比對：開啟網頁或回到分頁時檢查 version.json，有新版就自動換成新版 */
 (function () {
-  var BUILD = '0308ef04d7';
+  var BUILD = 'a320c2919c';
   function check() {
     fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
       if (!j || !j.v || j.v === BUILD) return;
@@ -1498,7 +1498,7 @@ dash.calc('ppl_latest', {
 (function () {
   if (!/googleusercontent\.com$/.test(location.hostname)) return;
   var ep = (window.DASH_CONFIG || {}).endpoint, a = document.getElementById('ql-res');
-  if (ep && a) { a.href = ep + '?page=resources'; a.target = '_blank'; }
+  if (ep && a) { a.href = ep + '?page=resources'; a.target = '_top'; } /* 不能用 _blank：從沙箱 iframe 開新分頁會沿用沙箱，Google 會顯示「無法開啟這個檔案」 */
 })();</script>
 
 <script>
