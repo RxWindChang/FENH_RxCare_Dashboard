@@ -655,6 +655,6 @@ setAll(EXAMPLE);
 })();
 </script>
 
-<script>(function(){var x=window.EXEC_URL;if(!x)return;var b=document.getElementById('backRes');b.href=x+'?page=resources';b.target='_top';var h=document.getElementById('helpLink');if(h){h.href=x+'?page=vpaguide';h.target='_blank';}})();</script>
+<script>(function(){var x=window.EXEC_URL;if(x)x=x.replace(/\/a\/macros\/[^/]+\//,'/macros/'); /* 網域帳號網址（/a/macros/網域/）改成一般網址，未登入該網域的人也能開 */if(!x)return;var b=document.getElementById('backRes');b.href=x+'?page=resources';b.target='_top';var h=document.getElementById('helpLink');if(h){h.href=x+'?page=vpaguide';h.target='_blank';}})();</script>
 </body>
 </html>

@@ -129,7 +129,8 @@ function subpage_(name) {
       cache.putAll(parts, 600);
     } catch (err) { /* 快取失敗時略過 */ }
   }
-  const exec = ScriptApp.getService().getUrl();
+  // getUrl() 對網域帳號會回傳 /a/macros/網域/… 的網址，未登入該網域的人打不開，改成一般網址
+  const exec = ScriptApp.getService().getUrl().replace(/\/a\/macros\/[^/]+\//, '/macros/');
   html = html.replace('<head>', '<head><script>window.EXEC_URL=' + JSON.stringify(exec) + ';<\/script>');
   const out = HtmlService.createHtmlOutput(html)
     .setTitle(sp.title)

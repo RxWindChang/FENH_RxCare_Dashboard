@@ -84,7 +84,7 @@ footer{border-top:1px solid var(--line);padding-top:14px;text-align:center;color
 </div>
 <script>
 /* 經由 Apps Script 備用網址開啟時，連結改指回同一個 /exec 網址 */
-(function(){var x=window.EXEC_URL;if(!x)return;
+(function(){var x=window.EXEC_URL;if(x)x=x.replace(/\/a\/macros\/[^/]+\//,'/macros/'); /* 網域帳號網址（/a/macros/網域/）改成一般網址，未登入該網域的人也能開 */if(!x)return;
 var b=document.getElementById('back');b.href=x;b.target='_top';
 document.querySelectorAll('a[data-page]').forEach(function(a){a.href=x+'?page='+a.dataset.page;a.target='_top';});})();
 </script>
