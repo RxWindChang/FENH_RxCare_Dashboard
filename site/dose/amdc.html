@@ -1223,8 +1223,15 @@ function vancoLadder(d, c) {
   /* AKI 進展中（KeGFR、Scr 上升）：建議階改為 AUC 450，上下階為 500／400 */
   const Tc = c.aki && c.akiProg ? 450 : 500;
   const best0 = [...cand].sort((a, b) => Math.abs(a.auc - Tc) - Math.abs(b.auc - Tc))[0];
-  const mid = cand.filter((x) => Math.abs(x.auc - Tc) <= Math.abs(best0.auc - Tc) + 10).sort((a, b) => b.oi - a.oi)[0];
-  const dn = pickT(Tc - 50, cand.filter((x) => x.auc < mid.auc - 1), mid.f), up = pickT(Tc + 50, cand.filter((x) => x.auc > mid.auc + 1), mid.f);
+  /* 單次劑量 ≥1,500 mg（QD／QOD／Q12H）時，若改用較短間隔仍能達目標 AUC ±60，改拆成較小單次劑量（如 2,000 mg QD → 1,000 mg Q12H），縮短單次輸注時間 */
+  const split = (x, T, pool) => {
+    if (!x || x.per < 1500 || x.oi === 0) return x;
+    const alt = pickT(T, pool.filter((y) => y.oi === x.oi - 1));
+    return alt && Math.abs(alt.auc - T) <= 60 ? split(alt, T, pool) : x;
+  };
+  const mid = split(cand.filter((x) => Math.abs(x.auc - Tc) <= Math.abs(best0.auc - Tc) + 10).sort((a, b) => b.oi - a.oi)[0], Tc, cand);
+  const pDn = cand.filter((x) => x.auc < mid.auc - 1), pUp = cand.filter((x) => x.auc > mid.auc + 1);
+  const dn = split(pickT(Tc - 50, pDn, mid.f), Tc - 50, pDn), up = split(pickT(Tc + 50, pUp, mid.f), Tc + 50, pUp);
   const mk = (x, T) => ({ fn: () => x.per, f: x.f, bl: `目標 AUC ${T}`, hd: x.auc > 600 ? 1 : 0,
     sub: `每日總量 ${x.day.toLocaleString('en-US')} mg（目標 AUC ${T} → ${Math.round(T * cl).toLocaleString('en-US')} mg/day）；估算 AUC₂₄ ≈ ${r0(x.auc)} mg·h/L${x.auc > 600 ? '（>600，AKI 風險上升）' : ''}；每劑 ${r1(x.per / W)} mg/kg（TBW ${r1(W)} kg）` });
   const L = [dn && mk(dn, Tc - 50), mk(mid, Tc), up && mk(up, Tc + 50)].filter(Boolean), mi = dn ? 1 : 0;
