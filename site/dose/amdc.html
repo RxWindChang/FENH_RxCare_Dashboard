@@ -620,9 +620,9 @@ add({ id: 'cippo', ref: 'PI', rrRef: 'UpToDate・SG', ind: ['一般感染', 'P. 
   rr: { HD: [0, 1, 'after dialysis (AD) 給藥'], PD: [0, 1], CRRT: [2, 3], SLED: [3, 3] },
   aki: 'w', tox: FQ_TOX, nx: FQ_NX, nt: [FQ_PO] });
 
-const LEVO_L = [T(250, 'q48h', { t: '首劑 500 mg' }), T(250, 'q24h', { t: '首劑 500 mg' }), T(500, 'q48h', { t: '首劑 750 mg' }), T(750, 'q48h'), T(500, 'q24h'), T(750, 'q24h', { t: '肺炎／P. aeruginosa' })];
-const LEVO_R = [[50, 4, 5], [20, 1, 3], [0, 0, 2]];
-const LEVO_RR = { HD: [0, 2, '首劑 500/750 mg；after dialysis (AD) 給藥'], PD: [0, 2, '首劑 500/750 mg'], CRRT: [2, 3, '750 mg 首劑後 500 mg q48h 或 750 mg q48h'], SLED: [3, 3] };
+const LEVO_L = [T(500, 'q48h'), T(750, 'q48h'), T(500, 'q24h'), T(750, 'q24h', { t: '肺炎／P. aeruginosa' })];
+const LEVO_R = [[50, 2, 3], [20, 0, 1], [0, 0, 0, '750 mg 系列：首劑 750 mg']];
+const LEVO_RR = { HD: [0, 0, 'after dialysis (AD) 給藥；750 mg 系列首劑 750 mg'], PD: [0, 0, '750 mg 系列首劑 750 mg'], CRRT: [0, 1, '750 mg 系列：750 mg 首劑後 500 mg QOD 或 750 mg QOD'], SLED: [1, 1] };
 add({ id: 'lvxiv', ref: 'PI', rrRef: 'UpToDate・SG', naD: [354, 500], ind: ['500 mg 系列（UTI 等）', '750 mg 系列（肺炎／P. aeruginosa）'], indDef: 2, g: 'Levofloxacin', b: 'Cravit', zh: '可樂必妥', st: '500 mg/100 mL/bot', cls: 'bac', sub: 'fq', rt: 'inj', kw: 'levo quinolone',
   L: LEVO_L, R: LEVO_R, rr: LEVO_RR, aki: 'w', tox: FQ_TOX, nx: FQ_NX,
   ob: '肥胖：不建議依體重加量，依腎功能給藥（Pai 2014；Märtson 2025）。',
