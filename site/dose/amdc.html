@@ -735,8 +735,8 @@ add({ id: 'minoiv', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Minocycline', b: 'Men
   tox: ['前庭毒性（頭暈、眩暈）', '肝毒性', '色素沉著、光敏感', 'DRESS', '加重氮血症'],
   inf: { dil: { NS: '依廠牌仿單', D5W: '依廠牌仿單', LR: '依廠牌仿單' }, v: [100, 250, 500], t: [1], ti: 0, note: '輸注 ≥60 min；勿與含鈣溶液同管' } });
 
-add({ id: 'doxy', ref: 'PI', rrRef: 'UpToDate・SG', ind: ['標準劑量', '高劑量（off-label）'], g: 'Doxycycline', b: 'Doxymycin (Doxynin)', zh: '得喜寧', st: '100 mg/cap', cls: 'bac', sub: 'tm', rt: 'po', kw: 'tetracycline rickettsia',
-  L: [T(100, 'q12h'), T(200, 'q12h', { hd: 1, t: '部分 MRSA／CRAB 經驗（off-label）' })], R: NA(0, 0, '無需依腎功能調整'), rr: SAME(0, 0),
+add({ id: 'doxy', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Doxycycline', b: 'Doxymycin (Doxynin)', zh: '得喜寧', st: '100 mg/cap', cls: 'bac', sub: 'tm', rt: 'po', kw: 'tetracycline rickettsia',
+  L: [T(100, 'q12h')], R: NA(0, 0, '無需依腎功能調整'), rr: SAME(0, 0),
   ld: '首劑 200 mg', tox: ['食道潰瘍（足量水、服後勿平躺 30 min）', '光敏感'], nt: ['與 Ca/Mg/Al/Fe 間隔 2–3 h。'] });
 
 add({ id: 'tcn', ref: 'SG', rrRef: 'UpToDate・SG', ind: ['一般感染', 'H. pylori 四合一'], g: 'Tetracycline', b: 'Hostacycline', zh: '鹽酸四環素', st: '250 mg/cap', cls: 'bac', sub: 'tm', rt: 'po', kw: 'h pylori',
