@@ -1338,8 +1338,27 @@ function ldText0(d, c, idx) {
 const norm = (s) => s.toLowerCase().replace(/[\s\-\/()（）.,·]/g, '');
 DRUGS.forEach((d, i) => { d._i = i; d._h = norm([d.g, d.b, d.zh, d.kw, d.st, subLab(d), d.novel ? 'novel' : ''].join(' ')); d._g = norm(d.g); d._b = norm(d.b); });
 function fuzzy(h, q) { let i = 0; for (const ch of h) { if (ch === q[i]) i++; if (i === q.length) return true; } return false; }
+/* 菌種搜尋：輸入菌種名稱／縮寫時，只列出對應藥品（exact；長名稱可前綴比對） */
+const ORG = [
+  { a: ['pseudomonas', 'p. aeruginosa', 'aeruginosa', 'psa', 'pa', '綠膿桿菌'], p: ['pseudomonas', 'aeruginosa'],
+    ids: ['tzp', 'caz', 'fep', 'cps', 'fdc', 'cza', 'czt', 'rec', 'mem', 'ipm', 'cipiv', 'cippo', 'lvxiv', 'lvxpo', 'amk', 'gen', 'col', 'pmb', 'fosiv'] },
+  { a: ['dtr', 'dtr-pa', 'dtr-p. aeruginosa'], ids: ['czt', 'cza', 'rec', 'fdc', 'col', 'pmb', 'amk'] },
+  { a: ['mrsa'], ids: ['van', 'tei', 'dap', 'lzdiv', 'lzdpo', 'cpt', 'smxiv', 'smxpo', 'doxy', 'minoiv', 'tgc', 'clniv', 'clnpo', 'fus', 'rif', 'nemopo', 'nemoiv'] },
+  { a: ['vre'], ids: ['lzdiv', 'lzdpo', 'dap', 'tgc', 'tei'] },
+  { a: ['esbl', 'esbl-e'], ids: ['etp', 'mem', 'ipm', 'rec', 'fdc', 'azavi', 'cza'] },
+  { a: ['cre', 'crkp', 'cr-kp', 'kpc', 'oxa-48', 'oxa48', 'ndm', 'mbl', 'carbapenem-resistant enterobacterales'], ids: ['cza', 'rec', 'azavi', 'fdc', 'tgc', 'col', 'pmb'] },
+  { a: ['sm', 's. maltophilia', 'maltophilia', 'stenotrophomonas', '嗜麥芽窄食單胞菌'], p: ['stenotrophomonas', 'maltophilia'], ids: ['lvxiv', 'lvxpo', 'smxiv', 'smxpo', 'tgc', 'minoiv', 'fdc'] },
+  { a: ['crab', 'xdrab', 'xdr-ab', 'cr-ab', 'acinetobacter', 'a. baumannii', 'baumannii', '鮑氏不動桿菌', '不動桿菌'], p: ['acinetobacter', 'baumannii'], ids: ['sul', 'fdc'] },
+  { a: ['anaerobe', 'anaerobes', 'anaerobic', '厭氧', '厭氧菌'], p: ['anaerobe', 'anaerobic'], ids: ['etp', 'mem', 'ipm', 'rec', 'mtz', 'mxfiv', 'mxfpo', 'tzp', 'tgc'] }
+].map((o) => ({ ...o, a: o.a.map(norm), p: (o.p || []).map(norm), ids: new Set(o.ids) }));
+function orgHit(q) {
+  const t = norm(q || ''); if (!t) return null;
+  const hit = ORG.filter((o) => o.a.includes(t) || (t.length >= 4 && o.p.some((x) => x.startsWith(t))));
+  return hit.length ? new Set(hit.flatMap((o) => [...o.ids])) : null;
+}
 function score(d, q) {
   if (!q) return 1;
+  const og = orgHit(q); if (og) return og.has(d.id) ? 20 : 0;
   const toks = q.toLowerCase().split(/\s+/).filter(Boolean).map(norm).filter(Boolean);
   let s = 0;
   for (const t of toks) {
