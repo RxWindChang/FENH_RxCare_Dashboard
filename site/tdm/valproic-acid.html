@@ -35,6 +35,7 @@ header.top h1 small{display:block;font-family:var(--f-mono);font-size:12px;font-
 .hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
 .brand{font-weight:700;font-size:13px;letter-spacing:.14em;color:var(--accent);text-transform:uppercase}
 .hdr-btns{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.hdr-btns button.hbtn{display:inline-flex;align-items:center;gap:6px;color:var(--accent);border:1px solid var(--accent);font-weight:600;background:var(--paper)}.help:hover,.hdr-btns button.hbtn:hover{background:color-mix(in srgb,var(--accent) 10%,var(--paper))}
 a.help{display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:var(--accent);border:1px solid var(--accent);border-radius:6px;padding:6px 12px;font-weight:600;background:var(--paper)}
 a.help:hover{background:var(--accent-soft)}
 .lb .req{color:var(--bad);font-weight:700;margin-right:auto;margin-left:2px}
@@ -132,8 +133,8 @@ code{font-family:var(--f-mono);font-size:12px;background:var(--soft);padding:1px
   <header class="top">
     <h1>Valproic Acid TDM Calculator<small>TOTAL → FREE VPA · ALBUMIN-ADJUSTED · SOAP</small></h1>
     <div class="hdr-right"><div class="brand">FEMH Pharmacy</div><div class="hdr-btns"><a class="help" id="backRes" href="../resources.html" title="回到臨床資源"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M11 18l-6-6 6-6"/></svg>臨床資源</a><a class="help" id="helpLink" href="valproic-acid-guide.html" target="_blank" rel="noopener" title="開啟使用說明書"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/><path d="M9 8h7M9 11.5h5"/></svg>使用說明</a>
-      <button type="button" id="btnExample">載入範例病人</button>
-      <button type="button" id="btnClear">清空</button>
+      <button type="button" id="btnExample" class="hbtn"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>載入範例病人</button>
+      <button type="button" id="btnClear" class="hbtn"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>清空</button>
     </div></div>
   </header>
   <div class="example" id="exampleBanner">目前顯示的是<strong>範例病人</strong>（虛構資料），用來示範計算流程。請按「清空」後輸入實際病人資料。</div>
