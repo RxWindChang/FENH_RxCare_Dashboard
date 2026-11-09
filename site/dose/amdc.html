@@ -1491,7 +1491,17 @@ function renderDetail() {
   const refOf = (i) => { if (d.L[i] && d.L[i].ref) return d.L[i].ref; const bs = bandMap[i] || []; const onlyRRT = bs.length && bs.every((b) => /^(iHD|PD|CRRT|SLED)$/.test(b)); return d._m === 'pif' ? 'UpToDate' : onlyRRT ? (d.rrRef || d.ref || '') : (d.ref || ''); };
   const banned = new Set(d.ban ? d.ban(CC) : []);
   const LA = L.filter(({ i }) => !banned.has(i)), pos = LA.findIndex((x) => x.i === p.idx);
-  const near = (i) => pos >= 0 && LA.findIndex((x) => x.i === i) >= 0 && Math.abs(LA.findIndex((x) => x.i === i) - pos) === 1;
+  /* β-lactam（時間依賴型）：上下一階優先選「同給藥間隔」的較高／較低劑量（例：1,000 mg Q8H 的上一階為 2,000 mg Q8H，而非 2,000 mg Q12H） */
+  const nb = new Set();
+  if (pos >= 0) {
+    const bt = LA[pos].t, sameF = d.sub === 'bl' && bt && bt.f && !d._lad ? LA.filter((x) => x.t && x.t.f === bt.f && x.i !== p.idx) : [];
+    const mgOf = (t) => (t && typeof t.d === "number" ? t.d : null), H = (t) => ({ q4h: 4, q6h: 6, q8h: 8, q12h: 12, q24h: 24, q48h: 48 }[t && t.f] || 0);
+    const sameD = d.sub === 'bl' && bt && mgOf(bt) != null && !d._lad ? LA.filter((x) => x.t && mgOf(x.t) === mgOf(bt) && x.i !== p.idx && H(x.t)) : [];
+    const upS = sameF.filter((x) => x.i > p.idx)[0] || sameD.filter((x) => H(x.t) < H(bt)).sort((a, b) => H(b.t) - H(a.t))[0];
+    const dnS = sameF.filter((x) => x.i < p.idx).slice(-1)[0] || sameD.filter((x) => H(x.t) > H(bt)).sort((a, b) => H(a.t) - H(b.t))[0];
+    nb.add((upS || LA[pos + 1] || {}).i); nb.add((dnS || LA[pos - 1] || {}).i);
+  }
+  const near = (i) => i !== p.idx && nb.has(i);
   const best = (i) => i === p.idx;
   const visible = LA.filter(({ i }) => S.showAll || p.idx == null || p.idx < 0 || best(i) || near(i) || LA.length <= 4);
   h += '<div class="ladder">' + [...visible].reverse().map(({ t, i, x }) => {
