@@ -1344,11 +1344,11 @@ const ORG = [
     ids: ['tzp', 'caz', 'fep', 'cps', 'fdc', 'cza', 'czt', 'rec', 'mem', 'ipm', 'cipiv', 'cippo', 'lvxiv', 'lvxpo', 'amk', 'gen', 'col', 'pmb', 'fosiv'] },
   { a: ['dtr', 'dtr-pa', 'dtr-p. aeruginosa'], ids: ['czt', 'cza', 'rec', 'fdc', 'col', 'pmb', 'amk'] },
   { a: ['mrsa'], ids: ['van', 'tei', 'dap', 'lzdiv', 'lzdpo', 'cpt', 'smxiv', 'smxpo', 'doxy', 'minoiv', 'tgc', 'clniv', 'clnpo', 'fus', 'rif', 'nemopo', 'nemoiv'] },
-  { a: ['vre'], ids: ['lzdiv', 'lzdpo', 'dap', 'tgc', 'tei'] },
+  { a: ['vre'], ids: ['lzdiv', 'lzdpo', 'dap', 'tgc'] },
   { a: ['esbl', 'esbl-e'], ids: ['etp', 'mem', 'ipm', 'rec', 'fdc', 'azavi', 'cza'] },
   { a: ['cre', 'crkp', 'cr-kp', 'kpc', 'oxa-48', 'oxa48', 'ndm', 'mbl', 'carbapenem-resistant enterobacterales'], ids: ['cza', 'rec', 'azavi', 'fdc', 'tgc', 'col', 'pmb'] },
   { a: ['sm', 's. maltophilia', 'maltophilia', 'stenotrophomonas', '嗜麥芽窄食單胞菌'], p: ['stenotrophomonas', 'maltophilia'], ids: ['lvxiv', 'lvxpo', 'smxiv', 'smxpo', 'tgc', 'minoiv', 'fdc'] },
-  { a: ['crab', 'xdrab', 'xdr-ab', 'cr-ab', 'acinetobacter', 'a. baumannii', 'baumannii', '鮑氏不動桿菌', '不動桿菌'], p: ['acinetobacter', 'baumannii'], ids: ['sul', 'fdc'] },
+  { a: ['crab', 'xdrab', 'xdr-ab', 'cr-ab', 'acinetobacter', 'a. baumannii', 'baumannii', '鮑氏不動桿菌', '不動桿菌'], p: ['acinetobacter', 'baumannii'], ids: ['sul', 'fdc', 'minoiv', 'tgc', 'col', 'pmb'] },
   { a: ['anaerobe', 'anaerobes', 'anaerobic', '厭氧', '厭氧菌'], p: ['anaerobe', 'anaerobic'], ids: ['etp', 'mem', 'ipm', 'rec', 'mtz', 'mxfiv', 'mxfpo', 'tzp', 'tgc'] }
 ].map((o) => ({ ...o, a: o.a.map(norm), p: (o.p || []).map(norm), ids: new Set(o.ids) }));
 function orgHit(q) {
