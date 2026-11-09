@@ -29,10 +29,13 @@
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14.5px;line-height:1.55;font-variant-numeric:tabular-nums lining-nums;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
 .wrap{max-width:1240px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
-header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;border-bottom:2px solid var(--ink);padding-bottom:10px}
-header.top h1{margin:0;font-size:26px;font-weight:700;letter-spacing:.02em;text-wrap:balance}
+header.top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 14px;border-bottom:2px solid var(--ink);padding-bottom:10px}
+.ttl{display:flex;align-items:center;gap:12px;min-width:0}.logo{width:44px;height:44px;flex:none}
+.femh{display:flex;flex-direction:column;align-items:flex-end;gap:1px;text-align:right}.femh .fb{font-weight:700;font-size:13px;letter-spacing:.14em;color:var(--accent);text-transform:uppercase}.femh .fs{font-size:11.5px;color:var(--muted)}
+@media (max-width:620px){.hdr-right{width:100%;justify-content:flex-start}.femh{align-items:flex-start;text-align:left;width:100%}}
+header.top h1{margin:0;font-size:22px;font-weight:700;letter-spacing:.02em;text-wrap:balance}
 header.top h1 small{display:block;font-family:var(--f-mono);font-size:12px;font-weight:500;color:var(--muted);letter-spacing:.08em}
-.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.hdr-right{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:10px 14px}
 .brand{font-weight:700;font-size:13px;letter-spacing:.14em;color:var(--accent);text-transform:uppercase}
 .hdr-btns{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .hdr-btns button.hbtn{display:inline-flex;align-items:center;gap:6px;color:var(--accent);border:1px solid var(--accent);font-weight:600;background:var(--paper)}.help:hover,.hdr-btns button.hbtn:hover{background:color-mix(in srgb,var(--accent) 10%,var(--paper))}
@@ -131,11 +134,17 @@ code{font-family:var(--f-mono);font-size:12px;background:var(--soft);padding:1px
 <body>
 <div class="wrap">
   <header class="top">
-    <h1>Valproic Acid TDM Calculator<small>TOTAL → FREE VPA · ALBUMIN-ADJUSTED · SOAP</small></h1>
-    <div class="hdr-right"><div class="brand">FEMH Pharmacy</div><div class="hdr-btns"><a class="help" id="backRes" href="../resources.html" title="回到臨床資源"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M11 18l-6-6 6-6"/></svg>臨床資源</a><a class="help" id="helpLink" href="valproic-acid-guide.html" target="_blank" rel="noopener" title="開啟使用說明書"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/><path d="M9 8h7M9 11.5h5"/></svg>使用說明</a>
+    <div class="ttl"><svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="44" height="44" aria-hidden="true">
+  <rect width="64" height="64" rx="14" fill="#1f6f5c"/>
+  <text x="32" y="30" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="900" font-size="25" letter-spacing="-0.5" fill="#ffffff">VPA</text>
+  <rect x="7" y="43" width="50" height="8" rx="2" fill="#ffffff" fill-opacity="0.22"/>
+  <path d="M9 56 L13 38 Q16 45 21 47 L25 36 Q28 44 33 46 L37 35 Q40 43 46 46" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="48" cy="46.5" r="5" fill="#f2c14e" stroke="#1f6f5c" stroke-width="1.5"/>
+</svg><h1>Valproic Acid TDM Calculator<small>TOTAL → FREE VPA · ALBUMIN-ADJUSTED · SOAP</small></h1></div>
+    <div class="hdr-right"><div class="hdr-btns"><a class="help" id="backRes" href="../resources.html" title="回到臨床資源"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M11 18l-6-6 6-6"/></svg>臨床資源</a><a class="help" id="helpLink" href="valproic-acid-guide.html" target="_blank" rel="noopener" title="開啟使用說明書"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/><path d="M9 8h7M9 11.5h5"/></svg>使用說明</a>
       <button type="button" id="btnExample" class="hbtn"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>載入範例病人</button>
       <button type="button" id="btnClear" class="hbtn"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>清空</button>
-    </div></div>
+    </div><div class="femh"><div class="fb">FEMH Pharmacy</div><div class="fs">亞東紀念醫院｜臨床藥學科｜藥事照護組</div></div></div>
   </header>
   <div class="example" id="exampleBanner">目前顯示的是<strong>範例病人</strong>（虛構資料），用來示範計算流程。請按「清空」後輸入實際病人資料。</div>
 
