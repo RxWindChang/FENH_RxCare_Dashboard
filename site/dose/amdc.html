@@ -35,7 +35,7 @@ header.top{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-block
 @media (max-width:760px){.femh{align-items:flex-start;text-align:left;width:100%}}
 .mark{width:28px;height:28px;border-radius:7px;background:var(--accent);display:grid;place-items:center;color:var(--accent-ink);font-weight:700;font-family:var(--f-mono);font-size:13px;flex:none}
 .top .spacer{flex:0 1 0}
-.clr{display:inline-flex;align-items:center;gap:5px;font:600 13px var(--f-sans);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 11px;cursor:pointer}.clr:hover{border-color:var(--accent);color:var(--accent)}
+.clr{display:inline-flex;align-items:center;gap:6px;font:600 13px var(--f-sans);color:var(--accent);background:var(--surface);border:1px solid var(--accent);border-radius:8px;padding:6px 11px;cursor:pointer}.clr:hover,#backRes:hover{background:var(--accent-soft)}
 .pill-ex{font-size:11px;padding:3px 8px;border-radius:99px;background:var(--warn-soft);color:var(--warn);font-weight:600}
 main.cols{display:grid;grid-template-columns:minmax(330px,370px) minmax(300px,350px) minmax(0,1fr);min-height:0}
 .col{min-height:0;overflow:auto;padding-block:14px;padding-inline:14px;border-right:1px solid var(--line)}
@@ -230,8 +230,8 @@ details.nabox:not([open]) summary h4{border-bottom:0}
     <div class="brand"><h1><b>AMDC</b> Anti-Microbial Dose Calculator</h1><span class="sub">RENAL · WEIGHT · RRT · INFUSION — 成人抗微生物藥物劑量建議</span></div>
     <div class="spacer"></div>
     <span class="pill-ex" id="exPill" hidden>範例病人資料，請改為實際數值</span>
-    <button type="button" class="clr" id="btnClear" title="清空所有病人資料"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>清空</button>
-    <a id="backRes" href="../resources.html" title="回到臨床資源" style="color:inherit;text-decoration:none;font-weight:600;font-size:13px;white-space:nowrap">← 臨床資源</a><div class="femh"><div class="fb">FEMH Pharmacy</div><div class="fs">亞東紀念醫院｜臨床藥學科｜藥事照護組</div></div>
+    <a id="backRes" href="../resources.html" title="回到臨床資源" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:var(--accent);border:1px solid var(--accent);border-radius:8px;padding:6px 11px;font:600 13px var(--f-sans);background:var(--surface);white-space:nowrap"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M11 18l-6-6 6-6"/></svg>臨床資源</a><button type="button" class="clr" id="btnClear" title="清空所有病人資料"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>清空</button>
+    <div class="femh"><div class="fb">FEMH Pharmacy</div><div class="fs">亞東紀念醫院｜臨床藥學科｜藥事照護組</div></div>
   </header>
   <main class="cols">
     <section class="col pat" aria-label="病人參數">
