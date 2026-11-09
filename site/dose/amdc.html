@@ -421,13 +421,13 @@ add({ id: 'cmz', ref: 'PI（日本）', rrRef: 'UpToDate・SG', blg: 'ceph', naD
   inf: { dil: { NS: '建議配製後儘速使用', D5W: '建議配製後儘速使用' }, v: [100], t: [0.5, 1], ti: 0 },
   nt: ['ESBL-E 非重症感染之 carbapenem-sparing 選項（日本經驗：1,000 mg q8h）。'] });
 
-add({ id: 'flx', ref: 'PI（日本）', rrRef: 'UpToDate・SG', blg: 'ceph', ind: ['一般感染', '每日 4,000 mg（仿單上限）'], g: 'Flomoxef', b: 'Flumarin', zh: '氟黴寧', st: '1,000 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'oxacephem esbl',
-  L: [T(1000, 'q24h'), T(1000, 'q12h'), T(1000, 'q8h'), T(1000, 'q6h', { t: '仿單重症上限 4,000 mg/day' })],
-  R: [[80, 2, 3], [50, 2, 2], [10, 1, 1], [0, 0, 0, '500–1,000 mg q24h']],
-  rr: { HD: [0, 0, '500–1,000 mg q24h，after dialysis (AD) 給藥'], PD: [0, 0], CRRT: [1, 1, '資料有限'], SLED: [1, 1, '資料有限'] },
+add({ id: 'flx', ref: 'Antibiotics 2022', rrRef: 'Andrassy 1991・透析ガイドブック', blg: 'ceph', g: 'Flomoxef', b: 'Flumarin', zh: '氟黴寧', st: '1,000 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'oxacephem esbl',
+  L: [T(1000, 'q24h', { ref: 'Antibiotics 2022・Andrassy 1991・透析ガイドブック' }), T(1000, 'q12h'), T(1000, 'q8h', { t: '1,000 mg Q12H 僅建議用於 MIC 偏低（≤0.25 mg/L）的情境' }), T(1000, 'q6h', { t: '2,000 mg Q12H 僅建議用於 MIC 偏低（≤0.25 mg/L）的情境' })],
+  R: [[50.0001, 3, 3, '', '>50'], [10, 2, 2, '', '10–50'], [0, 0, 0, '', '<10']],
+  rr: { HD: [0, 0, 'after dialysis (AD) 給藥'], PD: [0, 0], CRRT: [2, 2, '資料有限，依 effluent 清除率比照 CrCl 10–50 推估（無直接資料）'], SLED: [2, 2, '資料有限，依 effluent 清除率比照 CrCl 10–50 推估（無直接資料）'] },
   aki: 'w', tox: ['N-MTT 側鏈：可能增加出血或 Hypoprothrombinemia 風險（監測 PT/INR）', 'Disulfiram-like reaction', BL_TOX_NEURO],
   inf: { dil: { NS: '建議配製後儘速使用', D5W: '建議配製後儘速使用' }, v: [100], t: [0.5, 1], ti: 0 },
-  nt: ['腎劑量參考 Andrassy 1991、日本《透析患者への投薬ガイドブック》。'] });
+  nt: ['腎功能劑量依 PK/PD 模擬（目標 70% fT>MIC，ESBL-producing Enterobacterales）：CrCl >50 為 1 g Q6H、CrCl 10–50 為 1 g Q8H–Q12H、CrCl <10 為 1 g QD。Flomoxef t1/2 約 1 h，屬時間依賴型；每日總量相同時，縮短給藥間隔較能提高 fT>MIC。研究族群為侵襲性 UTI，用於其他感染部位時需外推。', 'Reference：Antibiotics 2022;11(4):456. doi:10.3390/antibiotics11040456；iHD／PD：Andrassy 1991、日本《透析患者への投薬ガイドブック》。'] });
 
 add({ id: 'cro', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'ceph', naD: [83, 1000], g: 'Ceftriaxone', b: 'Rocephin (Sintrix)', zh: '信得瑞', st: '1 g/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: '3rd generation cephalosporin',
   modes: [
@@ -1155,6 +1155,7 @@ const eff = (d, c = C) => {
 function bandLabel(R, i, unit) {
   const lo = R[i][0], hi = i > 0 ? R[i - 1][0] : null;
   if (R.length === 1) return '所有腎功能';
+  if (R[i][4]) return `${unit} ${R[i][4]}`; /* 自訂區間標籤 */
   if (hi == null) return `${unit} ≥${lo}`;
   if (lo === 0) return `${unit} <${hi}`;
   return `${unit} ${lo}–${hi - 1}`;
@@ -1484,7 +1485,7 @@ function renderDetail() {
   else if (d.R.length > 1 || !d.rf) d.R.forEach((r, bi) => addB(r[colI], bandLabel(d.R, bi, d.basis === 'egfr' ? 'eGFR' : 'CrCl')));
   if (d.rf) d.rf.forEach((r, bi) => { if (d.R.length === 1) (bandMap[d.R[0][colI]] = bandMap[d.R[0][colI]] || []).push(`${bandLabel(d.rf, bi, 'CrCl')}${r[1] < 1 ? `（×${Math.round(r[1] * 100)}%）` : ''}`); });
   if (d.rr && !d.rrt && !d._lad) Object.entries(d.rr).forEach(([k, e]) => { if (Array.isArray(e)) addB(e[colI - 1], RRTNAME[k]); });
-  const refOf = (i) => { const bs = bandMap[i] || []; const onlyRRT = bs.length && bs.every((b) => /^(iHD|PD|CRRT|SLED)$/.test(b)); return d._m === 'pif' ? 'UpToDate' : onlyRRT ? (d.rrRef || d.ref || '') : (d.ref || ''); };
+  const refOf = (i) => { if (d.L[i] && d.L[i].ref) return d.L[i].ref; const bs = bandMap[i] || []; const onlyRRT = bs.length && bs.every((b) => /^(iHD|PD|CRRT|SLED)$/.test(b)); return d._m === 'pif' ? 'UpToDate' : onlyRRT ? (d.rrRef || d.ref || '') : (d.ref || ''); };
   const banned = new Set(d.ban ? d.ban(CC) : []);
   const LA = L.filter(({ i }) => !banned.has(i)), pos = LA.findIndex((x) => x.i === p.idx);
   const near = (i) => pos >= 0 && LA.findIndex((x) => x.i === i) >= 0 && Math.abs(LA.findIndex((x) => x.i === i) - pos) === 1;
