@@ -152,8 +152,10 @@ details.more[open] summary{margin-bottom:8px}
 .seg.modes button{white-space:normal;flex:1 1 170px;text-align:center;line-height:1.35}
 .ld{margin:10px 0 0;padding:9px 12px;border-radius:var(--r);border:1px dashed var(--accent-line);background:var(--surface);font-size:13.5px}
 .ld b{color:var(--accent)}
-.ld.multi{border:2px solid var(--warn);background:var(--warn-soft);padding:10px 12px}
-.ld.multi .ldh{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:15px}
+.ld.multi,.ld.one{border:2px solid var(--warn);background:var(--warn-soft);padding:10px 12px}
+.ld.one .ldh b{color:var(--ink);font-size:15.5px}
+.ddi{margin:12px 0 0;padding:10px 14px;border:2px solid var(--danger);border-radius:var(--r);background:var(--danger-soft)}.ddih{display:flex;align-items:center;gap:6px;font-weight:700;font-size:15px;color:var(--danger)}.ddi p{margin:4px 0 0;font-size:14px;line-height:1.6;color:var(--ink)}
+.ld.multi .ldh,.ld.one .ldh{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:15px}
 .ld.multi .ldh b{color:var(--ink);font-family:var(--f-mono)}
 .ldtag{background:var(--warn);color:var(--surface);font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:99px;letter-spacing:.02em}
 .ld.multi .ldm{margin-top:4px;font-weight:600;color:var(--warn)}
@@ -652,6 +654,8 @@ add({ id: 'nemoiv', ref: 'BJCP 2021', rrRef: 'UpToDate・SG', g: 'Nemonoxacin', 
   nt: ['腎劑量文獻：Br J Clin Pharmacol 2021;87(12)，doi:10.1111/bcp.14881為口服單劑研究，IV 劑型係外推。'] });
 
 /* ================= Anti-GPC ================= */
+const RIF_DDI = 'Rifampin 為 CYP3A4、2C19 strong inducer，CYP2B6、2C8、2C9 moderate inducer，並會誘導 OATP1B1/1B3、P-glycoprotein (P-gp) 與 UGT1A1、1A9，藥物交互作用相當複雜，建議照會藥師審核交互作用。';
+const RFB_DDI = 'Rifabutin 為 CYP3A4 moderate inducer，並會誘導 CYP2C9 與 UGT1A4，藥物交互作用相當複雜，建議照會藥師審核交互作用。';
 const VAN_PAT = 'https://antimicrobials.mipdapps.net/shiny/rstudio/vancomycinPAT4_1c/';
 const VAN_PAT_DOC = 'https://drive.google.com/file/d/1wIvOTw050EBuAwOgVJy_P8PURffQoPjv/view';
 const VAN_CLINCALC = 'https://clincalc.com/Vancomycin/';
@@ -846,7 +850,7 @@ const TB_NOTE = '依《結核病診治指引》（疾管署）。肥胖者以理
 add({ id: 'inh', ref: 'TB 指引', rrRef: 'UpToDate・SG', g: 'Isoniazid', b: 'INAH', zh: '異菸鹼醯胼', st: '100 mg/tab（政府免費 300 mg/tab）', cls: 'bac', sub: 'tb', rt: 'po', kw: 'inh tb', wt: 'LEAN', rd: 100,
   L: [K(5, 'q24h', { mx: 300, t: '最大 300 mg' })], R: NA(0, 0, '無需依腎功能調整'), rr: SAME(0, 0, '透析日於 after dialysis (AD) 給藥'),
   tox: ['肝毒性（併 RIF/PZA 更高）', '周邊神經病變：併用 pyridoxine 25–50 mg/day（腎衰竭、糖尿病、酒癮、孕婦、營養不良）', 'CYP2C19/3A4 抑制（phenytoin、carbamazepine）'], nt: [TB_NOTE] });
-add({ id: 'rif', ref: 'TB 指引', rrRef: 'UpToDate・SG', g: 'Rifampicin', b: 'Rifampicin', zh: '立泛黴素', st: '300 mg/cap', cls: 'bac', sub: 'tb', rt: 'po', kw: 'rifampin tb',
+add({ id: 'rif', ddi: RIF_DDI, ref: 'TB 指引', rrRef: 'UpToDate・SG', g: 'Rifampicin', b: 'Rifampicin', zh: '立泛黴素', st: '300 mg/cap', cls: 'bac', sub: 'tb', rt: 'po', kw: 'rifampin tb',
   L: [X('', { fn: (c, W) => (W < 50 ? 450 : 600), f: 'q24h 空腹', t: '<50 kg 450 mg；≥50 kg 600 mg（10 mg/kg）' })], R: NA(0, 0, '無需依腎功能調整'), rr: SAME(0, 0),
   tox: ['強效 CYP3A4/2C9/2C19/P-gp 誘導：抗凝血、免疫抑制劑、抗病毒藥、azole、口服避孕藥等大量交互作用', '肝毒性', '體液橘紅色', '血小板低下／流感樣症候群（間歇給藥）'], nt: [TB_NOTE] });
 add({ id: 'emb', ref: 'TB 指引', rrRef: 'UpToDate・SG', g: 'Ethambutol', b: 'Myambutol (E-BUTOL)', zh: '醫肺必妥', st: '400 mg/tab', cls: 'bac', sub: 'tb', rt: 'po', kw: 'emb tb', wt: 'LEAN', rd: 200,
@@ -859,12 +863,12 @@ add({ id: 'pza', ref: 'TB 指引', rrRef: 'UpToDate・SG', g: 'Pyrazinamide', b:
   R: [[30, 1, 1], [0, 0, 0, 'CrCl <30：每週 3 次']], rr: { HD: [0, 0, 'after dialysis (AD) 給藥'], PD: [0, 0], CRRT: [0, 0, '資料有限'], SLED: [0, 0] },
   tox: ['肝毒性', '高尿酸血症／痛風', '關節痛、皮疹'], nt: ['25–30 mg/kg/dose，四捨五入至 250 mg（0.5#）以利給藥。', TB_NOTE] });
 
-add({ id: 'rfb', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Rifabutin', b: 'Mycobutin', zh: '淨核', st: '150 mg/cap', cls: 'bac', sub: 'tb', rt: 'po', kw: 'tb mac hiv',
+add({ id: 'rfb', ddi: RFB_DDI, ref: 'PI', rrRef: 'UpToDate・SG', g: 'Rifabutin', b: 'Mycobutin', zh: '淨核', st: '150 mg/cap', cls: 'bac', sub: 'tb', rt: 'po', kw: 'tb mac hiv',
   L: [T(150, 'q24h', { t: '併 boosted PI' }), T(300, 'q24h')], R: [[30, 1, 1], [0, 0, 0, 'CrCl <30：減 50%']], rr: SAME(0, 0),
   tox: ['葡萄膜炎（併 clarithromycin／azole）', '嗜中性球低下', '肝毒性'], nt: [TB_NOTE] });
-add({ id: 'rina', ref: 'TB 指引', rrRef: 'UpToDate・SG', g: 'Rifampicin/Isoniazid', b: 'Rina', zh: '利肺', st: '300/150 mg/cap', cls: 'bac', sub: 'tb', rt: 'po', kw: 'rifinah tb combination',
+add({ id: 'rina', ddi: RIF_DDI, ref: 'TB 指引', rrRef: 'UpToDate・SG', g: 'Rifampicin/Isoniazid', b: 'Rina', zh: '利肺', st: '300/150 mg/cap', cls: 'bac', sub: 'tb', rt: 'po', kw: 'rifinah tb combination',
   L: [X('2# QD 空腹', { t: '≥50 kg（RIF 600/INH 300 mg）' })], R: NA(0, 0, '無需依腎功能調整'), rr: SAME(0, 0), nt: ['<50 kg 需另行調配 RIF 450 mg。', TB_NOTE] });
-add({ id: 'akurit', ref: 'TB 指引', rrRef: 'UpToDate・SG', g: 'HERZ 四合一', b: 'AKuriT-4', zh: '立剋核-4', st: 'R150/H75/Z400/E275 mg/tab', cls: 'bac', sub: 'tb', rt: 'po', kw: 'tb combination fixed dose',
+add({ id: 'akurit', ddi: RIF_DDI, ref: 'TB 指引', rrRef: 'UpToDate・SG', g: 'HERZ 四合一', b: 'AKuriT-4', zh: '立剋核-4', st: 'R150/H75/Z400/E275 mg/tab', cls: 'bac', sub: 'tb', rt: 'po', kw: 'tb combination fixed dose',
   L: [X('', { fn: (c, W) => (W < 38 ? 2 : W < 55 ? 3 : W <= 70 ? 4 : 5), u: '#', f: 'QD', t: '30–37 kg 2#；38–54 kg 3#；55–70 kg 4#；≥71 kg 5#' })],
   R: [[30, 0, 0], [0, -1, -1, 'CrCl <30：複方不適用（PZA/EMB 需改每週 3 次），請改單方']], rr: { HD: [-1, -1, '改單方'], PD: [-1, -1], CRRT: [-1, -1], SLED: [-1, -1] }, nt: [TB_NOTE] });
 add({ id: 'sm', ref: 'SG', rrRef: 'UpToDate・SG', g: 'Streptomycin', b: 'Streptomycin', zh: '鏈黴素', st: '1,000 mg/vial', cls: 'bac', sub: 'tb', rt: 'inj', kw: 'aminoglycoside tb plague', wt: 'LEAN', rd: 50,
@@ -1477,12 +1481,13 @@ function renderDetail() {
   let h = `<div class="dh"><div><h3>${esc(d.g)}</h3><div class="bn">${esc(d.b)}${d.zh ? `｜${esc(d.zh)}` : ''}｜${esc(d.st)}</div>
     <div class="meta"><span class="tag rt">${CLSNAME[d.cls]}・${subLab(d)}</span>${d.novel ? '<span class="tag rt">Novel Agent</span>' : ''}<span class="tag rt">${d.rt === 'inj' ? '針劑' : '口服'}</span>${d.ext ? `<span class="tag ext">${d.ext}</span>` : ''}${d.tdmIcon ? '<span class="tdmi big" title="建議 TDM">◎ 建議 TDM</span>' : ''}${d.unitNote ? `<span class="tag rt">${d.unitNote}</span>` : ''}</div></div>
     <span class="tag ${TAG[p.status][0]}" style="font-size:12px;padding:4px 10px">${TAG[p.status][1]}</span></div>`;
+  if (d.ddi) h += `<div class="ddi" role="alert"><div class="ddih"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>藥物交互作用警示</div><p>${esc(d.ddi)}</p></div>`;
   h += `<div class="ctxbar"><span>腎功能 <b>${C.rrt !== 'none' ? RRTNAME[C.rrt] : r0(d.basis === 'egfr' ? C.paxEgfr : C.cr) + ' mL/min'}</b></span><span>分段 <b>${esc(p.band)}</b></span>${wl ? `<span>劑量體重 <b>${wl} ${r1(W)} kg</b></span>` : ''}${d.basis === 'egfr' ? '<span>依仿單使用 <b>eGFR</b></span>' : ''}</div>`;
   if (d0.modes) h += `<div class="seg modes" id="modeSeg">${d0.modes.map((m) => `<button data-v="${m.k}" aria-pressed="${modeKey(d0) === m.k}">${m.lab}</button>`).join('')}</div>`;
   if (d0.im) h += `<div class="imrow"><span>給藥方式</span><div class="seg modes" id="imSeg">${d0.im.map((m) => `<button data-v="${m}" aria-pressed="${imKey(d0) === m}">${IMLAB[m]}${m === 'pif' ? `（${d0.pifH} h）` : m === 'cif' ? '（24 h）' : '（30 min）'}</button>`).join('')}</div></div>`;
   const ld = ldText(d, CC, p.idx);
   if (ld && d.ldm) h += `<div class="ld multi"><div class="ldh"><span class="ldtag">多劑 Loading（誘導期）</span><b>${ld}</b></div><div class="ldm">${esc(fq(typeof d.ldm === 'function' ? d.ldm(CC) : d.ldm))}</div></div>`;
-  else if (ld) h += `<div class="ld"><b>Loading dose</b>　${ld}</div>`;
+  else if (ld) h += `<div class="ld one"><div class="ldh"><span class="ldtag">Loading dose</span><b>${ld}</b></div></div>`;
   if (d.phase && d.phase[modeKey(d0)]) h += `<div class="ld multi"><div class="ldh"><span class="ldtag">誘導期（Induction）</span><b>14–21 天</b></div><div class="ldm">${esc(d.phase[modeKey(d0)])}</div></div>`;
   if (d._m && p.idx != null && p.idx >= 0) { const x0 = tierText({ ...d, _m: null }, d.L[p.idx], CC); h += `<div class="ld multi"><div class="ldh"><span class="ldtag">首劑標準輸注</span><b>${esc(x0.mg != null ? fmtMg(x0.mg, d.unit) : x0.main)}</b><span>於 30 min 內輸注作為 loading dose</span></div><div class="ldm">${d._m === 'pif' ? `以快速達到目標濃度；${d.pifStart || '下一劑起依原給藥間隔'}，改為 ${d.pifH} h 延長輸注。` : '以快速達到目標濃度；loading 結束後立即開始 24 h 持續輸注。'}請於醫囑註明首劑輸注時間。<span style="font-weight:400;color:var(--muted)">（Stanford Health Care Extended-Infusion β-Lactam Protocol（2026））</span></div></div>`; }
   if (p.rrtText) h += `<div class="tier best" style="cursor:default;margin-top:10px"><span class="lv">${RRTNAME[C.rrt]} 建議</span><span><span class="dose">${esc(fq(p.rrtText))}</span></span></div>`;
