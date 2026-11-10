@@ -152,6 +152,8 @@ details.more[open] summary{margin-bottom:8px}
 .seg.modes button{white-space:normal;flex:1 1 170px;text-align:center;line-height:1.35}
 .ld{margin:10px 0 0;padding:9px 12px;border-radius:var(--r);border:1px dashed var(--accent-line);background:var(--surface);font-size:13.5px}
 .ld b{color:var(--accent)}
+.ldC{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:stretch;margin:12px 0 0}.ldC.solo{grid-template-columns:1fr}.stepC{display:flex;gap:10px;align-items:flex-start;border-radius:var(--r);padding:12px;color:#fff;min-width:0}.stepC.a{background:#B5530A;box-shadow:0 2px 8px rgba(181,83,10,.22)}.stepC.m{background:var(--accent)}.stepC .n{flex:none;width:24px;height:24px;border-radius:50%;background:#fff;font-weight:800;display:grid;place-items:center;font-size:13px}.stepC.a .n{color:#B5530A}.stepC.m .n{color:var(--accent)}.stepC .t{font-size:12px;font-weight:700;opacity:.92}.stepC .d{font-family:var(--f-mono);font-size:20px;font-weight:700;line-height:1.3}.stepC .s{font-size:11.5px;opacity:.9;margin-top:3px;line-height:1.45}.arrC{align-self:center;text-align:center;font-size:11.5px;color:var(--muted);font-weight:700;line-height:1.3}
+@media (max-width:620px){.ldC{grid-template-columns:1fr}.arrC br{display:none}.arrC .ar{display:inline-block;transform:rotate(90deg);margin-left:6px}}
 .ld.multi,.ld.one{border:2px solid var(--warn);background:var(--warn-soft);padding:10px 12px}
 .ld.one .ldh b{color:var(--ink);font-size:15.5px}
 .ddi{margin:12px 0 0;padding:10px 14px;border:2px solid var(--danger);border-radius:var(--r);background:var(--danger-soft)}.ddih{display:flex;align-items:center;gap:6px;font-weight:700;font-size:15px;color:var(--danger)}.ddi p{margin:4px 0 0;font-size:14px;line-height:1.6;color:var(--ink)}
@@ -1486,10 +1488,34 @@ function renderDetail() {
   if (d0.modes) h += `<div class="seg modes" id="modeSeg">${d0.modes.map((m) => `<button data-v="${m.k}" aria-pressed="${modeKey(d0) === m.k}">${m.lab}</button>`).join('')}</div>`;
   if (d0.im) h += `<div class="imrow"><span>給藥方式</span><div class="seg modes" id="imSeg">${d0.im.map((m) => `<button data-v="${m}" aria-pressed="${imKey(d0) === m}">${IMLAB[m]}${m === 'pif' ? `（${d0.pifH} h）` : m === 'cif' ? '（24 h）' : '（30 min）'}</button>`).join('')}</div></div>`;
   const ld = ldText(d, CC, p.idx);
-  if (ld && d.ldm) h += `<div class="ld multi"><div class="ldh"><span class="ldtag">多劑 Loading（誘導期）</span><b>${ld}</b></div><div class="ldm">${esc(fq(typeof d.ldm === 'function' ? d.ldm(CC) : d.ldm))}</div></div>`;
-  else if (ld) h += `<div class="ld one"><div class="ldh"><span class="ldtag">Loading dose</span><b>${ld}</b></div></div>`;
+  /* Loading dose：C 方案兩步驟時間軸（① loading → ② 維持劑量） */
+  const bx = p.idx != null && p.idx >= 0 ? tierText(d, d.L[p.idx], CC) : null;
+  const HRS = { q4h: 4, q6h: 6, q8h: 8, q12h: 12, q24h: 24, q48h: 48, q72h: 72 };
+  const ivH = bx && d.L[p.idx] && HRS[d.L[p.idx].f];
+  const splitHead = (t) => { const m = t.match(/^(.*?)(?=[（，。；]|$)/); return [m[1].trim(), t.slice(m[1].length).replace(/^[，。；]\s*/, '')]; };
+  const plain = (html) => html.replace(/<[^>]+>/g, '');
+  let step1 = null;
+  if (ld) {
+    const raw = plain(ld).replace(/^Loading\s*/, '');
+    const num = (ld.match(/<b class="num">(.*?)<\/b>/) || [])[1];
+    let big, sub;
+    if (num) { big = plain(num); sub = raw.replace(/\s*→\s*[^（。，；]*/, '').replace(/。/, '；'); }
+    else[big, sub] = splitHead(raw);
+    if (d.ldm) {
+      const [h2, rest] = splitHead(fq(typeof d.ldm === 'function' ? d.ldm(CC) : d.ldm));
+      const pk = (sub.match(/^（[\d.]+#）/) || [''])[0]; if (pk) sub = sub.slice(pk.length).replace(/^[；，]/, '');
+      const all = `${sub}${rest}`, m1 = all.match(/末次 loading 後 ([\d–]+ h)/), m2 = all.match(/第 (\d+) 天起(?:（第 \d+ 劑）)?(?:開始維持| \d)/);
+      step1 = { t: '多劑 Loading（誘導期）', big: `${big}${pk} ${h2}`, sub: [sub, rest].filter(Boolean).join(rest.startsWith('（') ? '' : '；'), arr: m1 ? `末次後 ${m1[1]}` : m2 ? `第 ${m2[1]} 天起` : '誘導期後' };
+    } else { const m3 = sub.match(/([\d–]+ h) 後開始維持/); step1 = { t: '首劑 Loading dose', big, sub, arr: m3 ? `${m3[1]} 後` : ivH ? `${ivH} h 後` : '接續' }; }
+  } else if (d._m && bx) {
+    const x0 = tierText({ ...d, _m: null }, d.L[p.idx], CC);
+    step1 = { t: '首劑標準輸注', big: `${x0.mg != null ? fmtMg(x0.mg, d.unit) : x0.main}（30 min）`, sub: `作為 loading dose，以快速達到目標濃度。請於醫囑註明首劑輸注時間（Stanford Health Care Extended-Infusion β-Lactam Protocol 2026）`, arr: d._m === 'pif' ? (d.pifStart ? '依原間隔' : '下一劑起') : '立即接續' };
+  }
+  if (step1) {
+    const s2 = bx ? `<div class="stepC m"><span class="n">2</span><div><div class="t">${d._m && !ld ? (d._m === 'pif' ? `維持劑量（${d.pifH} h 延長輸注）` : '維持劑量（24 h 持續輸注）') : '維持劑量'}</div><div class="d">${esc(bx.main)}${bx.po ? `<span style="font-size:14px;font-weight:600;opacity:.9">（${esc(String(bx.po).replace(/^→\s*/, ''))}）</span>` : ''}</div><div class="s">詳見下方劑量階梯</div></div></div>` : '';
+    h += `<div class="ldC${s2 ? '' : ' solo'}"><div class="stepC a"><span class="n">1</span><div><div class="t">${step1.t}</div><div class="d">${esc(step1.big)}</div>${step1.sub ? `<div class="s">${esc(step1.sub)}</div>` : ''}</div></div>${s2 ? `<div class="arrC">${esc(step1.arr)}<br><span class="ar">→</span></div>${s2}` : ''}</div>`;
+  }
   if (d.phase && d.phase[modeKey(d0)]) h += `<div class="ld multi"><div class="ldh"><span class="ldtag">誘導期（Induction）</span><b>14–21 天</b></div><div class="ldm">${esc(d.phase[modeKey(d0)])}</div></div>`;
-  if (d._m && p.idx != null && p.idx >= 0) { const x0 = tierText({ ...d, _m: null }, d.L[p.idx], CC); h += `<div class="ld multi"><div class="ldh"><span class="ldtag">首劑標準輸注</span><b>${esc(x0.mg != null ? fmtMg(x0.mg, d.unit) : x0.main)}</b><span>於 30 min 內輸注作為 loading dose</span></div><div class="ldm">${d._m === 'pif' ? `以快速達到目標濃度；${d.pifStart || '下一劑起依原給藥間隔'}，改為 ${d.pifH} h 延長輸注。` : '以快速達到目標濃度；loading 結束後立即開始 24 h 持續輸注。'}請於醫囑註明首劑輸注時間。<span style="font-weight:400;color:var(--muted)">（Stanford Health Care Extended-Infusion β-Lactam Protocol（2026））</span></div></div>`; }
   if (p.rrtText) h += `<div class="tier best" style="cursor:default;margin-top:10px"><span class="lv">${RRTNAME[C.rrt]} 建議</span><span><span class="dose">${esc(fq(p.rrtText))}</span></span></div>`;
   if (p.idx === -1) h += `<div class="tier no" style="margin-top:10px"><span class="lv" style="color:var(--danger)">不建議</span><span><span class="dose" style="color:var(--danger)">此腎功能／RRT 狀態不建議使用</span><div class="why">${esc(p.notes[0] || '')}</div></span></div>`;
   // ladder
