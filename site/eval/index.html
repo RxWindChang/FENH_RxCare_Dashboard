@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<title>評鑑評核｜藥事照護組</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%231f6f5c'/%3E%3Cpath d='M9 5h6v2H9zM8 6H7a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1h-1M9.5 13l2 2 3.5-4' fill='none' stroke='%23fff' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Same tokens as the Dashboard and 臨床資源 so the pages read as one site */
+:root{
+  --font:"Inter","Noto Sans TC",system-ui,-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif;
+  --bg:#f7f7f5;--panel:#ffffff;--fg:#1f2328;--muted:#6b7078;--line:#e3e3df;
+  --tdm:#1f6f5c;--tdm-soft:#e3f1ec;
+  color-scheme:light;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font);-webkit-font-smoothing:antialiased;font-feature-settings:"tnum" 1}
+.wrap{max-width:960px;margin:0 auto;padding-block:28px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:28px}
+header{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:14px}
+h1{margin:0;font-size:24px;font-weight:700;letter-spacing:-.01em}
+.sub{margin:4px 0 0;color:var(--muted);font-size:13px}
+.back{display:inline-flex;align-items:center;gap:6px;color:var(--muted);text-decoration:none;font-size:13px;padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.back:hover,.back:focus-visible{color:var(--fg);border-color:var(--muted)}
+section{display:flex;flex-direction:column;gap:12px}
+.sec-h{display:flex;align-items:baseline;gap:10px}
+.sec-h h2{margin:0;font-size:15px;font-weight:700;letter-spacing:.06em;color:var(--tdm)}
+.sec-h span{font-size:12px;color:var(--muted)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));gap:12px}
+.card{display:flex;gap:14px;align-items:flex-start;padding:16px;background:var(--panel);border:1px solid var(--line);border-radius:12px;text-decoration:none;color:inherit;min-width:0}
+.card:hover,.card:focus-visible{border-color:var(--tdm);box-shadow:0 0 0 1px var(--tdm) inset;outline:none}
+.ic{width:44px;height:44px;flex:none;border-radius:10px;background:var(--tdm);display:grid;place-items:center}
+.ic svg{width:28px;height:28px;fill:none;stroke:#ffffff;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.ic.alt{background:var(--tdm-soft)}
+.ic.alt svg{stroke:var(--tdm)}
+.card-t{font-weight:700;font-size:16px}
+.card-d{margin-top:4px;font-size:13px;line-height:1.55;color:var(--muted)}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.tags b{display:inline-flex;align-items:center;height:20px;line-height:1;font-family:"Noto Sans TC",system-ui,sans-serif;font-weight:500;font-size:11px;color:var(--tdm);background:var(--tdm-soft);padding:0 8px;border-radius:99px}
+footer{border-top:1px solid var(--line);padding-top:14px;text-align:center;color:var(--muted);font-size:12px;letter-spacing:.06em}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>評鑑評核</h1>
+      <p class="sub">藥事照護組評鑑資料與操作技巧評核</p>
+    </div>
+    <a class="back" id="back" href="../">← 回到 Dashboard</a>
+  </header>
+
+  <section aria-labelledby="sec-eval">
+    <div class="sec-h"><h2 id="sec-eval">照護組評核</h2><span>Skills assessment</span></div>
+    <div class="cards">
+      <a class="card" data-page="evalinhaler" href="inhaler.html">
+        <div class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="10" y="2.5" width="6" height="9" rx="1.5"/><path d="M8.5 11h9v8.5a1.5 1.5 0 0 1-1.5 1.5h-6a1.5 1.5 0 0 1-1.5-1.5z"/><path d="M8.5 16H4v4h4.5"/></svg></div>
+        <div>
+          <div class="card-t">吸入劑衛教評核</div>
+          <div class="card-d">吸入性藥物評值表：依各吸入器衛教要點與步驟逐項評核，計算正確率。</div>
+          <div class="tags"><b>Ellipta</b><b>pMDI</b><b>Respimat</b><b>Turbuhaler</b></div>
+        </div>
+      </a>
+      <a class="card" data-page="evalinsulin" href="insulin.html">
+        <div class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><g transform="rotate(-45 12 12)"><rect x="4" y="9.5" width="12" height="5" rx="1"/><path d="M16 10.5h2.5v3H16M18.5 12H22M4 11H2v2h2M8 9.5v5"/></g></svg></div>
+        <div>
+          <div class="card-t">筆型胰島素注射技術</div>
+          <div class="card-d">品管評核表：筆型胰島素及 GLP-1 注射技術正確率，共 8 項。</div>
+          <div class="tags"><b>胰島素</b><b>GLP-1</b><b>正確率</b></div>
+        </div>
+      </a>
+      <a class="card" data-page="evalcva" href="cva.html">
+        <div class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.5 4C8.5 4 7 6 7 7.5 5 8 4 9.5 4 11.5c0 1.4.7 2.6 1.8 3.3-.3 2.4 1.2 4.7 3.7 4.7.8 0 1.5-.3 2-.7z"/><path d="M12.5 4c3 0 4.5 2 4.5 3.5 2 .5 3 2 3 4 0 1.4-.7 2.6-1.8 3.3.3 2.4-1.2 4.7-3.7 4.7-.8 0-1.5-.3-2-.7z"/><path d="M14.5 9l-1.5 3h2.2l-1.8 3.5"/></svg></div>
+        <div>
+          <div class="card-t">CVA 衛教評核</div>
+          <div class="card-d">腦中風團隊-藥師年度評核表：藥物治療評估、團隊溝通、病人衛教與課程完成。</div>
+          <div class="tags"><b>5 分制</b><b>輔導覆核</b><b>年度複評</b></div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <section aria-labelledby="sec-rec">
+    <div class="sec-h"><h2 id="sec-rec">評核紀錄</h2><span>Records &amp; export</span></div>
+    <div class="cards">
+      <a class="card" data-page="evalexport" href="export.html">
+        <div class="ic alt"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/><path d="M12 11v6M9 14.5l3 3 3-3"/></svg></div>
+        <div>
+          <div class="card-t">評核表下載</div>
+          <div class="card-d">選擇時間區段查詢大家的評核結果，下載含簽名的 PDF。</div>
+          <div class="tags"><b>PDF</b><b>含簽名</b><b>總表</b></div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <footer>亞東紀念醫院｜臨床藥學科｜藥事照護組</footer>
+</div>
+<script>
+/* 經由 Apps Script 備用網址開啟時，連結改指回同一個 /exec 網址 */
+(function(){var x=window.EXEC_URL;if(x)x=x.replace(/\/a\/macros\/[^/]+\//,'/macros/');if(!x)return;
+var b=document.getElementById('back');b.href=x;b.target='_top';
+document.querySelectorAll('a[data-page]').forEach(function(a){a.href=x+'?page='+a.dataset.page;a.target='_top';});})();
+</script>
+</body>
+</html>

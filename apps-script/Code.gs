@@ -8,6 +8,8 @@
  *   board：     班表/假表/會議時間 公告 › 當月與下月班表、休假、照護組會議、晨會（藥學部會議）、
  *               實習生排程、宣達事項（工作表依名稱自動找最新的一張）
  *
+ * 評鑑評核：?evals=1&from=&to= 查詢評核紀錄；POST 送出評核（見檔案最後的「評鑑評核」段落）。
+ *
  * 網頁以 <網頁應用程式網址>?p=<密碼> 呼叫。
  * 密碼存在「專案設定 › 指令碼屬性」的 PASSWORD，不寫在程式碼裡
  * （這份程式碼放在公開的 GitHub repo，寫進來任何人都看得到）。
@@ -41,15 +43,13 @@ function doGet(e) {
   if (e && e.parameter && e.parameter.page) return subpage_(String(e.parameter.page));
   if (!e || !e.parameter || e.parameter.p == null) return page_();
   const cache = CacheService.getScriptCache();
-  const fails = Number(cache.get('fails') || 0);
-  if (fails >= MAX_FAILS) return json_({ ok: false, error: 'locked' });
+  const bad = checkPw_(e.parameter.p);
+  if (bad) return json_({ ok: false, error: bad });
 
-  const password = PropertiesService.getScriptProperties().getProperty('PASSWORD');
-  const given = e && e.parameter ? String(e.parameter.p || '') : '';
-  if (!password) return json_({ ok: false, error: '尚未設定密碼（指令碼屬性 PASSWORD）' });
-  if (given !== password) {
-    cache.put('fails', String(fails + 1), LOCK_SECONDS);
-    return json_({ ok: false, error: 'unauthorized' });
+  // 評鑑評核：查詢評核紀錄（不快取）
+  if (e.parameter.evals) {
+    try { return json_(evalList_(e.parameter.from, e.parameter.to, e.parameter.nosig === '1')); }
+    catch (err) { return json_({ ok: false, error: String(err && err.message || err) }); }
   }
 
   const fresh = e && e.parameter && e.parameter.fresh === '1';
@@ -105,7 +105,10 @@ function page_() {
 }
 
 /** 臨床資源頁與工具頁：不含任何資料，不需密碼。網頁內以 window.EXEC_URL 判斷連結要指回這個網址。 */
-const SUBPAGES = { resources: { path: 'resources.html', title: '臨床資源｜藥事照護組' }, vpa: { path: 'tdm/valproic-acid.html', title: 'Valproic Acid TDM Calculator', icon: 'tdm/vpa-icon.png' }, vpaguide: { path: 'tdm/valproic-acid-guide.html', title: 'VPA TDM Calculator 使用說明書', icon: 'tdm/vpa-icon.png' }, amdc: { path: 'dose/amdc.html', title: 'Anti-Microbial Dose Calculator (AMDC)', icon: 'dose/amdc-icon.png' } };
+const SUBPAGES = { resources: { path: 'resources.html', title: '臨床資源｜藥事照護組' },
+  eval: { path: 'eval/index.html', title: '評鑑評核｜藥事照護組' }, evalinhaler: { path: 'eval/inhaler.html', title: '吸入劑衛教評核｜評鑑評核' },
+  evalinsulin: { path: 'eval/insulin.html', title: '筆型胰島素注射技術｜評鑑評核' }, evalcva: { path: 'eval/cva.html', title: 'CVA 衛教評核｜評鑑評核' },
+  evalexport: { path: 'eval/export.html', title: '評核表下載｜評鑑評核' },vpa: { path: 'tdm/valproic-acid.html', title: 'Valproic Acid TDM Calculator', icon: 'tdm/vpa-icon.png' }, vpaguide: { path: 'tdm/valproic-acid-guide.html', title: 'VPA TDM Calculator 使用說明書', icon: 'tdm/vpa-icon.png' }, amdc: { path: 'dose/amdc.html', title: 'Anti-Microbial Dose Calculator (AMDC)', icon: 'dose/amdc-icon.png' } };
 function subpage_(name) {
   const sp = SUBPAGES[name];
   if (!sp) return HtmlService.createHtmlOutput('<p>找不到這個頁面。</p>');
@@ -314,7 +317,121 @@ function authorize() {
   for (const name in SOURCES) SpreadsheetApp.openById(SOURCES[name].id).getName();
   SpreadsheetApp.openById(BOARD_ID).getName();
   UrlFetchApp.fetch(PAGE_URL, { muteHttpExceptions: true }); // 備用網址需要「連線到外部服務」權限
+  Logger.log('評核紀錄試算表：' + evalSheet_().getParent().getUrl());
   Logger.log('授權完成。');
+}
+
+/* ======================= 評鑑評核（照護組評核紀錄） =======================
+ * 評核網頁（site/eval/）送出的紀錄寫進「照護組評核紀錄」試算表，一筆一列，簽名以圖片字串存在儲存格。
+ * 試算表第一次使用時自動建立在擁有者的雲端硬碟，ID 記在指令碼屬性 EVAL_SHEET_ID；
+ * 想改用既有的試算表，把 EVAL_SHEET_ID 改成該試算表 ID 即可（會自動新增「評核紀錄」工作表）。
+ */
+const EVAL_SHEET = '評核紀錄';
+const EVAL_HEAD = ['紀錄編號', '考核日期', '評核項目', '受評者', '考核者', '員編', '結果', '備註', '送出時間', '明細(JSON)', '受評者簽名', '考核者簽名'];
+const EVAL_FORMS = { inhaler: '吸入劑衛教評核', insulin: '筆型胰島素注射技術', cva: 'CVA 衛教評核' };
+const EVAL_FORM_KEY = { '吸入劑衛教評核': 'inhaler', '筆型胰島素注射技術': 'insulin', 'CVA 衛教評核': 'cva' };
+
+/** 比對密碼；通過回傳 null，否則回傳錯誤代碼（與 Dashboard 共用錯誤次數限制）。 */
+function checkPw_(given) {
+  const cache = CacheService.getScriptCache();
+  const fails = Number(cache.get('fails') || 0);
+  if (fails >= MAX_FAILS) return 'locked';
+  const password = PropertiesService.getScriptProperties().getProperty('PASSWORD');
+  if (!password) return '尚未設定密碼（指令碼屬性 PASSWORD）';
+  if (String(given || '') !== password) { cache.put('fails', String(fails + 1), LOCK_SECONDS); return 'unauthorized'; }
+  return null;
+}
+
+/** 執行一次：建立（或找到）評核紀錄試算表，並在執行紀錄顯示網址。 */
+function evalSetup() {
+  Logger.log('評核紀錄試算表：' + evalSheet_().getParent().getUrl());
+}
+
+function evalSheet_() {
+  const props = PropertiesService.getScriptProperties();
+  const id = props.getProperty('EVAL_SHEET_ID');
+  let ss;
+  if (id) ss = SpreadsheetApp.openById(id);
+  else { ss = SpreadsheetApp.create('照護組評核紀錄'); props.setProperty('EVAL_SHEET_ID', ss.getId()); }
+  let sh = ss.getSheetByName(EVAL_SHEET);
+  if (!sh) {
+    sh = ss.getSheets().length === 1 && ss.getSheets()[0].getLastRow() === 0 ? ss.getSheets()[0].setName(EVAL_SHEET) : ss.insertSheet(EVAL_SHEET);
+    sh.getRange(1, 1, 1, EVAL_HEAD.length).setValues([EVAL_HEAD]).setFontWeight('bold');
+    sh.setFrozenRows(1);
+    sh.getRange('A:L').setNumberFormat('@');
+    sh.setColumnWidth(10, 120); sh.setColumnWidth(11, 120); sh.setColumnWidth(12, 120);
+  }
+  return sh;
+}
+
+/** POST：{ p: 密碼, action: 'save', rec: {...} } */
+function doPost(e) {
+  let body;
+  try { body = JSON.parse(e.postData.contents); } catch (err) { return json_({ ok: false, error: '資料格式錯誤' }); }
+  const bad = checkPw_(body.p);
+  if (bad) return json_({ ok: false, error: bad });
+  try {
+    if (body.action === 'save') return json_(evalSave_(body.rec));
+    return json_({ ok: false, error: '不支援的動作' });
+  } catch (err) { return json_({ ok: false, error: String(err && err.message || err) }); }
+}
+
+/** 由 Apps Script 備用網址開啟評核頁時，網頁以 google.script.run 呼叫這兩個函式。 */
+function evalSaveRun(p, rec) {
+  const bad = checkPw_(p); if (bad) return { ok: false, error: bad };
+  try { return evalSave_(rec); } catch (err) { return { ok: false, error: String(err && err.message || err) }; }
+}
+function evalListRun(p, from, to, nosig) {
+  const bad = checkPw_(p); if (bad) return { ok: false, error: bad };
+  try { return evalList_(from, to, nosig); } catch (err) { return { ok: false, error: String(err && err.message || err) }; }
+}
+
+function evalSave_(rec) {
+  if (!rec || !EVAL_FORMS[rec.form]) throw new Error('評核項目不正確');
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(rec.date || ''))) throw new Error('考核日期格式不正確');
+  const str = (v, n) => String(v == null ? '' : v).slice(0, n);
+  if (!str(rec.evaluatee, 50).trim() || !str(rec.evaluator, 50).trim()) throw new Error('缺少受評者或考核者');
+  const sig = (v) => { const s = String(v || ''); if (!/^data:image\/(png|jpeg);base64,/.test(s)) throw new Error('簽名格式不正確'); if (s.length > 49000) throw new Error('簽名圖片過大，請清除後重簽'); return s; };
+  const sigA = sig(rec.sigEvaluatee), sigB = sig(rec.sigEvaluator);
+  const detail = {};
+  ['type', 'scores', 'course', 'needsTraining', 'review', 'sections', 'score'].forEach((k) => { if (rec[k] !== undefined) detail[k] = rec[k]; });
+  const detailText = JSON.stringify(detail);
+  if (detailText.length > 45000) throw new Error('評核內容過長');
+  const now = new Date();
+  const id = rec.date + '_' + rec.form + '_' + Utilities.getUuid().slice(0, 6);
+  const row = [id, rec.date, EVAL_FORMS[rec.form], str(rec.evaluatee, 50).trim(), str(rec.evaluator, 50).trim(), str(rec.empId, 20),
+    str(rec.summary, 200), str(rec.note, 1000), Utilities.formatDate(now, TZ, 'yyyy-MM-dd HH:mm:ss'), detailText, sigA, sigB];
+  const lock = LockService.getScriptLock();
+  lock.waitLock(20000);
+  try {
+    const sh = evalSheet_();
+    const r = sh.getLastRow() + 1;
+    sh.getRange(r, 1, 1, row.length).setNumberFormat('@').setValues([row]);
+  } finally { lock.release(); }
+  return { ok: true, id: id };
+}
+
+function evalList_(from, to, nosig) {
+  const re = /^\d{4}-\d{2}-\d{2}$/;
+  if (!re.test(String(from || '')) || !re.test(String(to || ''))) throw new Error('日期區間格式不正確');
+  const sh = evalSheet_();
+  const n = sh.getLastRow() - 1;
+  if (n < 1) return { ok: true, rows: [] };
+  const width = nosig ? 10 : 12;
+  const values = sh.getRange(2, 1, n, width).getDisplayValues();
+  const rows = [];
+  values.forEach((v) => {
+    const date = String(v[1]).trim().replace(/\//g, '-');
+    if (!v[0] || date < from || date > to) return;
+    let detail = {};
+    try { detail = JSON.parse(v[9] || '{}'); } catch (err) {}
+    const t = Date.parse(String(v[8]).replace(' ', 'T') + '+08:00');
+    const o = Object.assign(detail, { id: v[0], date: date, form: EVAL_FORM_KEY[v[2]] || v[2], evaluatee: v[3], evaluator: v[4], empId: v[5],
+      summary: v[6], note: v[7], createdAt: isNaN(t) ? null : t });
+    if (!nosig) { o.sigEvaluatee = v[10]; o.sigEvaluator = v[11]; }
+    rows.push(o);
+  });
+  return { ok: true, rows: rows };
 }
 
 /** 去掉定位用欄位，只留有填報數字的列，讓回傳資料小一點。 */
