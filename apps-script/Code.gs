@@ -407,7 +407,7 @@ function evalSave_(rec) {
     const sh = evalSheet_();
     const r = sh.getLastRow() + 1;
     sh.getRange(r, 1, 1, row.length).setNumberFormat('@').setValues([row]);
-  } finally { lock.release(); }
+  } finally { lock.releaseLock(); }
   return { ok: true, id: id };
 }
 
