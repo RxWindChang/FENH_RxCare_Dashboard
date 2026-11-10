@@ -117,6 +117,13 @@ table.res{width:100%;border-collapse:collapse;font-size:14px;min-width:640px}
 table.res th,table.res td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
 table.res tr:last-child td{border-bottom:0}
 table.res th{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.04em}
+.tblbar{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:28px;font-size:13px;color:var(--muted);margin-bottom:-8px}
+.sortbtn{background:none;border:0;padding:0;font:inherit;color:inherit;letter-spacing:inherit;display:inline-flex;align-items:center;gap:4px}
+.sortbtn i{font-style:normal;font-size:10px;opacity:.45}
+.sortbtn.on{color:var(--tdm)} .sortbtn.on i{opacity:1}
+table.res tr.frow th{padding-top:0;font-weight:400}
+.colf{width:100%;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:3px 6px;font-size:12.5px;color:var(--fg)}
+.colf:focus{border-color:var(--tdm);outline:none}
 .pill{display:inline-block;border-radius:99px;padding:1px 10px;font-size:12.5px}
 .pill.ok{background:var(--ok-soft);color:var(--ok)} .pill.bad{background:var(--bad-soft);color:var(--bad)} .pill.n{background:var(--tdm-soft);color:var(--tdm)}
 .linkbtn{background:none;border:0;color:var(--tdm);padding:2px 4px;font-size:13.5px}
@@ -450,7 +457,7 @@ async function save(k) {
   try {
     const res = await api.save(PW, r);
     if (!res || !res.ok) throw res;
-    toast(`已送出：${r.evaluatee} 的${FORMS[k].name}`); resetForm(k, false); loadToday(k);
+    toast(`評核結果已儲存（${r.evaluatee}｜${FORMS[k].name}）`); resetForm(k, false); loadToday(k);
   } catch (e) { const m = errText(e); if (m === "密碼不正確") needPw(m); toast("送出失敗：" + m); }
   finally { btn.disabled = false; btn.textContent = "送出評核"; }
 }
@@ -536,7 +543,30 @@ function summaryHTML(rows, total, from, to, page, pages) {
 }
 
 /* ---------- 下載頁 ---------- */
-let exRows = [];
+let exRows = [], exSort = { key: "date", dir: 1 }, exFilter = {};
+/* 結果欄的分類與排序值 */
+const resultCat = (r) => (r.form === "cva" ? (r.needsTraining ? "CVA：需輔導" : "CVA：各項 ≥ 3 分") : ((r.score || {}).pct === 100 ? "正確率 100%" : "正確率未達 100%"));
+const resultVal = (r) => (r.form === "cva" ? (r.scores || []).reduce((a, b) => a + (b || 0), 0) / 3 / 5 * 100 : ((r.score || {}).pct || 0));
+const COLS = [
+  { key: "date", label: "考核日期", val: (r) => r.date, cat: (r) => r.date.slice(0, 7) },
+  { key: "form", label: "評核項目", val: (r) => FORMS[r.form].name, cat: (r) => FORMS[r.form].name },
+  { key: "evaluatee", label: "受評者", val: (r) => r.evaluatee, cat: (r) => r.evaluatee },
+  { key: "evaluator", label: "考核者", val: (r) => r.evaluator, cat: (r) => r.evaluator },
+  { key: "result", label: "結果", val: resultVal, cat: resultCat }
+];
+function shown() {
+  const col = COLS.find((c) => c.key === exSort.key) || COLS[0];
+  const cmp = (a, b) => { const x = col.val(a), y = col.val(b);
+    const d = typeof x === "number" ? x - y : String(x).localeCompare(String(y), "zh-Hant-TW");
+    return d ? d * exSort.dir : (a.date === b.date ? (a.createdAt || 0) - (b.createdAt || 0) : a.date < b.date ? -1 : 1); };
+  return exRows.filter((r) => COLS.every((c) => !exFilter[c.key] || c.cat(r) === exFilter[c.key])).sort(cmp);
+}
+function fillFilters() {
+  COLS.forEach((c) => { const sel = $(`.colf[data-f="${c.key}"]`); const cur = exFilter[c.key] || "";
+    const vals = [...new Set(exRows.map(c.cat))].sort((a, b) => String(a).localeCompare(String(b), "zh-Hant-TW"));
+    sel.innerHTML = `<option value="">全部</option>` + vals.map((v) => `<option value="${esc(v)}">${esc(c.key === "date" ? v.replace("-", " 年 ") + " 月" : v)}</option>`).join("");
+    sel.value = vals.includes(cur) ? cur : ""; if (!sel.value) delete exFilter[c.key]; });
+}
 function buildExport() {
   document.title = "評核表下載｜評鑑評核";
   app.innerHTML = headerHTML("評核表下載", "選擇時間區段查詢，勾選要匯出的評核紀錄，下載 PDF（第一頁為總表，之後每筆一頁，含簽名）") + gateHTML() +
@@ -550,15 +580,21 @@ function buildExport() {
       <div class="quick"><button class="ghost" data-q="month">本月</button><button class="ghost" data-q="lastmonth">上月</button><button class="ghost" data-q="dec">今年 12 月</button><button class="ghost" data-q="year">今年全年</button></div>
       <div class="actions" style="margin-top:14px"><button class="btn sec" id="ex-run">查詢</button><button class="btn" id="ex-pdf" disabled>下載 PDF</button></div>
     </div>
-    <div class="tblwrap"><table class="res"><thead><tr><th><input type="checkbox" id="ex-all" aria-label="全選" checked></th><th>考核日期</th><th>評核項目</th><th>受評者</th><th>考核者</th><th>結果</th><th></th></tr></thead>
+    <div class="tblbar"><span id="ex-count"></span><button class="ghost" id="ex-clear" hidden>清除篩選</button></div>
+    <div class="tblwrap"><table class="res"><thead><tr><th><input type="checkbox" id="ex-all" aria-label="全選顯示中的紀錄" checked></th>
+      ${COLS.map((c) => `<th><button type="button" class="sortbtn" data-sort="${c.key}">${c.label}<i aria-hidden="true"></i></button></th>`).join("")}<th></th></tr>
+      <tr class="frow"><th></th>${COLS.map((c) => `<th><select class="colf" data-f="${c.key}" aria-label="篩選${c.label}"><option value="">全部</option></select></th>`).join("")}<th></th></tr></thead>
     <tbody id="ex-body"><tr><td colspan="7" class="empty">選擇區段後按「查詢」</td></tr></tbody></table></div>
     <p class="sub">評核紀錄存放於「照護組評核紀錄」試算表；要刪除或修正紀錄，請直接在試算表中處理。</p>
     <footer>亞東紀念醫院｜臨床藥學科｜藥事照護組</footer>`;
   setRange("month");
   $$("[data-q]").forEach((b) => b.addEventListener("click", () => { setRange(b.dataset.q); runQuery(); }));
   $("#ex-run").addEventListener("click", runQuery);
-  $("#ex-all").addEventListener("change", (e) => { $$(".ex-chk").forEach((c) => (c.checked = e.target.checked)); syncPdfBtn(); });
-  $("#ex-body").addEventListener("change", (e) => { if (e.target.classList.contains("ex-chk")) syncPdfBtn(); });
+  $("#ex-all").addEventListener("change", (e) => { shown().forEach((r) => (r._sel = e.target.checked)); renderRows(); });
+  $("#ex-body").addEventListener("change", (e) => { if (e.target.classList.contains("ex-chk")) { exRows[+e.target.dataset.i]._sel = e.target.checked; syncPdfBtn(); } });
+  $$(".sortbtn").forEach((b) => b.addEventListener("click", () => { const k = b.dataset.sort; if (exSort.key === k) exSort.dir = -exSort.dir; else { exSort.key = k; exSort.dir = 1; } renderRows(); }));
+  $$(".colf").forEach((sel) => sel.addEventListener("change", () => { exFilter[sel.dataset.f] = sel.value; renderRows(); }));
+  $("#ex-clear").addEventListener("click", () => { exFilter = {}; $$(".colf").forEach((x) => (x.value = "")); renderRows(); });
   $("#ex-body").addEventListener("click", (e) => { const v = e.target.closest("[data-view]"); if (v) { $("#modal-body").innerHTML = sheetHTML(exRows[+v.dataset.view]); $("#modal").hidden = false; } });
   $("#ex-pdf").addEventListener("click", makePdf);
   bindGate(() => runQuery());
@@ -581,20 +617,24 @@ async function runQuery() {
     const r = await api.list(PW, from, to, false); if (!r || !r.ok) throw r;
     const fForm = $("#ex-form").value, fWho = $("#ex-who").value.trim();
     exRows = r.rows.filter((x) => FORMS[x.form] && (!fForm || x.form === fForm) && (!fWho || x.evaluatee === fWho))
-      .sort((a, b) => (a.date === b.date ? (a.createdAt || 0) - (b.createdAt || 0) : a.date < b.date ? -1 : 1));
-    renderRows();
+      .map((x) => Object.assign(x, { _sel: true }));
+    fillFilters(); renderRows();
   } catch (e) { const m = errText(e); if (m === "密碼不正確") { PW = null; needPw(m); } body.innerHTML = `<tr><td colspan="7" class="empty">查詢失敗：${esc(m)}</td></tr>`; }
 }
 function renderRows() {
-  const body = $("#ex-body");
+  const body = $("#ex-body"), list = shown(), nf = Object.keys(exFilter).filter((k) => exFilter[k]).length;
+  $$(".sortbtn").forEach((b) => { const on = b.dataset.sort === exSort.key; b.classList.toggle("on", on); b.querySelector("i").textContent = on ? (exSort.dir > 0 ? "▲" : "▼") : "↕"; });
+  $("#ex-count").textContent = exRows.length ? (nf ? `顯示 ${list.length} / ${exRows.length} 筆` : `共 ${exRows.length} 筆`) : "";
+  $("#ex-clear").hidden = !nf;
   if (!exRows.length) { body.innerHTML = `<tr><td colspan="7" class="empty">此區間沒有評核紀錄</td></tr>`; syncPdfBtn(); return; }
-  body.innerHTML = exRows.map((r, i) => { const rt = resultText(r);
-    return `<tr><td><input type="checkbox" class="ex-chk" data-i="${i}" checked aria-label="選取"></td><td>${esc(r.date)}</td><td>${esc(FORMS[r.form].name)}</td>
+  if (!list.length) { body.innerHTML = `<tr><td colspan="7" class="empty">沒有符合篩選條件的紀錄</td></tr>`; syncPdfBtn(); return; }
+  body.innerHTML = list.map((r) => { const rt = resultText(r), i = exRows.indexOf(r);
+    return `<tr><td><input type="checkbox" class="ex-chk" data-i="${i}"${r._sel ? " checked" : ""} aria-label="選取"></td><td>${esc(r.date)}</td><td>${esc(FORMS[r.form].name)}</td>
       <td>${esc(r.evaluatee)}</td><td>${esc(r.evaluator)}</td><td><span class="pill ${rt.bad ? (r.form === "cva" ? "bad" : "n") : "ok"}">${esc(rt.txt)}</span></td>
       <td><button class="linkbtn" data-view="${i}">檢視</button></td></tr>`; }).join("");
-  $("#ex-all").checked = true; syncPdfBtn();
+  syncPdfBtn();
 }
-function syncPdfBtn() { const n = $$(".ex-chk:checked").length, b = $("#ex-pdf"); b.disabled = !n; b.textContent = n ? `下載 PDF（${n} 筆）` : "下載 PDF"; }
+function syncPdfBtn() { const vis = shown(), n = vis.filter((r) => r._sel).length; const all = $("#ex-all"); if (all) { all.checked = !!vis.length && n === vis.length; all.indeterminate = n > 0 && n < vis.length; } b = $("#ex-pdf"); b.disabled = !n; b.textContent = n ? `下載 PDF（${n} 筆）` : "下載 PDF"; }
 async function renderToPdf(pdf, html, first) {
   const host = $("#render-host"); host.innerHTML = html;
   await Promise.all($$("img", host).map((i) => (i.complete ? 0 : new Promise((r) => { i.onload = i.onerror = r; }))));
@@ -618,7 +658,7 @@ async function renderToPdf(pdf, html, first) {
   return first;
 }
 async function makePdf() {
-  const sel = $$(".ex-chk:checked").map((c) => exRows[+c.dataset.i]); if (!sel.length) return;
+  const sel = shown().filter((r) => r._sel); if (!sel.length) return; /* 依目前的篩選與排序順序匯出 */
   if (!window.jspdf || !window.html2canvas) { toast("PDF 元件尚未載入，請稍後再試"); return; }
   const btn = $("#ex-pdf"); btn.disabled = true;
   try {
