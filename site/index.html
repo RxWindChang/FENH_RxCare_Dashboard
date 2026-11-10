@@ -1498,8 +1498,8 @@ dash.calc('ppl_latest', {
 (function () {
   if (!/googleusercontent\.com$/.test(location.hostname)) return;
   var ep = (window.DASH_CONFIG || {}).endpoint, a = document.getElementById('ql-res'), v = document.getElementById('ql-eval');
-  if (ep && a) { a.href = ep + '?page=resources'; a.target = '_top'; }
-  if (ep && v) { v.href = ep + '?page=eval'; v.target = '_top'; } /* 不能用 _blank：從沙箱 iframe 開新分頁會沿用沙箱，Google 會顯示「無法開啟這個檔案」 */
+  if (ep && a) { a.href = ep + '?page=resources'; a.target = '_blank'; a.rel = 'noopener'; }
+  if (ep && v) { v.href = ep + '?page=eval'; v.target = '_blank'; v.rel = 'noopener'; } /* 臨床資源、評鑑評核一律開新視窗 */
 })();</script>
 
 <script>
