@@ -35,6 +35,7 @@ header.top{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-block
 @media (max-width:760px){.femh{align-items:flex-start;text-align:left;width:100%}}
 .mark{width:28px;height:28px;border-radius:7px;background:var(--accent);display:grid;place-items:center;color:var(--accent-ink);font-weight:700;font-family:var(--f-mono);font-size:13px;flex:none}
 .top .spacer{flex:0 1 0}
+.grp.org{background:var(--accent-soft);color:var(--accent)}
 .clr{display:inline-flex;align-items:center;gap:6px;font:600 13px var(--f-sans);color:var(--accent);background:var(--surface);border:1px solid var(--accent);border-radius:8px;padding:6px 11px;cursor:pointer}.clr:hover,#backRes:hover{background:var(--accent-soft)}
 .pill-ex{font-size:11px;padding:3px 8px;border-radius:99px;background:var(--warn-soft);color:var(--warn);font-weight:600}
 main.cols{display:grid;grid-template-columns:minmax(330px,370px) minmax(300px,350px) minmax(0,1fr);min-height:0}
@@ -1344,25 +1345,24 @@ DRUGS.forEach((d, i) => { d._i = i; d._h = norm([d.g, d.b, d.zh, d.kw, d.st, sub
 function fuzzy(h, q) { let i = 0; for (const ch of h) { if (ch === q[i]) i++; if (i === q.length) return true; } return false; }
 /* 菌種搜尋：輸入菌種名稱／縮寫時，只列出對應藥品（exact；長名稱可前綴比對） */
 const ORG = [
-  { a: ['pseudomonas', 'p. aeruginosa', 'aeruginosa', 'psa', 'pa', '綠膿桿菌'], p: ['pseudomonas', 'aeruginosa'],
+  { n: 'P. aeruginosa', a: ['pseudomonas', 'p. aeruginosa', 'aeruginosa', 'psa', 'pa', '綠膿桿菌'], p: ['pseudomonas', 'aeruginosa'],
     ids: ['tzp', 'caz', 'fep', 'cps', 'fdc', 'cza', 'czt', 'rec', 'mem', 'ipm', 'cipiv', 'cippo', 'lvxiv', 'lvxpo', 'amk', 'gen', 'col', 'pmb', 'fosiv'] },
-  { a: ['dtr', 'dtr-pa', 'dtr-p. aeruginosa'], ids: ['czt', 'cza', 'rec', 'fdc', 'col', 'pmb', 'amk'] },
-  { a: ['mrsa'], ids: ['van', 'tei', 'dap', 'lzdiv', 'lzdpo', 'cpt', 'smxiv', 'smxpo', 'doxy', 'minoiv', 'tgc', 'clniv', 'clnpo', 'fus', 'rif', 'nemopo', 'nemoiv'] },
-  { a: ['vre'], ids: ['lzdiv', 'lzdpo', 'dap', 'tgc'] },
-  { a: ['esbl', 'esbl-e'], ids: ['etp', 'mem', 'ipm', 'rec', 'fdc', 'azavi', 'cza'] },
-  { a: ['cre', 'crkp', 'cr-kp', 'kpc', 'oxa-48', 'oxa48', 'ndm', 'mbl', 'carbapenem-resistant enterobacterales'], ids: ['cza', 'rec', 'azavi', 'fdc', 'tgc', 'col', 'pmb'] },
-  { a: ['sm', 's. maltophilia', 'maltophilia', 'stenotrophomonas', '嗜麥芽窄食單胞菌'], p: ['stenotrophomonas', 'maltophilia'], ids: ['lvxiv', 'lvxpo', 'smxiv', 'smxpo', 'tgc', 'minoiv', 'fdc'] },
-  { a: ['crab', 'xdrab', 'xdr-ab', 'cr-ab', 'acinetobacter', 'a. baumannii', 'baumannii', '鮑氏不動桿菌', '不動桿菌'], p: ['acinetobacter', 'baumannii'], ids: ['sul', 'fdc', 'minoiv', 'tgc', 'col', 'pmb'] },
-  { a: ['anaerobe', 'anaerobes', 'anaerobic', '厭氧', '厭氧菌'], p: ['anaerobe', 'anaerobic'], ids: ['etp', 'mem', 'ipm', 'rec', 'mtz', 'mxfiv', 'mxfpo', 'tzp', 'tgc'] }
-].map((o) => ({ ...o, a: o.a.map(norm), p: (o.p || []).map(norm), ids: new Set(o.ids) }));
-function orgHit(q) {
-  const t = norm(q || ''); if (!t) return null;
-  const hit = ORG.filter((o) => o.a.includes(t) || (t.length >= 4 && o.p.some((x) => x.startsWith(t))));
-  return hit.length ? new Set(hit.flatMap((o) => [...o.ids])) : null;
+  { n: 'DTR-P. aeruginosa', a: ['dtr', 'dtr-pa', 'dtr-p. aeruginosa'], ids: ['czt', 'cza', 'rec', 'fdc', 'col', 'pmb', 'amk'] },
+  { n: 'MRSA', a: ['mrsa'], ids: ['van', 'tei', 'dap', 'lzdiv', 'lzdpo', 'cpt', 'smxiv', 'smxpo', 'doxy', 'minoiv', 'tgc', 'clniv', 'clnpo', 'fus', 'rif', 'nemopo', 'nemoiv'] },
+  { n: 'VRE', a: ['vre'], ids: ['lzdiv', 'lzdpo', 'dap', 'tgc'] },
+  { n: 'ESBL-E', a: ['esbl', 'esbl-e'], ids: ['etp', 'mem', 'ipm', 'rec', 'fdc', 'azavi', 'cza'] },
+  { n: 'CRE', a: ['cre', 'crkp', 'cr-kp', 'kpc', 'oxa-48', 'oxa48', 'ndm', 'mbl'], x: ['kpc', 'oxa-48', 'oxa48', 'ndm', 'mbl'], ids: ['cza', 'rec', 'azavi', 'fdc', 'tgc', 'col', 'pmb'] },
+  { n: 'S. maltophilia', a: ['sm', 's. maltophilia', 'maltophilia', 'stenotrophomonas', '嗜麥芽窄食單胞菌'], p: ['stenotrophomonas', 'maltophilia'], ids: ['lvxiv', 'lvxpo', 'smxiv', 'smxpo', 'tgc', 'minoiv', 'fdc'] },
+  { n: 'CRAB', a: ['crab', 'xdrab', 'xdr-ab', 'cr-ab', 'acinetobacter', 'a. baumannii', 'baumannii', '鮑氏不動桿菌', '不動桿菌'], p: ['acinetobacter', 'baumannii'], ids: ['sul', 'fdc', 'minoiv', 'tgc', 'col', 'pmb'] },
+  { n: 'Anaerobes', a: ['anaerobe', 'anaerobes', 'anaerobic', '厭氧', '厭氧菌'], p: ['anaerobe', 'anaerobic'], ids: ['etp', 'mem', 'ipm', 'rec', 'mtz', 'mxfiv', 'mxfpo', 'tzp', 'tgc'] }
+].map((o) => ({ ...o, a: o.a.map(norm), p: (o.p || []).map(norm), x: (o.x || []).map(norm), ids: new Set(o.ids) }));
+/* 菌種比對：完整關鍵字，或打 ≥2 字且為關鍵字開頭（KPC、OXA-48 等縮寫需完整輸入）；結果與一般藥名搜尋合併顯示 */
+function orgMatch(q) {
+  const t = norm(q || ''); if (!t) return [];
+  return ORG.filter((o) => o.a.includes(t) || (t.length >= 2 && o.a.some((x) => !o.x.includes(x) && x.startsWith(t))));
 }
 function score(d, q) {
   if (!q) return 1;
-  const og = orgHit(q); if (og) return og.has(d.id) ? 20 : 0;
   const toks = q.toLowerCase().split(/\s+/).filter(Boolean).map(norm).filter(Boolean);
   let s = 0;
   for (const t of toks) {
@@ -1436,22 +1436,30 @@ function renderChips() {
   $('subChips').innerHTML = subs.length ? `<button data-v="all" aria-pressed="${S.sub === 'all'}">全部</button>` + subs.map(([k, n]) => `<button data-v="${k}" class="${BLG[k] ? 'bl2' : ''}" aria-pressed="${S.sub === k}">${BLG[k] ? '└ ' : ''}${n}</button>`).join('') : '';
   $('subChips').querySelectorAll('button').forEach((b) => b.onclick = () => { S.sub = b.dataset.v; renderChips(); renderList(); });
 }
+const chipOK = (d) => (S.cls === 'all' || d.cls === S.cls) && (S.sub === 'all' || subOf(d) === S.sub || (S.sub === 'nov' && d.novel) || (S.sub === 'bl' && d.sub === 'bl')) && (S.rt === 'all' || d.rt === S.rt);
 function filtered() {
-  return DRUGS.map((d) => ({ d, s: score(d, S.q) })).filter(({ d, s }) => s > 0 && (S.cls === 'all' || d.cls === S.cls) && (S.sub === 'all' || subOf(d) === S.sub || (S.sub === 'nov' && d.novel) || (S.sub === 'bl' && d.sub === 'bl')) && (S.rt === 'all' || d.rt === S.rt));
+  return DRUGS.map((d) => ({ d, s: score(d, S.q) })).filter(({ d, s }) => s > 0 && chipOK(d));
 }
 const TAG = { std: ['std', '標準劑量'], adj: ['adj', '已調整'], up: ['up', '↑ 劑量'], no: ['no', '不建議'], rt: ['std', 'RRT 參考'] };
+function itemHTML(d) {
+  let tag = '';
+    if (C.ok) { const p = pick(d, C); const [cl, tx] = TAG[p.status]; tag = `<span class="tag ${cl}">${tx}</span>`; }
+  return `<button class="di" data-id="${d.id}" aria-current="${S.sel === d.id}"><span class="n">${esc(d.g)} <i>${esc(d.b)}</i>${d.tdmIcon ? ' <span class="tdmi" title="建議 TDM">TDM</span>' : ''}</span><span class="st">${tag}</span><span class="m">${d.rt === 'inj' ? '針' : '口'}・${esc(d.st)}${d.ext ? '・' + d.ext : ''}</span></button>`;
+}
 function renderList() {
-  const items = filtered();
-  $('cnt').textContent = `${items.length} 個品項`;
+  const items = filtered(), orgs = S.q ? orgMatch(S.q) : [];
+  const oItems = orgs.map((o) => ({ o, ds: DRUGS.filter((d) => o.ids.has(d.id) && chipOK(d)) }));
+  const nOrg = oItems.reduce((a, x) => a + x.ds.length, 0);
+  $('cnt').textContent = orgs.length ? `菌種 ${nOrg} 項・藥名 ${items.length} 項` : `${items.length} 個品項`;
   if (S.q) items.sort((a, b) => b.s - a.s);
   else items.sort((a, b) => (['bac', 'fun', 'vir'].indexOf(a.d.cls) - ['bac', 'fun', 'vir'].indexOf(b.d.cls)) || (SUBORD.indexOf(subOf(a.d)) - SUBORD.indexOf(subOf(b.d))) || (a.d._i - b.d._i));
   let html = '', last = '';
+  oItems.forEach(({ o, ds }) => { html += `<div class="grp org">菌種：${esc(o.n)}（${ds.length}）</div>` + ds.map(itemHTML).join(''); });
+  if (orgs.length && items.length) html += '<div class="grp">藥名搜尋結果</div>';
   for (const { d } of items) {
     const grp = `${CLSNAME[d.cls]}・${subLab(d)}`;
     if (!S.q && grp !== last) { html += `<div class="grp">${grp}</div>`; last = grp; }
-    let tag = '';
-    if (C.ok) { const p = pick(d, C); const [cl, tx] = TAG[p.status]; tag = `<span class="tag ${cl}">${tx}</span>`; }
-    html += `<button class="di" data-id="${d.id}" aria-current="${S.sel === d.id}"><span class="n">${esc(d.g)} <i>${esc(d.b)}</i>${d.tdmIcon ? ' <span class="tdmi" title="建議 TDM">TDM</span>' : ''}</span><span class="st">${tag}</span><span class="m">${d.rt === 'inj' ? '針' : '口'}・${esc(d.st)}${d.ext ? '・' + d.ext : ''}</span></button>`;
+    html += itemHTML(d);
   }
   $('dlist').innerHTML = html || '<div class="empty" style="background:var(--surface)">找不到符合的藥品，試試其他關鍵字</div>';
   $('dlist').querySelectorAll('.di').forEach((b) => b.onclick = () => { S.sel = b.dataset.id; S.tierSel = null; S.showAll = false; renderList(); renderDetail(); if (window.innerWidth <= 1180) $('detail').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
