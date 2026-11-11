@@ -480,9 +480,9 @@ add({ id: 'fep', ref: 'PI・UpToDate', rrRef: 'UpToDate・SG', blg: 'ceph', pifS
   inf: { dil: { NS: '1–40 mg/mL：室溫 24 h、冷藏 7 d', D5W: '室溫 24 h、冷藏 7 d' }, v: [50, 100], t: [0.5, 3, 4], ti: 0, c: [1, 40] },
   nt: [EI_NOTE] });
 
-add({ id: 'cps', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'ceph', naD: [68.5, 1000], ind: ['2,000 mg Q12H', '4,000 mg Q12H（高劑量）'], g: 'Cefoperazone/Sulbactam', b: 'Brosym', zh: '博益欣', st: '4,000 mg/vial (2,000 mg/2,000 mg)', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'sulperazon crab',
-  L: [T(1000, 'q12h'), T(2000, 'q12h'), T(4000, 'q12h', { hd: 1 }), T(4000, 'q8h', { hd: 1, t: 'CRAB-VAP' })],
-  R: NA(1, 2, '本院暫以不依腎功能調整呈現'), rr: SAME(1, 2, '本院暫以不依腎功能調整呈現'),
+add({ id: 'cps', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'ceph', naD: [68.5, 1000], g: 'Cefoperazone/Sulbactam', b: 'Brosym', zh: '博益欣', st: '4,000 mg/vial (2,000 mg/2,000 mg)', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'sulperazon crab',
+  L: [T(1000, 'q12h'), T(2000, 'q12h'), T(4000, 'q12h', { t: '本院標準劑量（嚴重／難治感染）' }), T(4000, 'q8h', { hd: 1, t: 'CRAB-VAP' })],
+  R: [[30, 2, 2, '本院暫以不依腎功能調整呈現', '所有腎功能'], [0, 2, 2, '本院暫以不依腎功能調整呈現。腎功能不全者若使用高劑量 Brosym，宜審慎監測 PT/INR 與可能的出血徵象，尤其當合併多重風險因子時（alcoholism、decompensated liver cirrhosis、long-term TPN、malnutrition、concomitant with antithrombotics、bleeding tendency、neutropenia）。', '所有腎功能']], rr: SAME(2, 2, '本院暫以不依腎功能調整呈現。腎功能不全者若使用高劑量 Brosym，宜審慎監測 PT/INR 與可能的出血徵象，尤其當合併多重風險因子時（alcoholism、decompensated liver cirrhosis、long-term TPN、malnutrition、concomitant with antithrombotics、bleeding tendency、neutropenia）。'),
   tox: ['高劑量：注意出血徵象與hypoprothrombinemia，監測 PT/INR，必要時補充 vitamin K（N-MTT 側鏈）', 'Disulfiram-like reaction（避免酒精）', '肝腎功能皆不全：cefoperazone ≤2,000 mg/day'],
   inf: { dil: { NS: '室溫 24 h', D5W: '室溫 24 h', LR: '需先以 SWFI 溶解再稀釋' }, v: [100], t: [0.5, 1], ti: 0, note: '勿與 aminoglycoside 同管混合' },
   nt: ['使用高劑量（4,000 mg q12h 以上）時需注意出血徵象或 hypoprothrombinemia。'] });
@@ -1165,7 +1165,7 @@ const eff = (d, c = C) => {
 function bandLabel(R, i, unit) {
   const lo = R[i][0], hi = i > 0 ? R[i - 1][0] : null;
   if (R.length === 1) return '所有腎功能';
-  if (R[i][4]) return `${unit} ${R[i][4]}`; /* 自訂區間標籤 */
+  if (R[i][4]) return R[i][4] === '所有腎功能' ? R[i][4] : `${unit} ${R[i][4]}`; /* 自訂區間標籤 */
   if (hi == null) return `${unit} ≥${lo}`;
   if (lo === 0) return `${unit} <${hi}`;
   return `${unit} ${lo}–${hi - 1}`;
@@ -1536,7 +1536,7 @@ function renderDetail() {
   const L = d.L.map((t, i) => ({ t, i, x: tierText(d, t, CC) }));
   const selT0 = sel != null && sel >= 0 ? L[sel] : null;
   const colI = d.col === 1 ? 1 : 2, bandMap = {};
-  const addB = (i, t) => { if (i == null || i < 0) return; (bandMap[i] = bandMap[i] || []).push(t); };
+  const addB = (i, t) => { if (i == null || i < 0) return; const a = (bandMap[i] = bandMap[i] || []); if (!a.includes(t)) a.push(t); };
   if (d._lad) L.forEach(({ t, i }) => addB(i, t.bl));
   else if (d.R.length > 1 || !d.rf) d.R.forEach((r, bi) => addB(r[colI], bandLabel(d.R, bi, d.basis === 'egfr' ? 'eGFR' : 'CrCl')));
   if (d.rf) d.rf.forEach((r, bi) => { if (d.R.length === 1) (bandMap[d.R[0][colI]] = bandMap[d.R[0][colI]] || []).push(`${bandLabel(d.rf, bi, 'CrCl')}${r[1] < 1 ? `（×${Math.round(r[1] * 100)}%）` : ''}`); });
