@@ -685,9 +685,9 @@ add({ id: 'van', tdmFn: VAN_TDM, aucLad: 1, ban: (c) => (c.rrt === 'HD' ? [1, 2,
 add({ id: 'tei', ref: 'PI（EU）', rrRef: 'UpToDate・SG', naD: [11.6, 200], g: 'Teicoplanin', b: 'Targocid', zh: '得時高', st: '200 mg/vial', cls: 'bac', sub: 'gpc', rt: 'inj', kw: 'glycopeptide mrsa', wt: 'TBW', rd: 100,
   modes: [
     { k: 'std', lab: 'MRSA 感染（9–12 mg/kg/dose）', L: [K(9, 'q72h', { rng: [9, 12] }), K(9, 'q48h', { rng: [9, 12] }), K(9, 'q24h', { rng: [9, 12] })], R: [[81, 2, 2], [30, 1, 1], [0, 0, 0]],
-      rr: { HD: [0, 0, '不被 HD 移除；Q3D'], PD: [0, 0, 'Q3D'], CRRT: [1, 1, 'Q48H'], SLED: [1, 1, '資料有限'] }, ld: { k: () => 9, rng: [9, 12], rd: 100 }, ldm: () => 'q12h × 3 劑（9–12 mg/kg/dose），之後 QD 維持；腎功能調整自第 4 天起' },
+      rr: { HD: [0, 0, '不被 HD 移除；Q3D'], PD: [0, 0, 'Q3D'], CRRT: [1, 1, 'Q48H'], SLED: [1, 1, '資料有限'] }, ld: { k: () => 9, rng: [9, 12], rd: 100, ecmoK: 12 }, ldm: (c) => (c.ecmo ? 'q12h × 5 劑（12 mg/kg/dose；ECMO 一律 5 劑），之後 QD 維持；腎功能調整自第 4 天起' : 'q12h × 3–5 劑（9–12 mg/kg/dose），之後 QD 維持；腎功能調整自第 4 天起') },
     { k: 'sev', lab: '嚴重 MRSA 感染（12 mg/kg/dose）', L: [K(12, 'q72h'), K(12, 'q48h'), K(12, 'q24h', { hd: 1 })], R: [[81, 2, 2], [30, 1, 1], [0, 0, 0]],
-      rr: { HD: [0, 0, '不被 HD 移除；Q3D'], PD: [0, 0, 'Q3D'], CRRT: [1, 1, 'Q48H'], SLED: [1, 1, '資料有限'] }, ld: { k: () => 12, rd: 100 }, ldm: () => 'q12h × 3–5 劑（12 mg/kg/dose），之後 QD 維持；腎功能調整自第 4 天起' }],
+      rr: { HD: [0, 0, '不被 HD 移除；Q3D'], PD: [0, 0, 'Q3D'], CRRT: [1, 1, 'Q48H'], SLED: [1, 1, '資料有限'] }, ld: { k: () => 12, rd: 100, ecmoK: 12 }, ldm: (c) => (c.ecmo ? 'q12h × 5 劑（12 mg/kg/dose；ECMO 一律 5 劑），之後 QD 維持；腎功能調整自第 4 天起' : 'q12h × 3–5 劑（12 mg/kg/dose），之後 QD 維持；腎功能調整自第 4 天起') }],
   aki: 'n',
   tox: ['血小板低下（高 trough）', '腎毒性（低於 vancomycin）', '皮疹、發燒'],
   ex: 'ECMO：Loading 12 mg/kg q12h ×3；迴路更換後濃度可下降約 36%（NTUH 未發表資料）。',
@@ -1244,7 +1244,11 @@ function vancoLadder(d, c) {
   /* 上下階估算 AUC 限制在 400–600 之間；無符合者則不列該階 */
   const pDn = cand.filter((x) => x.auc < mid.auc - 1 && x.auc >= 400), pUp = cand.filter((x) => x.auc > mid.auc + 1 && x.auc <= 600);
   const dn = split(pickT(Tc - 50, pDn, mid.f), Tc - 50, pDn), up = split(pickT(Tc + 50, pUp, mid.f), Tc + 50, pUp);
-  const mk = (x, T) => ({ fn: () => x.per, f: x.f, bl: `目標 AUC ${T}`, hd: x.auc > 600 ? 1 : 0, ps: x.alt ? `（${x.alt}）` : '',
+  /* 250 mg 級距下無 AUC 400–600 之上下階時，改以 100 mg 級距尋找 */
+  const c100 = []; ivs.forEach(([f, n], oi) => { for (let per = 500; per <= maxPer; per += 100) c100.push({ f, n, oi, per, day: per * n, auc: per * n / cl, r100: 1 }); });
+  const dnF = dn || pickT(Tc - 50, c100.filter((x) => x.auc < mid.auc - 1 && x.auc >= 400), mid.f);
+  const upF = up || pickT(Tc + 50, c100.filter((x) => x.auc > mid.auc + 1 && x.auc <= 600), mid.f);
+  const mk = (x, T) => ({ fn: () => x.per, f: x.f, bl: `目標 AUC ${T}`, hd: x.auc > 600 ? 1 : 0, ps: x.alt ? `（${x.alt}）` : x.r100 ? '（以 100 mg 級距）' : '',
     sub: `每日總量 ${x.day.toLocaleString('en-US')} mg（目標 AUC ${T} → ${Math.round(T * cl).toLocaleString('en-US')} mg/day）；估算 AUC₂₄ ≈ ${r0(x.auc)} mg·h/L${x.auc > 600 ? '（>600，AKI 風險上升）' : ''}；每劑 ${r1(x.per / W)} mg/kg（TBW ${r1(W)} kg）` });
   /* QD 單次 ≥1,500 mg：每日總量不變，拆成每劑 250 mg 倍數之 Q12H（優先）或 Q8H（例：1,500 QD → 750 Q12H；2,250 QD → 750 Q8H；3,000 QD → 1,500 Q12H 或 1,000 Q8H） */
   const eqv = (x) => {
@@ -1254,7 +1258,7 @@ function vancoLadder(d, c) {
     if (ok(t)) return { ...x, f: 'q8h', n: 3, per: t };
     return x;
   };
-  const L = [dn && mk(eqv(dn), Tc - 50), mk(eqv(mid), Tc), up && mk(eqv(up), Tc + 50)].filter(Boolean), mi = dn ? 1 : 0;
+  const L = [dnF && mk(eqv(dnF), Tc - 50), mk(eqv(mid), Tc), upF && mk(eqv(upF), Tc + 50)].filter(Boolean), mi = dnF ? 1 : 0;
   return { L, R: [[0, mi, mi]], arc: d.arc && { i: mi, t: d.arc.t }, rf: null, _lad: { cl, mi, aki: Tc === 450 } };
 }
 function vancoAUC(d, t, c) {
@@ -1348,8 +1352,9 @@ function ldText0(d, c, idx) {
   if (typeof d.ld === 'string') return d.ld;
   if (typeof d.ld === 'function') return d.ld(c, idx, d);
   const [wl, W] = d.wt ? dosingWeight(d, c) : ['TBW', c.wt];
-  const k = typeof d.ld.k === 'function' ? d.ld.k(c) : d.ld.k;
-  if (d.ld.rng) { const rd = d.ld.rd || 10; return `Loading ${d.ld.rng[0]}–${d.ld.rng[1]} mg/kg × ${r1(W)} kg (${wl}) → <b class="num">${roundTo(d.ld.rng[0] * W, rd).toLocaleString('en-US')}–${fmtMg(roundTo(d.ld.rng[1] * W, rd))}</b>（四捨五入至 ${rd} mg）`; }
+  const ecmo = c.ecmo && d.ld.ecmoK;
+  const k = ecmo ? d.ld.ecmoK : typeof d.ld.k === 'function' ? d.ld.k(c) : d.ld.k;
+  if (d.ld.rng && !ecmo) { const rd = d.ld.rd || 10; return `Loading ${d.ld.rng[0]}–${d.ld.rng[1]} mg/kg × ${r1(W)} kg (${wl}) → <b class="num">${roundTo(d.ld.rng[0] * W, rd).toLocaleString('en-US')}–${fmtMg(roundTo(d.ld.rng[1] * W, rd))}</b>（四捨五入至 ${rd} mg）`; }
   let mg = roundTo(k * W, d.ld.rd || 10); const capped = d.ld.mx && mg > d.ld.mx; if (capped) mg = d.ld.mx;
   return `Loading ${k} mg/kg × ${r1(W)} kg (${wl}) → <b class="num">${fmtMg(mg)}</b>${capped ? `（上限 ${fmtMg(d.ld.mx)}）` : ''}${d.ld.t ? '。' + d.ld.t : ''}`;
 }
