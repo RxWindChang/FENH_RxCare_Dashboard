@@ -1241,7 +1241,8 @@ function vancoLadder(d, c) {
     return alt && Math.abs(alt.auc - T) <= 60 ? split(alt, T, pool) : x;
   };
   const mid = split(cand.filter((x) => Math.abs(x.auc - Tc) <= Math.abs(best0.auc - Tc) + 10).sort((a, b) => b.oi - a.oi)[0], Tc, cand);
-  const pDn = cand.filter((x) => x.auc < mid.auc - 1), pUp = cand.filter((x) => x.auc > mid.auc + 1);
+  /* 上下階估算 AUC 限制在 400–600 之間；無符合者則不列該階 */
+  const pDn = cand.filter((x) => x.auc < mid.auc - 1 && x.auc >= 400), pUp = cand.filter((x) => x.auc > mid.auc + 1 && x.auc <= 600);
   const dn = split(pickT(Tc - 50, pDn, mid.f), Tc - 50, pDn), up = split(pickT(Tc + 50, pUp, mid.f), Tc + 50, pUp);
   const mk = (x, T) => ({ fn: () => x.per, f: x.f, bl: `目標 AUC ${T}`, hd: x.auc > 600 ? 1 : 0, ps: x.alt ? `（${x.alt}）` : '',
     sub: `每日總量 ${x.day.toLocaleString('en-US')} mg（目標 AUC ${T} → ${Math.round(T * cl).toLocaleString('en-US')} mg/day）；估算 AUC₂₄ ≈ ${r0(x.auc)} mg·h/L${x.auc > 600 ? '（>600，AKI 風險上升）' : ''}；每劑 ${r1(x.per / W)} mg/kg（TBW ${r1(W)} kg）` });
