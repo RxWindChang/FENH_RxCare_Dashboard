@@ -1243,9 +1243,17 @@ function vancoLadder(d, c) {
   const mid = split(cand.filter((x) => Math.abs(x.auc - Tc) <= Math.abs(best0.auc - Tc) + 10).sort((a, b) => b.oi - a.oi)[0], Tc, cand);
   const pDn = cand.filter((x) => x.auc < mid.auc - 1), pUp = cand.filter((x) => x.auc > mid.auc + 1);
   const dn = split(pickT(Tc - 50, pDn, mid.f), Tc - 50, pDn), up = split(pickT(Tc + 50, pUp, mid.f), Tc + 50, pUp);
-  const mk = (x, T) => ({ fn: () => x.per, f: x.f, bl: `目標 AUC ${T}`, hd: x.auc > 600 ? 1 : 0,
+  const mk = (x, T) => ({ fn: () => x.per, f: x.f, bl: `目標 AUC ${T}`, hd: x.auc > 600 ? 1 : 0, ps: x.alt ? `（${x.alt}）` : '',
     sub: `每日總量 ${x.day.toLocaleString('en-US')} mg（目標 AUC ${T} → ${Math.round(T * cl).toLocaleString('en-US')} mg/day）；估算 AUC₂₄ ≈ ${r0(x.auc)} mg·h/L${x.auc > 600 ? '（>600，AKI 風險上升）' : ''}；每劑 ${r1(x.per / W)} mg/kg（TBW ${r1(W)} kg）` });
-  const L = [dn && mk(dn, Tc - 50), mk(mid, Tc), up && mk(up, Tc + 50)].filter(Boolean), mi = dn ? 1 : 0;
+  /* QD 單次 ≥1,500 mg：每日總量不變，拆成每劑 250 mg 倍數之 Q12H（優先）或 Q8H（例：1,500 QD → 750 Q12H；2,250 QD → 750 Q8H；3,000 QD → 1,500 Q12H 或 1,000 Q8H） */
+  const eqv = (x) => {
+    if (!x || x.f !== 'q24h' || x.per < 1500) return x;
+    const h = x.per / 2, t = x.per / 3, ok = (v) => v % 250 === 0;
+    if (ok(h)) return { ...x, f: 'q12h', n: 2, per: h, alt: ok(t) ? `亦可 ${t.toLocaleString('en-US')} mg Q8H` : '' };
+    if (ok(t)) return { ...x, f: 'q8h', n: 3, per: t };
+    return x;
+  };
+  const L = [dn && mk(eqv(dn), Tc - 50), mk(eqv(mid), Tc), up && mk(eqv(up), Tc + 50)].filter(Boolean), mi = dn ? 1 : 0;
   return { L, R: [[0, mi, mi]], arc: d.arc && { i: mi, t: d.arc.t }, rf: null, _lad: { cl, mi, aki: Tc === 450 } };
 }
 function vancoAUC(d, t, c) {
