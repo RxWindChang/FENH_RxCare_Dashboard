@@ -849,7 +849,7 @@ add({ id: 'neo', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Neomycin', b: 'Neomycin'
 
 /* ================= Anti-TB ================= */
 const TB_NOTE = '依《結核病診治指引》（疾管署）。肥胖者以理想或 lean body weight 估算，避免 PZA/EMB 過量。';
-add({ id: 'inh', ref: 'TB 指引', rrRef: 'UpToDate・SG', g: 'Isoniazid', b: 'INAH', zh: '異菸鹼醯胼', st: '100 mg/tab（政府免費 300 mg/tab）', cls: 'bac', sub: 'tb', rt: 'po', kw: 'inh tb', wt: 'LEAN', rd: 100,
+add({ id: 'inh', ref: 'TB 指引', rrRef: 'UpToDate・SG', g: 'Isoniazid', b: 'INAH', zh: '異菸鹼醯胼', st: '100 mg/tab', cls: 'bac', sub: 'tb', rt: 'po', kw: 'inh tb', wt: 'LEAN', rd: 100,
   L: [K(5, 'q24h', { mx: 300, t: '最大 300 mg' })], R: NA(0, 0, '無需依腎功能調整'), rr: SAME(0, 0, '透析日於 after dialysis (AD) 給藥'),
   tox: ['肝毒性（併 RIF/PZA 更高）', '周邊神經病變：併用 pyridoxine 25–50 mg/day（腎衰竭、糖尿病、酒癮、孕婦、營養不良）', 'CYP2C19/3A4 抑制（phenytoin、carbamazepine）'], nt: [TB_NOTE] });
 add({ id: 'rif', ddi: RIF_DDI, ref: 'TB 指引', rrRef: 'UpToDate・SG', g: 'Rifampicin', b: 'Rifampicin', zh: '立泛黴素', st: '300 mg/cap', cls: 'bac', sub: 'tb', rt: 'po', kw: 'rifampin tb',
