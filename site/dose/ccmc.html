@@ -362,6 +362,8 @@ textarea#soap{display:block;width:calc(100% - 24px);margin:8px 12px 12px;min-hei
 .prodseg button[aria-pressed="true"]{outline:2px solid #1D4E89}
 .prodseg button small{display:block;font-weight:400;opacity:.85}
 
+.morelist{display:block;width:100%;margin:8px 0 2px;padding:10px;border:1px dashed var(--accent);border-radius:8px;background:var(--accent-soft);color:var(--accent);font-weight:600;font-size:14px;cursor:pointer}
+
 </style>
 </head><body>
 <div class="app">
@@ -2185,27 +2187,37 @@ function score(d, q) {
   const h = `${d.g} ${d.b} ${d.kw || ''} ${d.code}`.toLowerCase();
   return q.toLowerCase().split(/\s+/).every((t) => h.includes(t)) ? 1 : 0;
 }
+const MOB = window.matchMedia ? window.matchMedia('(max-width:760px)') : { matches: false };
+const MOB_N = 5; /* 手機版清單預設顯示幾項 */
 function renderList() {
   const items = DRUGS.filter((d) => (S.cls === 'all' || d.cls === S.cls || d.cls2 === S.cls) && score(d, S.q));
-  let h = '';
+  const limit = MOB.matches && !S.more && !S.q ? MOB_N : Infinity;
+  let h = '', shown = 0, total = 0;
   CLS.forEach(([k, n]) => {
     const g = items.filter((d) => d.cls === k || d.cls2 === k);
     if (!g.length) return;
+    total += g.length;
+    const vis = g.slice(0, Math.max(0, limit - shown));
+    if (!vis.length) return;
+    shown += vis.length;
     h += `<div class="grp">${n}</div>`;
-    h += g.map((d) => {
+    h += vis.map((d) => {
       const on = S.sel.includes(d.id);
       const rt = d.route === 'ci' ? '連續輸注' : d.route === 'sc' ? '皮下' : '間歇／單次';
       return `<label class="di ms" aria-current="${on}"><input type="checkbox" data-id="${d.id}" ${on ? 'checked' : ''}><span class="n">${esc(d.g)} <i>${esc(d.b)}</i></span><span class="st">${d.line === 'C' ? '<span class="tag no">中央</span>' : d.line === 'CP' ? '<span class="tag adj">中央為佳</span>' : ''}</span><span class="m">${esc(d.spec)}・${rt}</span></label>`;
     }).join('');
   });
+  if (MOB.matches && !S.q && items.length > MOB_N) h += S.more ? '<button type="button" class="morelist" id="btnMore">收合藥物清單</button>' : `<button type="button" class="morelist" id="btnMore">顯示更多藥物（還有 ${Math.max(items.length - shown, 0)} 項）</button>`;
   $('dlist').innerHTML = h || '<div class="empty">找不到符合的藥品</div>';
   $('dlist').querySelectorAll('input[type=checkbox]').forEach((c) => c.onchange = () => toggle(c.dataset.id, c.checked));
+  const bm = $('btnMore'); if (bm) bm.onclick = () => { S.more = !S.more; renderList(); if (!S.more) $('dlist').scrollIntoView({ block: 'nearest' }); };
   $('cnt').textContent = `已選 ${S.sel.length} 項`;
   $('btnNone').hidden = !S.sel.length;
 }
+if (MOB.addEventListener) MOB.addEventListener('change', () => renderList());
 function toggle(id, on) {
   S.sel = S.sel.filter((x) => x !== id);
-  if (on) { S.sel.push(id); S.open[id] = true; }
+  if (on) { S.sel.push(id); S.open[id] = !MOB.matches; }
   renderList(); renderDetail(); save();
 }
 
@@ -2537,7 +2549,7 @@ function clearAll() {
 /* ---------- init ---------- */
 function init() {
   $('clsTabs').innerHTML = `<button data-v="all" aria-pressed="true">全部</button>` + CLS.map(([k, n]) => `<button data-v="${k}" aria-pressed="false">${n}</button>`).join('');
-  $('clsTabs').querySelectorAll('button').forEach((b) => b.onclick = () => { S.cls = b.dataset.v; $('clsTabs').querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', x === b)); renderList(); });
+  $('clsTabs').querySelectorAll('button').forEach((b) => b.onclick = () => { S.cls = b.dataset.v; S.more = false; $('clsTabs').querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', x === b)); renderList(); });
   $('q').oninput = () => { S.q = $('q').value.trim(); renderList(); };
   document.querySelectorAll('#sexSeg button').forEach((b) => b.onclick = () => { setSex(b.dataset.v); renderPat(); renderDetail(); });
   [...NUMF, 'rrt', 'child'].forEach((k) => { $(k).oninput = () => { renderPat(); renderDetail(); }; });

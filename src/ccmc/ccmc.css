@@ -132,3 +132,5 @@ textarea#soap{display:block;width:calc(100% - 24px);margin:8px 12px 12px;min-hei
 .prodpick>span{font-size:12px;font-weight:600;color:var(--accent,#1D4E89)}
 .prodseg button[aria-pressed="true"]{outline:2px solid #1D4E89}
 .prodseg button small{display:block;font-weight:400;opacity:.85}
+
+.morelist{display:block;width:100%;margin:8px 0 2px;padding:10px;border:1px dashed var(--accent);border-radius:8px;background:var(--accent-soft);color:var(--accent);font-weight:600;font-size:14px;cursor:pointer}
