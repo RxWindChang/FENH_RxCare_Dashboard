@@ -197,8 +197,8 @@ function infHTML(d, P) {
   const t = S.target[d.id] ?? '', r = S.rate[d.id] ?? '';
   const tr = t !== '' ? toRate(d, Number(t), pr.c, W) : null, rd = r !== '' ? toDose(d, Number(r), pr.c, W) : null;
   const flag = (x) => x != null && (x > d.ci.hi * 1.0001) ? ' bad' : '';
-  h += `<div class="infg2"><label class="fld"><span>目標劑量</span><div class="inp"><input type="number" step="any" class="tdose" data-id="${d.id}" value="${t}"><span class="u">${esc(d.ci.u)}</span></div></label><div class="kv${flag(Number(t))}"><span>→ 流速</span><b>${tr != null ? fx(tr, 1) : '—'}</b> <small>mL/h</small></div>`;
-  h += `<label class="fld"><span>目前流速</span><div class="inp"><input type="number" step="any" class="trate" data-id="${d.id}" value="${r}"><span class="u">mL/h</span></div></label><div class="kv${flag(rd)}"><span>→ 劑量</span><b>${rd != null ? fx(rd, 3) : '—'}</b> <small>${esc(d.ci.u)}</small></div></div>`;
+  h += `<div class="infg2"><label class="fld"><span>目標劑量</span><div class="inp"><input type="number" step="any" class="tdose" data-id="${d.id}" value="${t}"><span class="u">${esc(d.ci.u)}</span></div></label><div class="kv${flag(Number(t))}" id="kvt-${d.id}"><span>→ 流速</span><b>${tr != null ? fx(tr, 1) : '—'}</b> <small>mL/h</small></div>`;
+  h += `<label class="fld"><span>目前流速</span><div class="inp"><input type="number" step="any" class="trate" data-id="${d.id}" value="${r}"><span class="u">mL/h</span></div></label><div class="kv${flag(rd)}" id="kvr-${d.id}"><span>→ 劑量</span><b>${rd != null ? fx(rd, 3) : '—'}</b> <small>${esc(d.ci.u)}</small></div></div>`;
   h += `<p class="note">常用範圍 ${d.ci.lo}–${d.ci.hi} ${esc(d.ci.u)}；粗框為建議起始。超出常用範圍以紅色標示。</p></div>`;
   return h;
 }
@@ -239,8 +239,20 @@ function bindDetail() {
   document.querySelectorAll('.ch').forEach((e) => e.onclick = () => { const id = e.dataset.tg; S.open[id] = !e.closest('.card').querySelector('.cb'); renderDetail(); });
   document.querySelectorAll('.prodseg button').forEach((b) => b.onclick = () => { const id = b.parentElement.dataset.id, k = Number(b.dataset.k); S.prep[id] = DMAP[id].preps.findIndex((p) => (p.p ?? 0) === k); renderDetail(); save(); });
   document.querySelectorAll('.prepseg button').forEach((b) => b.onclick = () => { S.prep[b.parentElement.dataset.id] = Number(b.dataset.i); renderDetail(); save(); });
-  const live = (sel, store) => document.querySelectorAll(sel).forEach((i) => i.onchange = () => { store[i.dataset.id || i.dataset.k] = i.value; renderDetail(); save(); });
-  live('.tdose', S.target); live('.trate', S.rate); live('.pin', S.prot);
+  document.querySelectorAll('.pin').forEach((i) => i.onchange = () => save());
+  document.querySelectorAll('.tdose, .trate').forEach((i) => i.onchange = () => save());
+  /* 輸入時即時換算（不重繪整張卡片，避免游標跳走）；離開欄位時再完整更新 */
+  const P = S.P || readP();
+  const inst = (i, isT) => { const id = i.dataset.id, d = DMAP[id]; (isT ? S.target : S.rate)[id] = i.value;
+    const pr = d.preps[Math.min(S.prep[id] ?? 0, d.preps.length - 1)], W = d.ci.w ? dw(P, d.ci.w).w : null, v = i.value === '' ? null : Number(i.value);
+    const out = v == null || isNaN(v) ? null : isT ? toRate(d, v, pr.c, W) : toDose(d, v, pr.c, W);
+    const box = $((isT ? 'kvt-' : 'kvr-') + id); if (!box) return;
+    box.querySelector('b').textContent = out != null ? fx(out, isT ? 1 : 3) : '—';
+    const dv = isT ? v : out; box.classList.toggle('bad', dv != null && dv > d.ci.hi * 1.0001);
+    renderSoap(); };
+  document.querySelectorAll('.tdose').forEach((i) => i.oninput = () => inst(i, true));
+  document.querySelectorAll('.trate').forEach((i) => i.oninput = () => inst(i, false));
+  document.querySelectorAll('.pin').forEach((i) => i.oninput = () => { S.prot[i.dataset.k] = i.value; const tmp = document.createElement('div'); tmp.innerHTML = protHTML(); const nw = tmp.querySelector('.ld.one'), sec = i.closest('.sec5'), old = sec && sec.querySelector('.ld.one'); if (old && nw) old.replaceWith(nw); else if (old) old.remove(); else if (nw && sec) sec.appendChild(nw); });
   const cd = document.querySelector('.cmpbox'); if (cd) cd.ontoggle = () => { S.cmpOpen = cd.open; };
   $('expAll').onclick = () => { S.sel.forEach((id) => { S.open[id] = true; }); renderDetail(); };
   $('colAll').onclick = () => { S.sel.forEach((id) => { S.open[id] = false; }); renderDetail(); };
