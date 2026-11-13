@@ -245,7 +245,7 @@ details.nabox:not([open]) summary h4{border-bottom:0}
       <div class="grid2">
         <div class="fld"><label for="age">年齡<span class="req">*</span></label><div class="inp"><input id="age" type="number" inputmode="decimal" min="0" max="120"><span class="u">歲</span></div></div>
         <div class="fld"><label>性別<span class="req">*</span></label><div class="seg" id="sexSeg"><button type="button" data-v="M">男</button><button type="button" data-v="F">女</button></div></div>
-        <div class="fld"><label for="ht">身高</label><div class="inp"><input id="ht" type="number" inputmode="decimal" placeholder="選填"><span class="u">cm</span></div></div>
+        <div class="fld"><label for="ht">身高<span class="req">*</span></label><div class="inp"><input id="ht" type="number" inputmode="decimal"><span class="u">cm</span></div></div>
         <div class="fld"><label for="wt">體重 (TBW)<span class="req">*</span></label><div class="inp"><input id="wt" type="number" inputmode="decimal"><span class="u">kg</span></div></div>
         <div class="fld"><label for="scr">Serum Cr<span class="req">*</span></label><div class="inp"><input id="scr" type="number" inputmode="decimal" step="0.01"><span class="u">mg/dL</span></div></div>
         <div class="fld"><label for="cys">Cystatin C</label><div class="inp"><input id="cys" type="number" inputmode="decimal" step="0.01" placeholder="選填"><span class="u">mg/L</span></div></div>
@@ -1085,7 +1085,7 @@ function patient() {
   const c = { age: num('age'), ht: num('ht'), wt: num('wt'), scr: num('scr'), cys: num('cys'), sex: S.sex, sev: 'sev',
     rrt: $('rrt').value, eff: num('eff'), icu: $('icu').checked, aki: $('aki').checked, akiHold: $('akiHold').checked,
     ecmo: $('ecmo').checked, neuro: $('neuro').value, cs: $('cs').checked, cp: $('cp').value, sofa: num('sofa') };
-  c.ok = c.age > 0 && c.wt > 0 && c.scr > 0;
+  c.ok = c.age > 0 && c.ht > 0 && c.wt > 0 && c.scr > 0;
   c.noHt = !(c.ht > 0); /* 身高為選填：未填時 IBW/AdjBW/BMI/BSA 無法計算，一律以 TBW */
   if (!c.ok) return c;
   const F = c.sex === 'F';
@@ -1405,7 +1405,7 @@ function renderPatient() {
   C = patient();
   const wT = $('wTable'), rT = $('rTable');
   if (!C.ok) {
-    wT.innerHTML = '<tr><td class="k">請輸入年齡、性別、體重、Scr</td></tr>'; rT.innerHTML = ''; $('basis').innerHTML = ''; $('pAlerts').innerHTML = ''; return;
+    wT.innerHTML = '<tr><td class="k">請輸入年齡、性別、身高、體重、Scr</td></tr>'; rT.innerHTML = ''; $('basis').innerHTML = ''; $('pAlerts').innerHTML = ''; return;
   }
   const bmiCat = C.bmi < 18.5 ? '過輕' : C.bmi < 24 ? '正常' : C.bmi < 27 ? '過重' : '肥胖';
   wT.innerHTML = C.noHt ? '<tr><td class="k">IBW、AdjBW、BMI、BSA</td><td class="v"><small>需輸入身高</small></td></tr><tr><td class="k">劑量體重</td><td class="v">一律以 TBW ' + r1(C.wt) + ' <small>kg</small></td></tr>' : [
