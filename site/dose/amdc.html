@@ -245,7 +245,7 @@ details.nabox:not([open]) summary h4{border-bottom:0}
       <div class="grid2">
         <div class="fld"><label for="age">年齡<span class="req">*</span></label><div class="inp"><input id="age" type="number" inputmode="decimal" min="0" max="120"><span class="u">歲</span></div></div>
         <div class="fld"><label>性別<span class="req">*</span></label><div class="seg" id="sexSeg"><button type="button" data-v="M">男</button><button type="button" data-v="F">女</button></div></div>
-        <div class="fld"><label for="ht">身高<span class="req">*</span></label><div class="inp"><input id="ht" type="number" inputmode="decimal"><span class="u">cm</span></div></div>
+        <div class="fld"><label for="ht">身高</label><div class="inp"><input id="ht" type="number" inputmode="decimal" placeholder="選填"><span class="u">cm</span></div></div>
         <div class="fld"><label for="wt">體重 (TBW)<span class="req">*</span></label><div class="inp"><input id="wt" type="number" inputmode="decimal"><span class="u">kg</span></div></div>
         <div class="fld"><label for="scr">Serum Cr<span class="req">*</span></label><div class="inp"><input id="scr" type="number" inputmode="decimal" step="0.01"><span class="u">mg/dL</span></div></div>
         <div class="fld"><label for="cys">Cystatin C</label><div class="inp"><input id="cys" type="number" inputmode="decimal" step="0.01" placeholder="選填"><span class="u">mg/L</span></div></div>
@@ -1085,29 +1085,33 @@ function patient() {
   const c = { age: num('age'), ht: num('ht'), wt: num('wt'), scr: num('scr'), cys: num('cys'), sex: S.sex, sev: 'sev',
     rrt: $('rrt').value, eff: num('eff'), icu: $('icu').checked, aki: $('aki').checked, akiHold: $('akiHold').checked,
     ecmo: $('ecmo').checked, neuro: $('neuro').value, cs: $('cs').checked, cp: $('cp').value, sofa: num('sofa') };
-  c.ok = c.age > 0 && c.ht > 0 && c.wt > 0 && c.scr > 0;
+  c.ok = c.age > 0 && c.wt > 0 && c.scr > 0;
+  c.noHt = !(c.ht > 0); /* 身高為選填：未填時 IBW/AdjBW/BMI/BSA 無法計算，一律以 TBW */
   if (!c.ok) return c;
   const F = c.sex === 'F';
-  c.ibw = Math.max((F ? 45.5 : 50) + 0.9055 * (c.ht - 152.4), 20);
-  c.adj = c.wt > c.ibw ? c.ibw + 0.4 * (c.wt - c.ibw) : c.wt;
-  c.bmi = c.wt / (c.ht / 100) ** 2;
-  c.bsa = Math.sqrt(c.ht * c.wt / 3600);
-  c.pibw = c.wt / c.ibw * 100;
-  c.obese = c.bmi >= 30;
-  c.cgW = c.bmi < 18.5 || c.wt < c.ibw ? ['TBW', c.wt, '過瘦（BMI <18.5）或 TBW < IBW'] : c.obese ? ['AdjBW', c.adj, '肥胖（BMI ≥30）'] : ['IBW', c.ibw, 'BMI 18.5–29.9（正常／過重）'];
+  if (c.noHt) { c.ibw = c.adj = c.wt; c.pibw = 100; c.bmi = c.bsa = null; c.obese = false; }
+  else {
+    c.ibw = Math.max((F ? 45.5 : 50) + 0.9055 * (c.ht - 152.4), 20);
+    c.adj = c.wt > c.ibw ? c.ibw + 0.4 * (c.wt - c.ibw) : c.wt;
+    c.bmi = c.wt / (c.ht / 100) ** 2;
+    c.bsa = Math.sqrt(c.ht * c.wt / 3600);
+    c.pibw = c.wt / c.ibw * 100;
+    c.obese = c.bmi >= 30;
+  }
+  c.cgW = c.noHt ? ['TBW', c.wt, '未輸入身高，以 TBW 計算'] : c.bmi < 18.5 || c.wt < c.ibw ? ['TBW', c.wt, '過瘦（BMI <18.5）或 TBW < IBW'] : c.obese ? ['AdjBW', c.adj, '肥胖（BMI ≥30）'] : ['IBW', c.ibw, 'BMI 18.5–29.9（正常／過重）'];
   const cg = (w, scr = c.scr) => (140 - c.age) * w / (72 * scr) * (F ? 0.85 : 1);
-  c.cgT = cg(c.wt); c.cgI = cg(c.ibw); c.cgA = cg(c.adj); c.cgAuto = cg(c.cgW[1]);
+  c.cgT = cg(c.wt); c.cgI = c.noHt ? null : cg(c.ibw); c.cgA = c.noHt ? null : cg(c.adj); c.cgAuto = cg(c.cgW[1]);
   const k = F ? 0.7 : 0.9, a = F ? -0.241 : -0.302;
   c.egfr = 142 * Math.min(c.scr / k, 1) ** a * Math.max(c.scr / k, 1) ** -1.2 * 0.9938 ** c.age * (F ? 1.012 : 1);
-  c.egfrD = c.egfr * c.bsa / 1.73;
+  c.egfrD = c.noHt ? c.egfr : c.egfr * c.bsa / 1.73; /* 無身高：無法去標準化，以 /1.73m² 值估計 */
   if (c.cys > 0) {
     c.egfrCys = 133 * Math.min(c.cys / 0.8, 1) ** -0.499 * Math.max(c.cys / 0.8, 1) ** -1.328 * 0.996 ** c.age * (F ? 0.932 : 1);
     const a2 = F ? -0.219 : -0.144;
     c.egfrCC = 135 * Math.min(c.scr / k, 1) ** a2 * Math.max(c.scr / k, 1) ** -0.544 * Math.min(c.cys / 0.8, 1) ** -0.323 * Math.max(c.cys / 0.8, 1) ** -0.778 * 0.9961 ** c.age * (F ? 0.963 : 1);
-    c.egfrCCD = c.egfrCC * c.bsa / 1.73;
+    c.egfrCCD = c.noHt ? c.egfrCC : c.egfrCC * c.bsa / 1.73;
   }
   const ucr = num('ucr'), uvol = num('uvol'), uhr = num('uhr');
-  if (ucr > 0 && uvol > 0 && uhr > 0) { c.ucrcl = ucr * uvol / (c.scr * uhr * 60); c.ucrclN = c.ucrcl * 1.73 / c.bsa; }
+  if (ucr > 0 && uvol > 0 && uhr > 0) { c.ucrcl = ucr * uvol / (c.scr * uhr * 60); c.ucrclN = c.noHt ? null : c.ucrcl * 1.73 / c.bsa; }
   const b = num('bscr'), p = num('pscr'), h = num('phr');
   if (c.aki && b > 0 && p > 0 && h > 0) {
     const base = cg(c.cgW[1], b), mean = (p + c.scr) / 2, dS = c.scr - p;
@@ -1128,16 +1132,17 @@ function renalOptions(c) {
   return [
     { k: 'cg', lab: `CrCl (C-G, ${c.cgW[0]}) — 自動`, v: c.cgAuto, u: 'mL/min', sub: c.cgW[2] },
     { k: 'cgT', lab: 'CrCl (C-G, TBW)', v: c.cgT, u: 'mL/min' },
-    { k: 'cgI', lab: 'CrCl (C-G, IBW)', v: c.cgI, u: 'mL/min' },
-    { k: 'cgA', lab: 'CrCl (C-G, AdjBW)', v: c.cgA, u: 'mL/min' },
-    { k: 'egfr', lab: 'eGFR CKD-EPI 2021 (Cr)（參考）', v: c.egfrD, u: 'mL/min', sub: `${r0(c.egfr)} /1.73m²` },
+    { k: 'cgI', lab: 'CrCl (C-G, IBW)', v: c.cgI, u: 'mL/min', sub: c.noHt ? '需身高' : '' },
+    { k: 'cgA', lab: 'CrCl (C-G, AdjBW)', v: c.cgA, u: 'mL/min', sub: c.noHt ? '需身高' : '' },
+    { k: 'egfr', lab: 'eGFR CKD-EPI 2021 (Cr)（參考）', v: c.egfrD, u: 'mL/min', sub: c.noHt ? '未輸入身高：以 /1.73m² 值估計' : `${r0(c.egfr)} /1.73m²` },
     { k: 'egfrcc', lab: 'eGFR CKD-EPI 2021 (Cr-Cys)（參考）', v: c.egfrCCD, u: 'mL/min', sub: c.egfrCC != null ? `${r0(c.egfrCC)} /1.73m²` : '需 Cystatin C' },
-    { k: 'ucr', lab: '24-h Urine CrCl', v: c.ucrcl, u: 'mL/min', sub: c.ucrcl != null ? `${r0(c.ucrclN)} /1.73m²` : '需尿液資料' },
+    { k: 'ucr', lab: '24-h Urine CrCl', v: c.ucrcl, u: 'mL/min', sub: c.ucrcl != null ? (c.noHt ? '' : `${r0(c.ucrclN)} /1.73m²`) : '需尿液資料' },
     { k: 'ke', lab: 'Kinetic eGFR (AKI)', v: c.ke, u: 'mL/min', sub: c.ke != null ? '' : 'AKI＋前次 Scr' }
   ];
 }
 
 function dosingWeight(d, c) {
+  if (c.noHt) return ['TBW', c.wt];
   switch (d.wt) {
     case 'TBW': return ['TBW', c.wt];
     case 'AG': return c.wt < c.ibw ? ['TBW', c.wt] : c.pibw > 120 ? ['AdjBW', c.adj] : ['IBW', c.ibw];
@@ -1400,10 +1405,10 @@ function renderPatient() {
   C = patient();
   const wT = $('wTable'), rT = $('rTable');
   if (!C.ok) {
-    wT.innerHTML = '<tr><td class="k">請輸入年齡、性別、身高、體重、Scr</td></tr>'; rT.innerHTML = ''; $('basis').innerHTML = ''; $('pAlerts').innerHTML = ''; return;
+    wT.innerHTML = '<tr><td class="k">請輸入年齡、性別、體重、Scr</td></tr>'; rT.innerHTML = ''; $('basis').innerHTML = ''; $('pAlerts').innerHTML = ''; return;
   }
   const bmiCat = C.bmi < 18.5 ? '過輕' : C.bmi < 24 ? '正常' : C.bmi < 27 ? '過重' : '肥胖';
-  wT.innerHTML = [
+  wT.innerHTML = C.noHt ? '<tr><td class="k">IBW、AdjBW、BMI、BSA</td><td class="v"><small>需輸入身高</small></td></tr><tr><td class="k">劑量體重</td><td class="v">一律以 TBW ' + r1(C.wt) + ' <small>kg</small></td></tr>' : [
     ['IBW（Devine）', `${r1(C.ibw)} <small>kg</small>`],
     ['AdjBW（IBW + 0.4×(TBW−IBW)）', `${r1(C.adj)} <small>kg</small>`],
     ['TBW／IBW', `${r0(C.pibw)} <small>%</small>`],
@@ -1444,6 +1449,7 @@ function patientAlerts(c) {
   if (c.ecmo) a.push(['w', '<b>ECMO</b>：Vd 增加、迴路吸附（高脂溶性、高蛋白結合藥物如 voriconazole、posaconazole、micafungin 影響大）；優先 TDM 指引。']);
   if (c.neuro) a.push(['w', `<b>${c.neuro}</b>：神經重症 ARC 發生率高；避免 carbapenem 與 valproic acid 併用；留意 cefepime、imipenem、FQ、metronidazole 神經毒性。CNS 感染需使用腦膜炎劑量。`]);
   if (c.cs) a.push(['w', '<b>心臟手術後</b>：CPB 血液稀釋使 Scr 偏低而高估腎功能；CSA-AKI 好發於術後 48–72 h，避免腎毒性藥物疊加並每日追蹤 Scr。']);
+  if (c.noHt) a.push(['w', '<b>未輸入身高</b>：無法計算 IBW、AdjBW、BMI、BSA，C-G 與所有藥物劑量一律以 TBW 計算；肥胖或水腫病人可能高估腎功能與劑量，建議補上身高。']);
   if (c.obese) a.push(['i', `<b>肥胖（BMI ${r1(c.bmi)}、${r0(c.pibw)}% IBW）</b>：C-G 自動改用 AdjBW；各藥物依其 PK 使用 TBW／AdjBW／IBW（Märtson, Lancet ID 2025）。`]);
   if (c.egfrCys != null) { const r = c.egfrCys / c.egfr; if (r < 0.7 || r > 1.3) a.push(['i', `<b>eGFRcr 與 eGFRcys 差異 ${r0(Math.abs(1 - r) * 100)}%</b>：肌肉量少／臥床者 Scr 低估腎功能不全，建議參考 Cr-Cys 或實測 CrCl（cystatin C 受類固醇、甲狀腺、發炎影響）。`]); }
   if (c.rrt === 'none' && c.scr < 0.7 && c.age >= 65) a.push(['i', '<b>高齡且 Scr <0.7</b>：可能反映肌肉量低，C-G 易高估；部分機構將 Scr 進位至 0.8–1.0，請臨床判斷。']);
