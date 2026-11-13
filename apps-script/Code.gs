@@ -108,7 +108,7 @@ function page_() {
 const SUBPAGES = { resources: { path: 'resources.html', title: '臨床資源｜藥事照護組' },
   eval: { path: 'eval/index.html', title: '評鑑評核｜藥事照護組' }, evalinhaler: { path: 'eval/inhaler.html', title: '吸入劑衛教評核｜評鑑評核' },
   evalinsulin: { path: 'eval/insulin.html', title: '筆型胰島素注射技術｜評鑑評核' }, evalcva: { path: 'eval/cva.html', title: 'CVA 衛教評核｜評鑑評核' },
-  evalexport: { path: 'eval/export.html', title: '評核表下載｜評鑑評核' },vpa: { path: 'tdm/valproic-acid.html', title: 'Valproic Acid TDM Calculator', icon: 'tdm/vpa-icon.png' }, vpaguide: { path: 'tdm/valproic-acid-guide.html', title: 'VPA TDM Calculator 使用說明書', icon: 'tdm/vpa-icon.png' }, amdc: { path: 'dose/amdc.html', title: 'Anti-Microbial Dose Calculator (AMDC)', icon: 'dose/amdc-icon.png' } };
+  evalexport: { path: 'eval/export.html', title: '評核表下載｜評鑑評核' },vpa: { path: 'tdm/valproic-acid.html', title: 'Valproic Acid TDM Calculator', icon: 'tdm/vpa-icon.png' }, vpaguide: { path: 'tdm/valproic-acid-guide.html', title: 'VPA TDM Calculator 使用說明書', icon: 'tdm/vpa-icon.png' }, amdc: { path: 'dose/amdc.html', title: 'Anti-Microbial Dose Calculator (AMDC)', icon: 'dose/amdc-icon.png' }, ccmc: { path: 'dose/ccmc.html', title: 'Critical Care Medication Calculator (CCMC)', icon: 'dose/ccmc-icon.png' } };
 function subpage_(name) {
   const sp = SUBPAGES[name];
   if (!sp) return HtmlService.createHtmlOutput('<p>找不到這個頁面。</p>');

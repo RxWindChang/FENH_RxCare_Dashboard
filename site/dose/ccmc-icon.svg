@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#1D4E89"/>
+  <text x="32" y="27" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="900" font-size="18" letter-spacing="-0.5" fill="#ffffff">CCMC</text>
+  <rect x="7" y="35" width="50" height="20" rx="4" fill="#ffffff" fill-opacity="0.16"/>
+  <path d="M9 46 H20 L23 39 L28 53 L32 42 L35 46 H42" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M50 37 C50 37 45 43 45 46.5 A5 5 0 0 0 55 46.5 C55 43 50 37 50 37 Z" fill="#F2C14E"/>
+</svg>

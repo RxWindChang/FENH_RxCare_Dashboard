@@ -1,0 +1,98 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset=utf8><meta name="robots" content="noindex, nofollow, noarchive"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>FEMH CCMC</title>
+<link rel="icon" type="image/svg+xml" href="ccmc-icon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="ccmc-180.png"><link rel="icon" type="image/png" sizes="512x512" href="ccmc-512.png">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700;8..60,800&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<meta name="apple-mobile-web-app-title" content="FEMH CCMC"><meta name="application-name" content="FEMH CCMC"><meta name="theme-color" content="#1D4E89">
+<style>
+/*AMDC_CSS*/
+/*CCMC_CSS*/
+</style>
+</head><body>
+<div class="app">
+  <header class="top">
+    <img class="logo" src="ccmc-icon.svg" alt="">
+    <div class="brand"><h1><b>CCMC</b>Critical Care Medication Calculator</h1><div class="sub">重症藥物計算器｜劑量・泡法・給藥途徑・IV 相容性</div></div>
+    <span class="pill-ex" id="exPill" hidden>範例病人資料，請改為實際數值</span>
+    <button type="button" class="clr" id="btnExample" title="載入範例病人（虛構資料）"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>載入範例病人</button>
+    <button type="button" class="clr" id="btnClear" title="清空所有病人資料與選取"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>清空</button>
+    <a id="backRes" class="clr" href="../resources.html" title="回到臨床資源"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M11 18l-6-6 6-6"/></svg>臨床資源</a>
+    <div class="femh"><div class="fb">FEMH Pharmacy</div><div class="fs">亞東紀念醫院｜臨床藥學科｜藥事照護組</div></div>
+  </header>
+  <main class="cols">
+    <section class="col pat" aria-label="病人參數">
+      <h2 class="sec">病人基本資料</h2>
+      <div class="grid2">
+        <div class="fld"><label for="age">年齡</label><div class="inp"><input id="age" type="number" inputmode="decimal" min="0" max="120"><span class="u">歲</span></div></div>
+        <div class="fld"><label>性別</label><div class="seg" id="sexSeg"><button type="button" data-v="M">男</button><button type="button" data-v="F">女</button></div></div>
+        <div class="fld"><label for="ht">身高</label><div class="inp"><input id="ht" type="number" inputmode="decimal"><span class="u">cm</span></div></div>
+        <div class="fld"><label for="wt">體重 (TBW)</label><div class="inp"><input id="wt" type="number" inputmode="decimal"><span class="u">kg</span></div></div>
+        <div class="fld"><label for="scr">Serum Cr</label><div class="inp"><input id="scr" type="number" inputmode="decimal" step="0.01"><span class="u">mg/dL</span></div></div>
+        <div class="fld"><label for="child">Child-Pugh</label><div class="inp"><select id="child"><option value="">無肝病／未評估</option><option>A</option><option>B</option><option>C</option></select></div></div>
+      </div>
+      <div class="fld" style="margin-top:8px"><label for="rrt">腎臟替代療法 (RRT)</label><div class="inp"><select id="rrt"><option value="none">無</option><option value="CRRT">CRRT</option><option value="HD">間歇性血液透析 (iHD)</option><option value="PD">腹膜透析 (PD)</option></select></div></div>
+      <div class="res" style="margin-top:8px"><table id="wTable"></table></div>
+
+      <h2 class="sec">主診斷（可複選，自動帶入常用藥）</h2>
+      <div id="dxBox" class="dxbox"></div>
+
+      <h2 class="sec">維生器材與狀態（會影響用藥者）</h2>
+      <div class="stack">
+        <label class="chk"><input type="checkbox" id="cvc"><span>已有中央靜脈導管 CVC／PICC（影響給藥途徑、KCl 速率）</span></label>
+        <label class="chk"><input type="checkbox" id="mv"><span>Mechanical Ventilator（影響 NMBA、鎮靜）</span></label>
+        <label class="chk"><input type="checkbox" id="ecmo"><span>ECMO（迴路吸附、Vd 改變、heparin）</span></label>
+        <label class="chk"><input type="checkbox" id="mcs"><span>IABP／Impella（heparin）</span></label>
+        <label class="chk"><input type="checkbox" id="ttm"><span>TTM 低溫（代謝與 Hofmann 降解變慢）</span></label>
+        <label class="chk"><input type="checkbox" id="hf"><span>HFrEF／失代償心衰竭（CCB、β-blocker、容積）</span></label>
+      </div>
+
+      <h2 class="sec">生命徵象</h2>
+      <div class="grid3">
+        <div class="fld"><label for="hr">HR</label><div class="inp"><input id="hr" type="number" inputmode="decimal"><span class="u">bpm</span></div></div>
+        <div class="fld"><label for="sbp">SBP</label><div class="inp"><input id="sbp" type="number" inputmode="decimal"><span class="u">mmHg</span></div></div>
+        <div class="fld"><label for="map">MAP</label><div class="inp"><input id="map" type="number" inputmode="decimal"><span class="u">mmHg</span></div></div>
+      </div>
+
+      <h2 class="sec">檢驗值（選填）</h2>
+      <div class="grid3">
+        <div class="fld"><label for="k">K</label><div class="inp"><input id="k" type="number" step="0.1"><span class="u">mmol/L</span></div></div>
+        <div class="fld"><label for="mg">Mg</label><div class="inp"><input id="mg" type="number" step="0.1"><span class="u">mg/dL</span></div></div>
+        <div class="fld"><label for="phos">P</label><div class="inp"><input id="phos" type="number" step="0.1"><span class="u">mg/dL</span></div></div>
+        <div class="fld"><label for="ca">Ca</label><div class="inp"><input id="ca" type="number" step="0.1"><span class="u">mg/dL</span></div></div>
+        <div class="fld"><label for="ica">iCa</label><div class="inp"><input id="ica" type="number" step="0.01"><span class="u">mmol/L</span></div></div>
+        <div class="fld"><label for="alb">Albumin</label><div class="inp"><input id="alb" type="number" step="0.1"><span class="u">g/dL</span></div></div>
+        <div class="fld"><label for="na">Na</label><div class="inp"><input id="na" type="number"><span class="u">mmol/L</span></div></div>
+        <div class="fld"><label for="glu">Glucose</label><div class="inp"><input id="glu" type="number"><span class="u">mg/dL</span></div></div>
+        <div class="fld"><label for="hco3">HCO₃⁻</label><div class="inp"><input id="hco3" type="number"><span class="u">mmol/L</span></div></div>
+        <div class="fld"><label for="plt">PLT</label><div class="inp"><input id="plt" type="number"><span class="u">10³/µL</span></div></div>
+      </div>
+      <div class="alerts" id="pAlerts"></div>
+      <p class="hint" style="margin-top:12px">資料只存在這台裝置的瀏覽器，不會上傳。</p>
+    </section>
+
+
+    <section class="col list" aria-label="藥物清單">
+      <div class="search">
+        <div class="sbox"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+          <input id="q" type="search" placeholder="搜尋學名、商品名、中文（如 levophed、鎮靜、低血鉀）" autocomplete="off"></div>
+        <div class="chips cls" id="clsTabs"></div>
+      </div>
+      <div class="cnt"><span id="cnt"></span><button class="morebtn" id="btnNone" hidden>清除選取</button></div>
+      <div class="dl" id="dlist"></div>
+    </section>
+    <section class="col detail" aria-label="選取藥品">
+      <div id="detail"></div>
+      <details class="soapbox" id="soapBox"><summary>SOAP（自動產生，可直接編修）</summary>
+        <div class="soap-head"><span class="hint">內容依目前病人與選取藥品即時更新</span><span class="copied" id="copied" hidden>已複製</span><button type="button" class="clr" id="btnCopy">複製 SOAP</button></div>
+        <textarea id="soap" spellcheck="false"></textarea>
+      </details>
+    </section>
+  </main>
+</div>
+<script>
+/*CCMC_JS*/
+</script>
+<script>/* 經由 Apps Script 備用網址開啟時，「臨床資源」改指回同一個 /exec 網址 */(function(){var x=window.EXEC_URL;if(x)x=x.replace(/\/a\/macros\/[^/]+\//,'/macros/');if(!x)return;var b=document.getElementById('backRes');b.href=x+'?page=resources';b.target='_top';})();</script>
+</body></html>
