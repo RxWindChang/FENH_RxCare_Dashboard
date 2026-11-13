@@ -28,7 +28,7 @@ function dxFocus(id) { return (S.dx || []).map((k) => DXM[k]).filter((x) => x.d.
 function toggleDx(id, on) {
   S.dx = (S.dx || []).filter((x) => x !== id);
   const x = DXM[id];
-  if (on) { S.dx.push(id); x.d.forEach((d) => { if (!S.sel.includes(d)) S.sel.push(d); }); }
+  if (on) { S.dx.push(id); x.d.forEach((d) => { if (!S.sel.includes(d)) S.sel.push(d); S.open[d] = false; }); }
   else x.d.forEach((d) => { if (!S.dx.some((k) => DXM[k].d.includes(d))) S.sel = S.sel.filter((y) => y !== d); });
   renderDx(); renderList(); renderDetail(); save();
 }
@@ -110,7 +110,7 @@ function renderList() {
 }
 function toggle(id, on) {
   S.sel = S.sel.filter((x) => x !== id);
-  if (on) S.sel.push(id);
+  if (on) { S.sel.push(id); S.open[id] = true; }
   renderList(); renderDetail(); save();
 }
 
@@ -226,7 +226,7 @@ function renderDetail() {
   const ord = orderedSel();
   let h = `<div class="ctxbar">${ctx.join('')}</div>`;
   if (P.ecmo) { const ef = ord.filter((id) => DMAP[id].ecmo && DMAP[id].ecmo[0] !== 'i'); if (ef.length) h += `<div class="al d ecmoal"><b>ECMO 檢核：</b>${ef.map((id) => `<span class="tag ecmo${DMAP[id].ecmo[0] === 'd' ? ' hi' : ''}">${esc(DMAP[id].g)}</span>`).join(' ')} 受迴路吸附或 Vd 改變影響，劑量需求與濃度不可預測，依臨床效果與可得之濃度滴定。</div>`; }
-  h += `<div class="cardtools"><span class="hint">預設展開前 3 項</span><button class="morebtn" id="expAll">全部展開</button><button class="morebtn" id="colAll">全部收合</button><button class="morebtn" id="printBtn">列印</button></div>`;
+  h += `<div class="cardtools"><span class="hint">主診斷帶入的藥預設收合</span><button class="morebtn" id="expAll">全部展開</button><button class="morebtn" id="colAll">全部收合</button><button class="morebtn" id="printBtn">列印</button></div>`;
   let idx = 0;
   CLS.forEach(([k, n]) => { const ids = ord.filter((id) => DMAP[id].cls === k); if (ids.length) h += `<h2 class="cgrp">${n}<span>${ids.length}</span></h2>` + ids.map((id) => cardHTML(DMAP[id], P, idx++)).join(''); });
   h += compatHTML(S.sel);
