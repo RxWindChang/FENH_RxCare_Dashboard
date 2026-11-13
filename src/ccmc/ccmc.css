@@ -105,7 +105,9 @@ h2.cgrp::after{content:"";flex:1;height:1px;background:var(--line)}
 main.cols{grid-template-columns:minmax(320px,350px) minmax(300px,340px) minmax(0,1fr)}
 .col.detail{background:var(--surface)}
 .col.list{border-left:1px solid var(--line);border-right:1px solid var(--line);display:flex;flex-direction:column}
-.col.list .dl{flex:0 1 auto}
+.col.list .dl{flex:1 1 auto;min-height:0;overflow-y:auto}
+@media (max-width:1180px){.col.list .dl{flex:none;max-height:460px}}
+@media (max-width:760px){.col.list .dl{max-height:none;overflow:visible}}
 @media (max-width:1180px){main.cols{grid-template-columns:minmax(300px,340px) minmax(0,1fr);grid-template-rows:auto auto}.col.pat{grid-row:1 / span 2}.col.list{grid-column:2;grid-row:1;max-height:none;border-left:0;border-right:0;border-bottom:1px solid var(--line)}.col.detail{grid-column:2;grid-row:2}}
 @media (max-width:760px){.col.list{max-height:none}}
 .tag.ecmo{background:var(--warn-soft);color:var(--warn);border:1px solid var(--warn)}
