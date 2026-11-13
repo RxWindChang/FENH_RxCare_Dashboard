@@ -41,8 +41,33 @@ section{display:flex;flex-direction:column;gap:12px}
 .tags b{display:inline-flex;align-items:center;height:20px;line-height:1;font-family:"Noto Sans TC",system-ui,sans-serif;font-weight:500;font-size:11px;color:var(--tdm);background:var(--tdm-soft);padding:0 8px;border-radius:99px}
 footer{border-top:1px solid var(--line);padding-top:14px;text-align:center;color:var(--muted);font-size:12px;letter-spacing:.06em}
 </style>
+<style>
+/* 密碼門檻：未驗證過的裝置先輸入 Dashboard 密碼 */
+html.locked .wrap{display:none}
+.gate{display:none;min-height:100vh;align-items:center;justify-content:center;padding:24px}
+html.locked .gate{display:flex}
+.gate form{width:min(100%,340px);background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px;display:flex;flex-direction:column;gap:12px}
+.gate h1{font-size:18px}
+.gate p{margin:0;color:var(--muted);font-size:13px;line-height:1.6}
+.gate input{font:inherit;font-size:16px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--fg)}
+.gate button{font:inherit;font-weight:600;padding:10px 12px;border:0;border-radius:8px;background:var(--tdm);color:#fff;cursor:pointer}
+.gate button[disabled]{opacity:.6;cursor:default}
+.gate .err{color:#b42318;font-size:13px;min-height:1em}
+</style>
+<script>(function(){var ok=false;try{ok=!!localStorage.getItem("rxcare_pw")}catch(e){}if(!ok)ok=/(?:^|; )rxcare_pw=[^;]+/.test(document.cookie);if(!ok)document.documentElement.classList.add("locked");})();</script>
+<script src="config.js"></script>
 </head>
 <body>
+<div class="gate" id="gate">
+  <form id="gateForm" autocomplete="on">
+    <h1>臨床資源</h1>
+    <p>請輸入藥事照護組 Dashboard 的密碼。這台裝置驗證一次後就會記住。</p>
+    <input type="text" name="username" value="rxcare" autocomplete="username" hidden>
+    <input id="gatePw" type="password" autocomplete="current-password" placeholder="密碼" required>
+    <button id="gateBtn" type="submit">進入</button>
+    <div class="err" id="gateErr" role="alert"></div>
+  </form>
+</div>
 <div class="wrap">
   <header>
     <div>
@@ -95,6 +120,31 @@ footer{border-top:1px solid var(--line);padding-top:14px;text-align:center;color
 (function(){var x=window.EXEC_URL;if(x)x=x.replace(/\/a\/macros\/[^/]+\//,'/macros/'); /* 網域帳號網址（/a/macros/網域/）改成一般網址，未登入該網域的人也能開 */if(!x)return;
 var b=document.getElementById('back');b.href=x;b.target='_top';
 document.querySelectorAll('a[data-page]').forEach(function(a){a.href=x+'?page='+a.dataset.page;a.target='_top';});})();
+</script>
+<script>
+/* 密碼由 Apps Script 伺服器比對；通過後與 Dashboard 一樣記在這台裝置（localStorage＋一年期 cookie） */
+(function(){
+  var form=document.getElementById('gateForm'); if(!form) return;
+  var ep=window.EXEC_URL||(window.DASH_CONFIG||{}).endpoint||'';
+  ep=ep.replace(/\/a\/macros\/[^/]+\//,'/macros/');
+  var btn=document.getElementById('gateBtn'), err=document.getElementById('gateErr'), inp=document.getElementById('gatePw');
+  form.addEventListener('submit',function(ev){
+    ev.preventDefault(); var pw=inp.value.trim(); if(!pw) return;
+    if(!ep){err.textContent='找不到驗證伺服器，請從 Dashboard 進入。';return;}
+    btn.disabled=true; btn.textContent='驗證中…'; err.textContent='';
+    fetch(ep+'?p='+encodeURIComponent(pw),{cache:'no-store'}).then(function(r){return r.json();}).then(function(j){
+      if(j&&j.ok){
+        try{localStorage.setItem('rxcare_pw',pw);}catch(e){}
+        try{document.cookie='rxcare_pw='+encodeURIComponent(pw)+'; max-age=31536000; path=/; SameSite=Strict; Secure';}catch(e){}
+        document.documentElement.classList.remove('locked');
+      } else {
+        err.textContent=(j&&j.error==='locked')?'嘗試次數過多，請 10 分鐘後再試。':'密碼錯誤，請再試一次。';
+        inp.select();
+      }
+    }).catch(function(){err.textContent='無法連線到驗證伺服器，請稍後再試。';})
+    .then(function(){btn.disabled=false;btn.textContent='進入';});
+  });
+})();
 </script>
 </body>
 </html>
