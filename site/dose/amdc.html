@@ -636,29 +636,31 @@ const FQ_TOX = ['QTc 延長（併用其他延長 QT 藥物、低 K/Mg）', '肌�
 const FQ_NX = 'Fluoroquinolone 降低癲癇閾值、可致譫妄；神經重症病人需評估風險效益。';
 const FQ_PO = '與含 Ca/Mg/Al/Fe/Zn 製劑（制酸劑、鐵劑、管灌營養）間隔：服藥前 2 h 或服藥後 6 h。';
 
-add({ id: 'cipiv', ref: 'PI', rrRef: 'UpToDate・SG', naD: [354, 200], ind: ['一般感染', 'P. aeruginosa'], g: 'Ciprofloxacin', b: 'Ciproxin (Cinolone)', zh: '信諾隆', st: '200 mg/100 mL/bot', cls: 'bac', sub: 'fq', rt: 'inj', kw: 'cipro quinolone',
+add({ id: 'cipiv', utd: '2026/11/16', utdSrc: 'Ciprofloxacin (systemic): Drug information', ref: 'UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', naD: [354, 200], ind: ['一般感染', 'P. aeruginosa'], g: 'Ciprofloxacin', b: 'Ciproxin (Cinolone)', zh: '信諾隆', st: '200 mg/100 mL/bot', cls: 'bac', sub: 'fq', rt: 'inj', kw: 'cipro quinolone',
   L: [T(400, 'q24h'), T(400, 'q12h'), T(400, 'q8h', { t: 'P. aeruginosa／CNS' })],
-  R: [[30, 1, 2], [0, 0, 0]],
-  rr: { HD: [0, 0, 'after dialysis (AD) 給藥'], PD: [0, 0], CRRT: [1, 1, '200–400 mg q8–12h'], SLED: [1, 1, 'MIC ≤0.5'] },
+  R: [[30, 1, 2], [0, 0, 0, '200–400 mg Q12–24H（若用 200 mg QD，先給 400 mg loading）']],
+  rr: { HD: [0, 0, '200–400 mg QD；透析日於 after dialysis (AD) 給藥'], PD: [0, 0, '200–400 mg QD'], CRRT: [1, 1, '200–400 mg Q8–12H；400 mg Q8H 僅用於嚴重感染或 MIC ≥0.5 mg/L 之難治菌，需密切監測'], SLED: [1, 1, '400 mg Q12H（假設 MIC ≤0.5 mg/L）'] },
+  arc: { i: 2, t: 'ARC：400 mg Q8H（MIC ≤0.125 mg/L）；MIC >0.125 mg/L 時模擬可能需 600 mg Q8H，需密切監測或改用其他藥物。' },
   aki: 'w', tox: FQ_TOX, nx: FQ_NX,
   inf: { rb: 100, t: [1], ti: 0, dil: { '預混軟袋': '室溫保存，避光' }, note: '預混輸液，輸注 60 min' },
   nt: ['CYP1A2 抑制：theophylline、tizanidine、clozapine 濃度上升。'] });
 
-add({ id: 'cippo', ref: 'PI', rrRef: 'UpToDate・SG', ind: ['一般感染', 'P. aeruginosa'], g: 'Ciprofloxacin', b: 'Ciproxin (Ciprogen)', zh: '喜博欣', st: '250 mg/tab', cls: 'bac', sub: 'fq', rt: 'po', kw: 'cipro quinolone',
-  L: [T(250, 'q24h'), T(500, 'q24h'), T(250, 'q12h'), T(500, 'q12h'), T(750, 'q12h', { t: 'P. aeruginosa／骨關節' })],
-  R: [[50, 3, 4], [30, 2, 3], [0, 0, 1, '仿單 250–500 mg q18h']],
-  rr: { HD: [0, 1, 'after dialysis (AD) 給藥'], PD: [0, 1], CRRT: [2, 3], SLED: [3, 3] },
+add({ id: 'cippo', utd: '2026/11/16', utdSrc: 'Ciprofloxacin (systemic): Drug information', ref: 'UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', ind: ['一般感染', 'P. aeruginosa'], g: 'Ciprofloxacin', b: 'Ciproxin (Ciprogen)', zh: '喜博欣', st: '250 mg/tab', cls: 'bac', sub: 'fq', rt: 'po', kw: 'cipro quinolone',
+  L: [T(250, 'q24h'), T(500, 'q24h'), T(250, 'q12h'), T(500, 'q12h'), T(750, 'q12h', { t: 'P. aeruginosa／骨關節' }), T(750, 'q24h', { t: '嚴重感染' })],
+  R: [[50, 3, 4], [30, 2, 3, '嚴重感染可用 750 mg Q12H'], [0, 1, 5, '一般 500 mg QD；嚴重感染 750 mg QD']],
+  rr: { HD: [1, 5, '250–500 mg QD（若用 250 mg QD，先給 500 mg loading）；嚴重感染可用 750 mg QD；透析日於 after dialysis (AD) 給藥'], PD: [1, 5, '250–500 mg QD（若用 250 mg QD，先給 500 mg loading）；嚴重感染可用 750 mg QD'], CRRT: [2, 3, '250–750 mg Q12H'], SLED: [3, 3, '500 mg Q12H，於 PIRRT 後給藥'] },
   aki: 'w', tox: FQ_TOX, nx: FQ_NX, nt: [FQ_PO] });
 
 const LEVO_L = [T(500, 'q48h'), T(750, 'q48h'), T(500, 'q24h'), T(750, 'q24h', { t: '肺炎／P. aeruginosa' })];
 const LEVO_R = [[50, 2, 3], [20, 0, 1], [0, 0, 0, '750 mg 系列：首劑 750 mg']];
-const LEVO_RR = { HD: [0, 0, 'after dialysis (AD) 給藥；750 mg 系列首劑 750 mg'], PD: [0, 0, '750 mg 系列首劑 750 mg'], CRRT: [0, 1, '750 mg 系列：750 mg 首劑後 500 mg QOD 或 750 mg QOD'], SLED: [1, 1] };
-add({ id: 'lvxiv', ref: 'PI', rrRef: 'UpToDate・SG', naD: [354, 500], ind: ['500 mg 系列（UTI 等）', '750 mg 系列（肺炎／P. aeruginosa）'], indDef: 2, g: 'Levofloxacin', b: 'Cravit', zh: '可樂必妥', st: '500 mg/100 mL/bot', cls: 'bac', sub: 'fq', rt: 'inj', kw: 'levo quinolone',
-  L: LEVO_L, R: LEVO_R, rr: LEVO_RR, aki: 'w', tox: FQ_TOX, nx: FQ_NX,
+const LEVO_RR = { HD: [0, 0, 'after dialysis (AD) 給藥；750 mg 系列首劑 750 mg'], PD: [0, 0, '750 mg 系列首劑 750 mg'], CRRT: [0, 1, '500 mg 系列：500 mg 首劑後 250 mg QD 或 500 mg QOD；750 mg 系列：750 mg 首劑後 500 mg QD 或 750 mg QOD'], SLED: [0, 1, '於 PIRRT 後給藥'] };
+const LEVO_ARC = { i: 3, t: 'ARC：750 mg loading 後 500 mg Q12H 或 1,000 mg QD（Monte Carlo 模擬，專家意見）。' };
+add({ id: 'lvxiv', utd: '2026/11/16', utdSrc: 'Levofloxacin (systemic): Drug information', ref: 'UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', naD: [354, 500], ind: ['500 mg 系列（UTI 等）', '750 mg 系列（肺炎／P. aeruginosa）'], indDef: 2, g: 'Levofloxacin', b: 'Cravit', zh: '可樂必妥', st: '500 mg/100 mL/bot', cls: 'bac', sub: 'fq', rt: 'inj', kw: 'levo quinolone',
+  L: LEVO_L, R: LEVO_R, rr: LEVO_RR, arc: LEVO_ARC, aki: 'w', tox: FQ_TOX, nx: FQ_NX,
   ob: '肥胖：不建議依體重加量，依腎功能給藥（Pai 2014；Märtson 2025）。',
   inf: { rb: 100, t: [1, 1.5], ti: 0, dil: { '預混軟袋': '室溫保存' }, note: '500 mg ≥60 min；750 mg ≥90 min' } });
-add({ id: 'lvxpo', ref: 'PI', rrRef: 'UpToDate・SG', ind: ['500 mg 系列（UTI 等）', '750 mg 系列（肺炎／P. aeruginosa）'], indDef: 2, g: 'Levofloxacin', b: 'Cravit', zh: '可樂必妥', st: '500 mg/tab（CDC 供應 750 mg/tab）', cls: 'bac', sub: 'fq', rt: 'po', kw: 'levo quinolone tb',
-  L: LEVO_L, R: LEVO_R, rr: LEVO_RR, aki: 'w', tox: FQ_TOX, nx: FQ_NX, nt: [FQ_PO, '結核病（MDR-TB）：750–1000 mg q24h。'] });
+add({ id: 'lvxpo', utd: '2026/11/16', utdSrc: 'Levofloxacin (systemic): Drug information', ref: 'UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', ind: ['500 mg 系列（UTI 等）', '750 mg 系列（肺炎／P. aeruginosa）'], indDef: 2, g: 'Levofloxacin', b: 'Cravit', zh: '可樂必妥', st: '500 mg/tab（CDC 供應 750 mg/tab）', cls: 'bac', sub: 'fq', rt: 'po', kw: 'levo quinolone tb',
+  L: LEVO_L, R: LEVO_R, rr: LEVO_RR, arc: LEVO_ARC, aki: 'w', tox: FQ_TOX, nx: FQ_NX, nt: [FQ_PO] });
 
 add({ id: 'mxfiv', ref: 'PI', rrRef: 'UpToDate・SG', naD: [781.6, 400], g: 'Moxifloxacin', b: 'Avelox (Moflodal)', zh: '摩西淨菌', st: '400 mg/250 mL/vial', cls: 'bac', sub: 'fq', rt: 'inj', kw: 'moxi quinolone',
   L: [T(400, 'q24h')], R: NA(0, 0, '無需依腎功能調整'), rr: SAME(0, 0, '不被透析移除'), tox: FQ_TOX, nx: FQ_NX,
@@ -668,10 +670,10 @@ add({ id: 'mxfpo', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Moxifloxacin', b: 'Ave
 
 const NEMO_R = [[30, 1, 1, '輕中度腎功能不全無需調整'], [0, 0, 0, 'CrCl <30：500 mg q48h（PTA 92.7%，MIC ≤1 mg/L）— 依 Br J Clin Pharmacol 2021, doi:10.1111/bcp.14881；仿單無明確分段，屬研究建議']];
 const NEMO_RR = { HD: [0, 0, '無資料；參考重度腎功能不全研究建議 500 mg q48h（doi:10.1111/bcp.14881），透析日於 after dialysis (AD) 給藥'], PD: [0, 0, '資料有限'], CRRT: [1, 1, '資料有限'], SLED: [0, 0, '資料有限'] };
-add({ id: 'nemopo', ref: 'BJCP 2021', rrRef: 'UpToDate・SG', g: 'Nemonoxacin', b: 'Taigexyn', zh: '太捷信', st: '250 mg/cap', cls: 'bac', sub: 'fq', rt: 'po', kw: 'nemo non-fluorinated quinolone cap',
+add({ id: 'nemopo', utdNone: 'UpToDate 無專論・依仿單', ref: 'BJCP 2021', rrRef: 'UpToDate・SG', g: 'Nemonoxacin', b: 'Taigexyn', zh: '太捷信', st: '250 mg/cap', cls: 'bac', sub: 'fq', rt: 'po', kw: 'nemo non-fluorinated quinolone cap',
   L: [T(500, 'q48h'), T(500, 'q24h', { t: '社區型肺炎 7–10 天' })], R: NEMO_R, rr: NEMO_RR, aki: 'w',
   tox: ['QTc 延長', '肝功能異常、皮疹', '血糖異常', 'CNS 副作用', '應避免用於重症肌無力者'], nx: FQ_NX, nt: [FQ_PO, '非氟化 quinolone，具抗 MRSA 活性；適應症為成人社區型肺炎。', '腎劑量文獻：Br J Clin Pharmacol 2021;87(12)，doi:10.1111/bcp.14881— 10 位重度腎功能不全者單劑 500 mg PK 研究，Monte Carlo 模擬以 500 mg q48h 最佳；250 mg q24h 與 500 mg LD→250 mg q24h 均不足。'] });
-add({ id: 'nemoiv', ref: 'BJCP 2021', rrRef: 'UpToDate・SG', g: 'Nemonoxacin', b: 'Taigexyn', zh: '太捷信', st: '500 mg/250 mL/bag', cls: 'bac', sub: 'fq', rt: 'inj', kw: 'nemo non-fluorinated quinolone',
+add({ id: 'nemoiv', utdNone: 'UpToDate 無專論・依仿單', ref: 'BJCP 2021', rrRef: 'UpToDate・SG', g: 'Nemonoxacin', b: 'Taigexyn', zh: '太捷信', st: '500 mg/250 mL/bag', cls: 'bac', sub: 'fq', rt: 'inj', kw: 'nemo non-fluorinated quinolone',
   L: [T(500, 'q48h'), T(500, 'q24h', { t: '社區型肺炎' })], R: NEMO_R, rr: NEMO_RR, aki: 'w',
   tox: ['輸注部位反應', 'QTc 延長', '肝功能異常', '血糖異常', '應避免用於重症肌無力者'], nx: FQ_NX,
   inf: { rb: 250, t: [1.5], ti: 0, dil: { '預混軟袋': '室溫保存' }, note: '預混輸液，輸注 90 min' },
@@ -1525,7 +1527,7 @@ function renderDetail() {
   const [wl, W] = d.wt ? dosingWeight(d, CC) : [null, null];
   const sel = S.tierSel ?? p.idx;
   let h = `<div class="dh"><div><h3>${esc(d.g)}</h3><div class="bn">${esc(d.b)}${d.zh ? `｜${esc(d.zh)}` : ''}｜${esc(d.st)}</div>
-    <div class="meta"><span class="tag rt">${CLSNAME[d.cls]}・${subLab(d)}</span>${d.novel ? '<span class="tag rt">Novel Agent</span>' : ''}<span class="tag rt">${d.rt === 'inj' ? '針劑' : '口服'}</span>${d.ext ? `<span class="tag ext">${d.ext}</span>` : ''}${d.utd ? `<span class="tag utd" title="已以 UpToDate 現行版逐項核對${d.utdSrc ? '；' + esc(d.utdSrc) : ''}">UpToDate 已核對 ${d.utd}</span>` : ''}${d.tdmIcon ? '<span class="tdmi big" title="建議 TDM">◎ 建議 TDM</span>' : ''}${d.unitNote ? `<span class="tag rt">${d.unitNote}</span>` : ''}</div></div>
+    <div class="meta"><span class="tag rt">${CLSNAME[d.cls]}・${subLab(d)}</span>${d.novel ? '<span class="tag rt">Novel Agent</span>' : ''}<span class="tag rt">${d.rt === 'inj' ? '針劑' : '口服'}</span>${d.ext ? `<span class="tag ext">${d.ext}</span>` : ''}${d.utd ? `<span class="tag utd" title="已以 UpToDate 現行版逐項核對${d.utdSrc ? '；' + esc(d.utdSrc) : ''}">UpToDate 已核對 ${d.utd}</span>` : ''}${d.utdNone ? `<span class="tag rt" title="UpToDate 無此藥專論">${esc(d.utdNone)}</span>` : ''}${d.tdmIcon ? '<span class="tdmi big" title="建議 TDM">◎ 建議 TDM</span>' : ''}${d.unitNote ? `<span class="tag rt">${d.unitNote}</span>` : ''}</div></div>
     <span class="tag ${TAG[p.status][0]}" style="font-size:12px;padding:4px 10px">${TAG[p.status][1]}</span></div>`;
   if (d.ddi) h += `<div class="ddi" role="alert"><div class="ddih"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>藥物交互作用警示</div><p>${esc(d.ddi)}</p></div>`;
   h += `<div class="ctxbar"><span>腎功能 <b>${C.rrt !== 'none' ? RRTNAME[C.rrt] : r0(d.basis === 'egfr' ? C.paxEgfr : C.cr) + ' mL/min'}</b></span><span>分段 <b>${esc(p.band)}</b></span>${wl ? `<span>劑量體重 <b>${wl} ${r1(W)} kg</b></span>` : ''}${d.basis === 'egfr' ? '<span>依仿單使用 <b>eGFR</b></span>' : ''}</div>`;
