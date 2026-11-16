@@ -798,10 +798,11 @@ add({ id: 'tgc', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Tigecycline', b: 'Tygaci
   inf: { dil: { NS: '室溫 24 h、冷藏 48 h', D5W: '同 NS', LR: '相容' }, v: [100], t: [0.5, 1], ti: 1, c: [0, 1] },
   nt: ['需依 Child-Pugh 分級調整：Child-Pugh A/B 不需調整；C 維持劑量減半。請於左側「進階」輸入 Child-Pugh。'] });
 
-add({ id: 'minoiv', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Minocycline', b: 'Menocik', zh: '美諾幸', st: '100 mg/vial', cls: 'bac', sub: 'tm', rt: 'inj', kw: 'tetracycline crab stenotrophomonas',
-  L: [T(100, 'q12h', { t: '腎功能不全時（每日總量 ≤200 mg）' }), T(200, 'q12h', { t: '本院標準劑量：CRAB／S. maltophilia（IDSA AMR Guidance 2024）' })],
-  R: [[60, 1, 1], [0, 0, 0, '腎功能不全：每日總量不超過 200 mg（仿單）']],
-  rr: SAME(0, 0, '每日不超過 200 mg'),
+const MINO_RENAL = '無需依腎功能調整；腎功能不全且每日 >200 mg 時，理論上 BUN 可能上升（抗合成代謝作用），需頻繁監測 BUN、Scr 與尿毒症狀';
+add({ id: 'minoiv', utd: '2026/11/16', utdSrc: 'Minocycline (systemic): Drug information', ref: 'UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', g: 'Minocycline', b: 'Menocik', zh: '美諾幸', st: '100 mg/vial', cls: 'bac', sub: 'tm', rt: 'inj', kw: 'tetracycline crab stenotrophomonas',
+  L: [T(100, 'q12h', { t: '一般感染（loading 200 mg 後）' }), T(200, 'q12h', { t: '本院標準劑量：CRAB／S. maltophilia（IDSA AMR Guidance 2024）' })],
+  R: [[60, 1, 1, '無需依腎功能調整'], [0, 1, 1, MINO_RENAL]],
+  rr: SAME(1, 1, '無需調整。' + MINO_RENAL),
   tox: ['前庭毒性（頭暈、眩暈）', '肝毒性', '色素沉著、光敏感', 'DRESS', '加重氮血症'],
   inf: { dil: { NS: '依廠牌仿單', D5W: '依廠牌仿單', LR: '依廠牌仿單' }, v: [100, 250, 500], t: [1], ti: 0, note: '輸注 ≥60 min；勿與含鈣溶液同管' } });
 
@@ -809,13 +810,15 @@ add({ id: 'doxy', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Doxycycline', b: 'Doxym
   L: [T(100, 'q12h')], R: NA(0, 0, '無需依腎功能調整'), rr: SAME(0, 0),
   tox: ['食道潰瘍（足量水、服後勿平躺 30 min）', '光敏感'], nt: ['與 Ca/Mg/Al/Fe 間隔 2–3 h。'] });
 
-add({ id: 'tcn', ref: 'SG', rrRef: 'UpToDate・SG', ind: ['一般感染', 'H. pylori 四合一'], g: 'Tetracycline', b: 'Hostacycline', zh: '鹽酸四環素', st: '250 mg/cap', cls: 'bac', sub: 'tm', rt: 'po', kw: 'h pylori',
-  L: [T(250, 'q6h'), T(500, 'q6h', { t: 'H. pylori 四合一' })], R: [[50, 0, 1], [0, -1, -1, 'CrCl <50 不建議（加重氮血症）；改用 doxycycline']],
-  rr: { HD: [-1, -1], PD: [-1, -1], CRRT: [-1, -1], SLED: [-1, -1] }, tox: ['加重氮血症', '光敏感'] });
+add({ id: 'tcn', utd: '2026/11/16', utdSrc: 'Tetracycline: Drug information', ref: 'SG・UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', ind: ['一般感染', 'H. pylori 四合一'], g: 'Tetracycline', b: 'Hostacycline', zh: '鹽酸四環素', st: '250 mg/cap', cls: 'bac', sub: 'tm', rt: 'po', kw: 'h pylori',
+  L: [T(250, 'q12h'), T(500, 'q12h'), T(250, 'q6h'), T(500, 'q6h', { t: 'H. pylori 四合一' })],
+  R: [[60, 2, 3], [30, 0, 1, '', '', ['或 250 mg Q8H', '或 500 mg Q8H']], [10, -1, -1, 'CrCl 10–29：盡量避免（腎功能不全者可致 AKI）；必要時 250 mg QD（一般）或 500 mg QD（H. pylori）'], [0, -1, -1, 'CrCl <10：避免；必要時 250 mg QOD（一般）或 500 mg QOD（H. pylori）']],
+  rr: { HD: [-1, -1, '避免，建議改用其他藥物；必要時同 CrCl <10，透析日於 after dialysis (AD) 給藥'], PD: [-1, -1, '避免，建議改用其他藥物；必要時同 CrCl <10'], CRRT: [-1, -1, '避免，建議改用其他藥物（資料有限）'], SLED: [-1, -1, '避免，建議改用其他藥物（資料有限）'] }, tox: ['加重氮血症；腎功能不全者可致 AKI', '光敏感'],
+  nt: ['H. pylori 四合一：不可以 doxycycline 取代 tetracycline（降低療效；UpToDate, 2026/11/16）。一般感染若需替代，可改用 doxycycline（無需依腎功能調整）。'] });
 
-add({ id: 'azm', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Azithromycin', b: 'Zithromax (Aziciin)', zh: '侒舒芯亞', st: '250 mg/tab', cls: 'bac', sub: 'tm', rt: 'po', kw: 'macrolide atypical',
+add({ id: 'azm', utd: '2026/11/16', utdSrc: 'Azithromycin (systemic): Drug information', ref: 'PI', rrRef: 'UpToDate, 2026/11/16', g: 'Azithromycin', b: 'Zithromax (Aziciin)', zh: '侒舒芯亞', st: '250 mg/tab', cls: 'bac', sub: 'tm', rt: 'po', kw: 'macrolide atypical',
   modes: [{ k: 'a3', lab: '500 mg QD ×3 天', L: [X('500 mg（2#）QD ×3 天')] }, { k: 'a5', lab: '500 mg 第 1 天 → 250 mg QD ×4 天', L: [X('第 1 天 500 mg（2#），第 2–5 天 250 mg（1#）QD')] }],
-  R: NA(0, 0, '無需依腎功能調整（CrCl <10 慎用）'), rr: SAME(0, 0), tox: ['QTc 延長', '肝功能異常', '聽力受損（長期）'] });
+  R: NA(0, 0, '無需依腎功能調整'), rr: SAME(0, 0, '無需調整'), tox: ['QTc 延長', '肝功能異常', '聽力受損（長期）'] });
 
 add({ id: 'clr', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Clarithromycin', b: 'Klaricid', zh: '開羅理黴素', st: '500 mg/tab', cls: 'bac', sub: 'tm', rt: 'po', kw: 'macrolide h pylori mac',
   L: [T(250, 'q12h'), T(500, 'q12h')], R: [[30, 1, 1], [0, 0, 0, '或 500 mg q24h']], rr: SAME(0, 0),
@@ -842,19 +845,21 @@ add({ id: 'pmb', ref: 'Consensus 2019', rrRef: 'UpToDate・SG', g: 'Polymyxin B'
   inf: { dil: { D5W: '冷藏 72 h', NS: '相容' }, v: [250, 500], t: [1, 1.5], ti: 0, note: '1 mg = 10,000 IU' } });
 
 const AG_TOX = ['腎毒性（與 trough 及療程相關）', '耳毒性／前庭毒性（累積劑量相關，不可逆）', '神經肌肉阻斷', '應避免用於重症肌無力者'];
-add({ id: 'amk', ref: 'SG・UpToDate', rrRef: 'UpToDate・SG', ind: ['一般（15 mg/kg）', '重症首劑（25 mg/kg）'], g: 'Amikacin', b: 'Aminfec', zh: '安炎', st: '250 mg/2 mL/vial（CDC 供應 500 mg）', cls: 'bac', sub: 'tm', rt: 'inj', kw: 'aminoglycoside', wt: 'AG', rd: 25,
-  L: [K(7.5, 'q48–72h／AD', { t: '依濃度' }), K(15, 'q48h'), K(15, 'q36h'), K(15, 'q24h'), K(20, 'q24h'), K(25, 'q24h', { hd: 1, t: '重症首劑 25–30 mg/kg' })],
-  R: [[60, 3, 5], [40, 2, 2], [20, 1, 1], [0, 0, 0, '改傳統劑量 + TDM']],
-  rr: { HD: [0, 0, '5–7.5 mg/kg AD（依 pre-HD 濃度）；目前文獻建議未有高度共識，請與臨床藥師討論。'], PD: [0, 0, '依濃度；目前文獻建議未有高度共識，請與臨床藥師討論。'], CRRT: [1, 3, 'Loading 後依濃度 q24–48h；目前文獻建議未有高度共識，請與臨床藥師討論。'], SLED: [1, 1, '資料有限；目前文獻建議未有高度共識，請與臨床藥師討論。'] },
+add({ id: 'amk', utd: '2026/11/16', utdSrc: 'Amikacin (systemic): Drug information', ref: 'SG・UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', ind: ['一般（15 mg/kg）', '重症首劑（25 mg/kg）'], g: 'Amikacin', b: 'Aminfec', zh: '安炎', st: '250 mg/2 mL/vial（CDC 供應 500 mg）', cls: 'bac', sub: 'tm', rt: 'inj', kw: 'aminoglycoside', wt: 'AG', rd: 25,
+  L: [K(7.5, 'q48–72h／AD', { t: '依濃度' }), K(15, 'q48h'), K(15, 'q36h'), K(25, 'q48h', { t: 'CRRT／SLED 重症' }), K(15, 'q24h'), K(20, 'q24h'), K(25, 'q24h', { hd: 1, t: '重症首劑 25–30 mg/kg' })],
+  R: [[60, 4, 6], [40, 2, 2], [20, 1, 1], [0, 0, 0, '給予一次常規劑量後依濃度決定後續劑量與間隔（或改傳統給藥）']],
+  rr: { HD: [0, 0, '5–12.5 mg/kg TIW AD；pre-HD <10 mg/L 或 post-HD <6–8 mg/L 時再給（post-HD 濃度於 HD 結束後 ≥2–4 h 抽）。建議與臨床藥師逐案討論治療劑量與監測計畫。'], PD: [0, 0, '5–12.5 mg/kg Q48–72H，依濃度調整。建議與臨床藥師逐案討論治療劑量與監測計畫。'], CRRT: [1, 3, '15–25 mg/kg Q48H（effluent 20–25 mL/kg/h），依濃度調整。建議與臨床藥師逐案討論治療劑量與監測計畫。'], SLED: [1, 3, '15–25 mg/kg Q48H，PIRRT 日於開始前 30–60 min 給藥，依濃度調整。建議與臨床藥師逐案討論治療劑量與監測計畫。'] },
+  arc: { i: 5, t: 'ARC：首劑 20–30 mg/kg QD，密切監測濃度並以個人化 PK 計算調整，不建議使用 nomogram。' },
   aki: 'n', tdm: 'Extended-interval：Cmax 56–64 mg/L（或 Cmax/MIC ≥8–10）、trough <2.5 mg/L。請會診藥師。短療程 once-daily dosing 不需常規 TDM；療程 >5–7 天、腎功能不穩定或傳統間隔給藥時建議監測。',
   ob: '劑量體重：TBW >120% IBW 用 AdjBW；維持劑量依腎功能與 TDM（Märtson 2025）。', tox: AG_TOX,
   inf: { dil: { NS: '室溫 24 h', D5W: '室溫 24 h' }, v: [100, 250], t: [0.5, 1], ti: 0 },
-  nt: ['結核病：15 mg/kg q24h（或 3×/週）。'] });
+  nt: ['首劑 15–20 mg/kg，重症可至 30 mg/kg QD；CrCl <40 需謹慎，但 sepsis／shock 或 MDR-GNB 仍可考慮 extended-interval dosing（UpToDate, 2026/11/16）。', '結核病：15 mg/kg q24h（或 3×/週）。'] });
 
-add({ id: 'gen', ref: 'SG・UpToDate', rrRef: 'UpToDate・SG', ind: ['一般（5 mg/kg）', '重症（7 mg/kg）'], g: 'Gentamicin', b: 'Gentamicin', zh: '僅大黴素', st: '80 mg/2 mL/vial', cls: 'bac', sub: 'tm', rt: 'inj', kw: 'aminoglycoside synergy', wt: 'AG', rd: 10,
-  L: [K(2, 'q48–72h／AD', { t: '依濃度' }), K(7, 'q48h'), K(7, 'q36h'), K(5, 'q24h'), K(7, 'q24h', { hd: 1 })],
-  R: [[60, 3, 4], [40, 2, 2], [20, 1, 1], [0, 0, 0, '改傳統劑量 + TDM']],
-  rr: { HD: [0, 0, '1.5–2 mg/kg AD（依 pre-HD 濃度）；目前文獻建議未有高度共識，請與臨床藥師討論。'], PD: [0, 0, '依濃度；目前文獻建議未有高度共識，請與臨床藥師討論。'], CRRT: [0, 3, 'Loading 2–3 mg/kg，後依濃度 q24–48h；目前文獻建議未有高度共識，請與臨床藥師討論。'], SLED: [0, 0, '資料有限；目前文獻建議未有高度共識，請與臨床藥師討論。'] },
+add({ id: 'gen', utd: '2026/11/16', utdSrc: 'Gentamicin (systemic): Drug information', ref: 'SG・UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', ind: ['一般（5 mg/kg）', '重症（7 mg/kg）'], g: 'Gentamicin', b: 'Gentamicin', zh: '僅大黴素', st: '80 mg/2 mL/vial', cls: 'bac', sub: 'tm', rt: 'inj', kw: 'aminoglycoside synergy', wt: 'AG', rd: 10,
+  L: [K(2, 'q48–72h／AD', { t: '依濃度' }), K(3, 'q24–48h', { rng: [2.5, 3], t: 'CRRT' }), K(5, 'q48h'), K(6, 'q48h', { t: 'SLED' }), K(5, 'q36h'), K(7, 'q48h'), K(5, 'q24–48h', { t: 'CRRT 重症' }), K(7, 'q36h'), K(5, 'q24h'), K(7, 'q24h', { hd: 1 })],
+  R: [[60, 8, 9], [40, 4, 7], [20, 2, 5], [0, 0, 0, '給予一次常規劑量後依濃度決定後續劑量與間隔（或改傳統給藥）']],
+  rr: { HD: [0, 0, 'Loading 2–3 mg/kg，之後 TIW AD：全身性 GNB 感染 2–3 mg/kg（pre-HD <3–5 或 post-HD <2 mg/L 時再給）；UTI 1–1.5 mg/kg；G+ synergy 1 mg/kg。post-HD 濃度於 HD 結束後 ≥2–4 h 抽。建議與臨床藥師逐案討論治療劑量與監測計畫。'], PD: [0, 0, '1–3 mg/kg Q48–72H，依濃度調整。建議與臨床藥師逐案討論治療劑量與監測計畫。'], CRRT: [1, 6, '全身性 GNB 感染 2.5–3 mg/kg（可至 5 mg/kg）Q24–48H，依濃度調整；G+ synergy／UTI：loading 2–3 mg/kg 後 1–1.5 mg/kg Q24–36H。建議與臨床藥師逐案討論治療劑量與監測計畫。'], SLED: [3, 3, '全身性 GNB 感染 6 mg/kg Q48H（通常 Q48–72H），PIRRT 日於開始前 30–60 min 給藥；G+ synergy／UTI 同 CRRT（PIRRT 後給藥）。建議與臨床藥師逐案討論治療劑量與監測計畫。'] },
+  arc: { i: 9, t: 'ARC：首劑 7–8 mg/kg QD，密切監測濃度並以個人化 PK 計算調整，不建議使用 nomogram。' },
   aki: 'n', tdm: 'Extended-interval：Cmax 16–24 mg/L、trough <1 mg/L；G+ synergy：peak 3–4、trough <1。短療程 once-daily dosing 不需常規 TDM；療程 >5–7 天、腎功能不穩定或傳統間隔給藥時建議監測。',
   ob: '劑量體重：TBW >120% IBW 用 AdjBW。', tox: AG_TOX,
   inf: { dil: { NS: '室溫 24 h', D5W: '室溫 24 h' }, v: [100], t: [0.5, 1], ti: 0 },
@@ -903,9 +908,10 @@ add({ id: 'mtz', ref: 'PI・SG', rrRef: 'UpToDate・SG', naD: [310.4, 500], g: '
   nx: 'Metronidazole 腦病變 (encephalopathy)可類似神經惡化（構音障礙、步態不穩、意識改變）；長期使用者需鑑別。',
   inf: { rb: 100, t: [0.5, 1], ti: 1, dil: { '預混輸液': '勿冷藏' }, note: '預混輸液' } });
 
-add({ id: 'neo', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Neomycin', b: 'Neomycin', zh: '紐奧黴素', st: '250 mg/cap', cls: 'bac', sub: 'tm', rt: 'po', kw: 'hepatic encephalopathy bowel prep',
-  L: [X('1,000 mg q6h（短期 ≤6 天）', { t: '肝性腦病變' }), X('1,000 mg ×3 劑（術前 19、18、9 時）', { t: '術前腸道準備（併口服 erythromycin／metronidazole）' })],
-  R: [[50, 0, 0], [0, 0, 0, '腎功能不全：全身吸收增加 → 腎／耳毒性，避免長期使用']], rr: SAME(0, 0, '避免'), tox: AG_TOX });
+const NEO_RENAL = '口服吸收少，劑量無需調整；但腎功能不全者腎、耳毒性風險增加，避免長期使用；治療中出現腎功能惡化應考慮停藥';
+add({ id: 'neo', utd: '2026/11/16', utdSrc: 'Neomycin: Drug information', ref: 'PI・UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', g: 'Neomycin', b: 'Neomycin', zh: '紐奧黴素', st: '250 mg/cap', cls: 'bac', sub: 'tm', rt: 'po', kw: 'hepatic encephalopathy bowel prep',
+  L: [X('1,000 mg q6h（短期 ≤6 天）', { t: '肝性腦病變（仿單）' }), X('1,000 mg ×3 劑（術前 19、18、9 時）', { t: '術前腸道準備（併口服 erythromycin／metronidazole）' })],
+  R: [[50, 0, 0, '無需依腎功能調整'], [0, 0, 0, NEO_RENAL]], rr: SAME(0, 0, NEO_RENAL), tox: AG_TOX });
 
 /* ================= Anti-TB ================= */
 const TB_NOTE = '依《結核病診治指引》（疾管署）。肥胖者以理想或 lean body weight 估算，避免 PZA/EMB 過量。';
