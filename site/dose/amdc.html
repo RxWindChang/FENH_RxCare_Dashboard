@@ -35,6 +35,7 @@ header.top{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-block
 @media (max-width:760px){.femh{align-items:flex-start;text-align:left;width:100%}}
 .mark{width:28px;height:28px;border-radius:7px;background:var(--accent);display:grid;place-items:center;color:var(--accent-ink);font-weight:700;font-family:var(--f-mono);font-size:13px;flex:none}
 .top .spacer{flex:0 1 0}
+.rl{color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;cursor:pointer}a.rl:hover,.rl:hover{color:var(--accent)}
 .tag.utd{background:#E3F2EA;color:#1F6B47;border:1px solid #A9D6BC;font-weight:600}
 .grp.org{background:var(--accent-soft);color:var(--accent)}
 .clr{display:inline-flex;align-items:center;gap:6px;font:600 13px var(--f-sans);color:var(--accent);background:var(--surface);border:1px solid var(--accent);border-radius:8px;padding:6px 11px;cursor:pointer}.clr:hover,#backRes:hover{background:var(--accent-soft)}
@@ -337,6 +338,19 @@ const add = (o) => DRUGS.push(o);
 const BL_TOX_NEURO = '高劑量或腎功能不全時之神經毒性：意識改變、肌抽躍 (myoclonus)、癲癇／非痙攣性癲癇重積狀態 (NCSE)';
 const CARBA_VPA = 'Carbapenem 與 valproic acid 併用：VPA 濃度 24 h 內下降 60–90%，增加 VPA 劑量亦無法矯正，應避免併用或改用其他抗癲癇藥。';
 const EI_NOTE = '重症／高 MIC：可改用 pIF（3–4 h）或 cIF 以提高 %fT>MIC（上方「給藥方式」選擇），並考慮 β-lactam TDM。';
+
+/* 非仿單／UpToDate 之文獻：顯示文字 → PubMed 連結（tier 右側參考與備註中自動加超連結） */
+const REFS = {
+  'IDSA MDRG(-) infection guideline 2024': 'https://pubmed.ncbi.nlm.nih.gov/39108079/',
+  'IJID 2024 Dec;149:107267': 'https://pubmed.ncbi.nlm.nih.gov/?term=10.1016%2Fj.ijid.2024.107267',
+  'Wenzler E, AAC 2017': 'https://pubmed.ncbi.nlm.nih.gov/28416553/',
+  'PMID 36337045': 'https://pubmed.ncbi.nlm.nih.gov/36337045/',
+  'Winter MA, et al. Pharmacotherapy 2012;32:604-12': 'https://pubmed.ncbi.nlm.nih.gov/22576791/',
+  'Antibiotics 2022': 'https://pubmed.ncbi.nlm.nih.gov/?term=10.3390%2Fantibiotics11040456',
+  'Oliva A, JAC Antimicrob Resist 2024;6(6):dlae201': 'https://pubmed.ncbi.nlm.nih.gov/?term=10.1093%2Fjacamr%2Fdlae201',
+  'doi:10.3390/antibiotics11040456': 'https://pubmed.ncbi.nlm.nih.gov/?term=10.3390%2Fantibiotics11040456'
+};
+const UTD_D = '2026/11/16';
 /* ================= 抗細菌：β-lactams & combinations ================= */
 add({ id: 'amp', ref: 'SG・UpToDate', rrRef: 'UpToDate・SG', blg: 'pen', naD: [33.35, 500], g: 'Ampicillin', b: 'Ampolin', zh: '安博黴素', st: '500 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'penicillin aminopenicillin',
   L: [T(1000, 'q12h'), T(1000, 'q8h'), T(2000, 'q12h'), T(1000, 'q6h'), T(2000, 'q8h'), T(2000, 'q6h'), T(2000, 'q4h', { hd: 1, t: '腦膜炎／Enterococcus 心內膜炎' })],
@@ -359,13 +373,14 @@ add({ id: 'sam', ref: 'UpToDate', rrRef: 'UpToDate・SG', blg: 'pen', naD: [115,
   inf: { dil: { NS: '≤45 mg/mL：室溫 8 h', D5W: '室溫約 2 h，僅限短時輸注' }, v: [100, 250], t: [0.5], ti: 0, c: [0, 45] },
   nt: ['依腎功能延長給藥間隔，每劑 1,500 mg 或 3,000 mg（UpToDate／Lexicomp：CrCl ≥30 Q6H；15–29 Q12H；<15 Q24H）。', 'CRAB 治療請改用本院 sulbactam 單方高劑量（每日 9,000 mg）。'] });
 
-add({ id: 'sul', ref: 'UpToDate・IDSA 2024', rrRef: 'UpToDate・SG', blg: 'pen', pifStart: '維持劑量依原給藥間隔開始', g: 'Sulbactam', b: 'Sulbactam', zh: '舒貝', st: '500 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'crab acinetobacter',
-  L: [T(1000, 'q12h'), T(2000, 'q12h', { hd: 1 }), T(3000, 'q12h', { hd: 1 }), T(3000, 'q8h', { hd: 1, t: 'CRAB 高劑量：sulbactam 9,000 mg/day（IDSA 2024）' })], im: ['std', 'pif'], pifH: 4, imDef: 'pif',
-  R: [[50, 3, 3], [30, 2, 2], [15, 1, 1], [0, 0, 0]],
-  rr: { HD: [0, 0, '透析日於 after dialysis (AD) 給藥'], PD: [0, 0, '資料有限'], CRRT: [3, 3, '高流量 CRRT 建議維持 3,000 mg q8h'], SLED: [2, 2, '資料有限'] },
+add({ id: 'sul', pifRefKeep: 1, ref: 'IDSA MDRG(-) infection guideline 2024・IJID 2024 Dec;149:107267', rrRef: 'IJID 2024 Dec;149:107267', blg: 'pen', pifStart: '維持劑量依原給藥間隔開始', g: 'Sulbactam', b: 'Sulbactam', zh: '舒貝', st: '500 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'crab acinetobacter',
+  L: [T(1500, 'q8h', { lb: '1,500–2,000 mg' }), T(3000, 'q8h', { lb: '3,000–4,000 mg', t: 'CRAB：sulbactam 9,000–12,000 mg/day' })], im: ['std', 'pif'], pifH: 4, imDef: 'pif',
+  R: [[30, 1, 1], [0, 0, 0]],
+  ld: (c) => (c.rrt !== 'none' || c.cr < 30 ? 'Loading 3,000–4,000 mg' : ''), ldm: () => 'q8h × 3 劑（前 24 h），之後依腎功能給予維持劑量（IJID 2024 Dec;149:107267）',
+  rr: { HD: [0, 0, '透析日於 after dialysis (AD) 給藥'], PD: [0, 0], CRRT: [0, 0, '若為 high effluent flow rate，可考慮 3,000 mg Q8H'], SLED: [0, 0] },
   aki: 'w', tox: SUL_TOX,
-  inf: { dil: { NS: '室溫 8 h', D5W: '室溫 4 h' }, v: [100, 250], t: [0.5, 4], ti: 0, note: 'CRAB 高劑量建議考慮 4-h 延長輸注（pIF）' },
-  nt: ['本院 sulbactam 單方預設為 CRAB 高劑量（每日 9,000 mg）。', SUL_CRAB_NOTE] });
+  inf: { dil: { NS: '室溫 8 h', D5W: '室溫 4 h' }, v: [100, 250], t: [0.5, 4], ti: 0, note: 'CRAB 高劑量建議 4-h 延長輸注（pIF）' },
+  nt: ['本院 sulbactam 單方僅用於 CRAB，不提供其他用途之劑量；須併用第二種活性藥物（IDSA MDRG(-) infection guideline 2024）。', '劑量依據：IDSA MDRG(-) infection guideline 2024（sulbactam 每日 9,000 mg 以上）；IJID 2024 Dec;149:107267（colistin 合併 sulbactam 9 vs 12 g/day 治療 CRAB pneumonia RCT）：CrCl ≥30 維持 3–4 g Q8H；CrCl <30（含 HD、SLED、CRRT、CAPD）先 3–4 g Q8H × 24 h，之後 1.5–2 g Q8H。'] });
 
 add({ id: 'oxa', naOpen: 1, ref: 'PI', rrRef: 'UpToDate・SG', blg: 'pen', naD: [57.3, 500], ind: ['一般感染（如 SSTI）', 'MSSA 菌血症／心內膜炎／骨髓炎'], indDef: 2, g: 'Oxacillin', b: 'Prostaphyllin (Ocillina)', zh: '歐西林', st: '500 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'mssa anti-staphylococcal penicillin',
   L: [T(1000, 'q6h'), T(2000, 'q6h'), T(2000, 'q4h', { hd: 1, t: 'MSSA 菌血症／心內膜炎' })],
@@ -502,7 +517,7 @@ add({ id: 'cpt', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'ceph', g: 'Ceftaroline
   inf: { dil: { NS: '室溫 6 h、冷藏 24 h', D5W: '室溫 6 h、冷藏 24 h', LR: '相容' }, v: [50, 100, 250], t: [1, 2], ti: 0 },
   nt: ['給藥間隔依感染類型選擇：q8h（嚴重 MRSA 菌血症／肺炎，或與 daptomycin 等合併治療 VRE），q12h（其他感染）；每劑劑量依腎功能決定（>50：600 mg；31–50：400 mg；15–30：300 mg；<15／HD：200 mg）。'] });
 
-add({ id: 'fdc', utd: '2026-11-16', utdSrc: 'Cefiderocol: Drug information', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'ceph', novel: 1, g: 'Cefiderocol', b: 'Fetroja', zh: '伏驖佳', st: '1,000 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'siderophore crab cre',
+add({ id: 'fdc', utd: '2026/11/16', utdSrc: 'Cefiderocol: Drug information', ref: 'UpToDate, 2026/11/16・PI', rrRef: 'UpToDate, 2026/11/16', blg: 'ceph', novel: 1, g: 'Cefiderocol', b: 'Fetroja', zh: '伏驖佳', st: '1,000 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'siderophore crab cre',
   L: [T(750, 'q12h'), T(1000, 'q8h'), T(1500, 'q12h'), T(2000, 'q12h'), T(1500, 'q8h'), T(2000, 'q8h'), T(2000, 'q6h', { t: 'ARC (CrCl ≥120)' })],
   R: [[120, 6, 6], [60, 5, 5], [30, 4, 4], [15, 1, 1], [0, 0, 0]],
   rr: { HD: [0, 0, 'after dialysis (AD) 給藥'], PD: [0, 0, '參考 CrCl <15'], SLED: [4, 4, '資料有限'],
@@ -511,25 +526,25 @@ add({ id: 'fdc', utd: '2026-11-16', utdSrc: 'Cefiderocol: Drug information', ref
   aki: 'w', tox: ['肝功能異常', 'CREDIBLE-CR trial 指出，相較於對照組，cefiderocol 於 CRAB infection 的死亡率似乎較高'],
   inf: { dil: { NS: '室溫 6 h；冷藏 24 h（之後室溫 6 h 內用完）', D5W: '同 NS' }, v: [100, 250], t: [3], ti: 0, fixed: 1, note: '本院規定一律 3-h 延長輸注（仿單 3 h）' } });
 
-add({ id: 'cza', utd: '2026-11-16', utdSrc: 'Ceftazidime and avibactam: Drug information（Topic 100152 v172.0，2026-08-07 更新）', ref: 'UpToDate・PI', rrRef: 'UpToDate', blg: 'ceph', novel: 1, g: 'Ceftazidime/Avibactam', b: 'Zavicefta', zh: '贊飛得', st: '2,500 mg/vial (2,000 mg/500 mg)', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'avycaz kpc oxa-48 cre', cf: 0.8,
+add({ id: 'cza', utd: '2026/11/16', utdSrc: 'Ceftazidime and avibactam: Drug information（Topic 100152 v172.0，2026-08-07 更新）', ref: 'UpToDate, 2026/11/16・PI', rrRef: 'UpToDate, 2026/11/16', blg: 'ceph', novel: 1, g: 'Ceftazidime/Avibactam', b: 'Zavicefta', zh: '贊飛得', st: '2,500 mg/vial (2,000 mg/500 mg)', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'avycaz kpc oxa-48 cre', cf: 0.8,
   L: [T(937.5, 'q48h', { lb: '940 mg (750/187.5 mg)' }), T(937.5, 'q24h', { lb: '940 mg (750/187.5 mg)' }), T(937.5, 'q12h', { lb: '940 mg (750/187.5 mg)' }), T(1250, 'q12h', { lb: '1,250 mg (1,000/250 mg)' }), T(1250, 'q8h', { lb: '1,250 mg (1,000/250 mg)' }), T(2500, 'q8h', { lb: '2,500 mg (2,000/500 mg)' })],
   R: [[50.0001, 5, 5, '', '>50'], [30.0001, 4, 4, '', '>30–50'], [15.0001, 2, 2, '', '>15–30'], [5.0001, 1, 1, '', '>5–15'], [0, 0, 0, '', '≤5']],
-  rr: { HD: [1, 1, '透析日於 after dialysis (AD) 給藥'], PD: [1, 1], CRRT: [4, 4, '1,250 mg Q8H（UpToDate）；高 effluent 可考慮 2,500 mg Q8H（Wenzler E, AAC 2017）'], SLED: [3, 3, 'PIRRT 當天：1,250 mg Q12H（其中一劑於 PIRRT 後給予）；每日長時間 PIRRT（如 12 h/day）可能需 Q8H；非 PIRRT 日比照 CrCl ≤15（940 mg QD）（UpToDate）'] },
+  rr: { HD: [1, 1, '透析日於 after dialysis (AD) 給藥'], PD: [1, 1], CRRT: [4, 4, '1,250 mg Q8H（UpToDate, 2026/11/16）；高 effluent 可考慮 2,500 mg Q8H（Wenzler E, AAC 2017）'], SLED: [3, 3, 'PIRRT 當天：1,250 mg Q12H（其中一劑於 PIRRT 後給予）；每日長時間 PIRRT（如 12 h/day）可能需 Q8H；非 PIRRT 日比照 CrCl ≤15（940 mg QD）（UpToDate, 2026/11/16）'] },
   aki: 'w', tox: [BL_TOX_NEURO],
   inf: { dil: { NS: '8 mg/mL：冷藏 12 h + 室溫 4 h；>8–40 mg/mL：室溫 4 h（EU）', D5W: '同 NS', LR: '相容' }, v: [100, 250], t: [3], ti: 0, fixed: 1, c: [8, 40], note: '本院一律 3-h 延長輸注（仿單 2 h）。濃度以 ceftazidime 計 8–40 mg/mL' },
   adjWarn: 'CRKP／KPC-Kp 嚴重感染：依腎功能減量可能略為降低治療成功率。仿單於 cIAI 試驗中 CrCl 30–50 者臨床治癒率較低；統合分析顯示腎劑量調整與較高死亡率相關（OR 1.79, 95% CI 1.18–2.72；Gatti M, Br J Clin Pharmacol 2023, PMID 36337045）；KPC-Kp 菌血症減量組 30 天死亡率較高（HR 4.47；Oliva A, JAC-AMR 2024;6:dlae201）。AKI 初期或重症可考慮先給全劑量，密切監測腎功能與神經毒性，必要時 TDM。',
   nt: ['MBL (NDM) 菌株：需併用 aztreonam（或改 Emblaveo）。', 'CRKP 嚴重感染腎劑量調整之療效疑慮：Gatti M, Br J Clin Pharmacol 2023（PMID 36337045）；Oliva A, JAC Antimicrob Resist 2024;6(6):dlae201；Avycaz 美國仿單 Warnings 5.1。'] });
 
-add({ id: 'czt', utd: '2026-11-16', utdSrc: 'Ceftolozane and tazobactam: Drug information', ref: 'UpToDate・PI', rrRef: 'UpToDate', blg: 'ceph', novel: 1, ind: ['HAP／VAP／嚴重 MDR-GNB 感染', 'cIAI／cUTI'], g: 'Ceftolozane/Tazobactam', b: 'Zerbaxa', zh: '諾倍適', st: '1,500 mg/vial (1,000 mg/500 mg)', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'dtr pseudomonas',
+add({ id: 'czt', utd: '2026/11/16', utdSrc: 'Ceftolozane and tazobactam: Drug information', ref: 'UpToDate, 2026/11/16・PI', rrRef: 'UpToDate, 2026/11/16', blg: 'ceph', novel: 1, ind: ['HAP／VAP／嚴重 MDR-GNB 感染', 'cIAI／cUTI'], g: 'Ceftolozane/Tazobactam', b: 'Zerbaxa', zh: '諾倍適', st: '1,500 mg/vial (1,000 mg/500 mg)', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'dtr pseudomonas',
   L: [T(150, 'q8h', { t: 'HD（cIAI/cUTI）' }), T(375, 'q8h'), T(450, 'q8h', { t: 'HD（HAP/VAP）' }), T(750, 'q8h'), T(1500, 'q8h', { t: 'cIAI／cUTI（感受性菌）' }), T(3000, 'q8h', { t: 'HAP／VAP／嚴重 MDR-GNB（含 DTR-P. aeruginosa）' })],
   R: [[50.0001, 5, 4, '', '>50'], [30, 4, 3, '', '30–50'], [15, 3, 1, '', '15–29'], [0, -1, -1, 'CrCl <15 未透析：仿單無建議（未研究）', '<15']],
-  rr: { HD: [2, 0, 'Loading 2,250 mg（cIAI／cUTI 750 mg）單次，之後維持劑量；透析日於 after dialysis (AD) 立即給藥（UpToDate）'], PD: [-1, -1, '無資料'], CRRT: [4, 4, '1,500 mg Q8H；24 h 後可考慮減為 750 mg Q8H 以避免蓄積，或 3,000 mg loading 後 750 mg Q8H（UpToDate，Monte Carlo 模擬）'], SLED: [0, 0, '750 mg loading 後，非 PIRRT 時 150 mg Q8H；PIRRT 開始 1 h 內與結束後 1 h 內各追加 750 mg（UpToDate，單一個案資料）'] },
-  arc: { i: 5, t: 'ARC：經驗性治療可給 1,500 mg loading 後 4,500 mg／24 h 持續輸注；無法持續輸注則 3,000 mg Q8H（3-h 延長輸注）。目標治療（感受性菌）3,000 mg Q8H 3-h 延長輸注（UpToDate）' },
-  nt: ['AKI 初期可考慮先給全劑量 48 h 後再依腎功能減量（試驗中 CrCl 30–50 者治癒率較低）（UpToDate）。'],
+  rr: { HD: [2, 0, 'Loading 2,250 mg（cIAI／cUTI 750 mg）單次，之後維持劑量；透析日於 after dialysis (AD) 立即給藥（UpToDate, 2026/11/16）'], PD: [-1, -1, '無資料'], CRRT: [4, 4, '1,500 mg Q8H；24 h 後可考慮減為 750 mg Q8H 以避免蓄積，或 3,000 mg loading 後 750 mg Q8H（UpToDate, 2026/11/16，Monte Carlo 模擬）'], SLED: [0, 0, '750 mg loading 後，非 PIRRT 時 150 mg Q8H；PIRRT 開始 1 h 內與結束後 1 h 內各追加 750 mg（UpToDate, 2026/11/16，單一個案資料）'] },
+  arc: { i: 5, t: 'ARC：經驗性治療可給 1,500 mg loading 後 4,500 mg／24 h 持續輸注；無法持續輸注則 3,000 mg Q8H（3-h 延長輸注）。目標治療（感受性菌）3,000 mg Q8H 3-h 延長輸注（UpToDate, 2026/11/16）' },
+  nt: ['AKI 初期可考慮先給全劑量 48 h 後再依腎功能減量（試驗中 CrCl 30–50 者治癒率較低）（UpToDate, 2026/11/16）。'],
   aki: 'w', tox: ['低血鉀'],
   inf: { dil: { NS: '室溫 24 h、冷藏 7 d', D5W: '室溫 24 h、冷藏 7 d' }, v: [100], t: [3], ti: 0, fixed: 1, note: '本院一律 3-h 延長輸注（仿單 1 h）' } });
 
-add({ id: 'azavi', utd: '2026-11-16', utdSrc: 'Aztreonam and avibactam: Drug information', ref: 'UpToDate・PI', rrRef: 'UpToDate', blg: 'nov', novel: 1, g: 'Aztreonam/Avibactam', b: 'Emblaveo', zh: '', st: '2,000 mg/vial (1,500 mg/500 mg)', cls: 'bac', sub: 'bl', rt: 'inj', ext: '健保不給付', kw: 'mbl ndm aztreonam avibactam', unitNote: '劑量以 aztreonam 計',
+add({ id: 'azavi', utd: '2026/11/16', utdSrc: 'Aztreonam and avibactam: Drug information', ref: 'UpToDate, 2026/11/16・PI', rrRef: 'UpToDate, 2026/11/16', blg: 'nov', novel: 1, g: 'Aztreonam/Avibactam', b: 'Emblaveo', zh: '', st: '2,000 mg/vial (1,500 mg/500 mg)', cls: 'bac', sub: 'bl', rt: 'inj', ext: '健保不給付', kw: 'mbl ndm aztreonam avibactam', unitNote: '劑量以 aztreonam 計',
   L: [T(675, 'q12h', { lb: '675/225 mg' }), T(675, 'q8h', { lb: '675/225 mg' }), T(750, 'q6h', { lb: '750/250 mg' }), T(1500, 'q6h', { lb: '1,500/500 mg' })],
   R: [[50.0001, 3, 3, '', '>50'], [30.0001, 2, 2, '', '>30–50'], [15.0001, 1, 1, '', '>15–30'], [0, 0, 0, '', '≤15']],
   ld: (c) => c.rrt === 'PD' || c.rrt === 'SLED' ? '' : c.rrt === 'HD' || (c.rrt === 'none' && c.cr <= 15) ? 'Loading 1,000 mg/330 mg (3 h)' : c.rrt === 'none' && c.cr <= 30 ? 'Loading 1,350 mg/450 mg (3 h)' : 'Loading 2,000 mg/670 mg (3 h)，下一個給藥間隔開始維持劑量',
@@ -579,11 +594,11 @@ add({ id: 'ipm', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'carb', pifStart: '維�
   nx: 'Imipenem 癲癇閾值下降最明顯；CNS 感染或神經重症病人建議改用 meropenem。' + CARBA_VPA,
   inf: { dil: { NS: '≤5 mg/mL：室溫 4 h、冷藏 24 h', D5W: '室溫 4 h' }, v: [100, 250], t: [0.5, 1, 3], ti: 0, c: [0, 5] } });
 
-add({ id: 'rec', utd: '2026-11-16', utdSrc: 'Imipenem, cilastatin, and relebactam: Drug information', ref: 'UpToDate・PI', rrRef: 'UpToDate', blg: 'carb', novel: 1, g: 'Imipenem/Cilastatin/Relebactam', b: 'Recarbrio', zh: '', st: '1,250 mg/vial (500/500/250 mg)', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'kpc relebactam',
+add({ id: 'rec', utd: '2026/11/16', utdSrc: 'Imipenem, cilastatin, and relebactam: Drug information', ref: 'UpToDate, 2026/11/16・PI', rrRef: 'UpToDate, 2026/11/16', blg: 'carb', novel: 1, g: 'Imipenem/Cilastatin/Relebactam', b: 'Recarbrio', zh: '', st: '1,250 mg/vial (500/500/250 mg)', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'kpc relebactam',
   L: [T(500, 'q12h', { lb: '500 mg（總量）' }), T(500, 'q8h', { lb: '500 mg（總量）' }), T(500, 'q6h', { lb: '500 mg（總量）' }), T(750, 'q6h', { lb: '750 mg（總量）' }), T(1000, 'q6h', { lb: '1,000 mg（總量）' }), T(1250, 'q6h', { lb: '1,250 mg' })],
-  R: [[90, 5, 5], [60, 4, 4], [30, 3, 3], [15, 2, 2], [0, 0, 0, '仿單不建議用於未接受血液透析者；無資料時可考慮 500 mg Q12H（UpToDate）', '<15']],
+  R: [[90, 5, 5], [60, 4, 4], [30, 3, 3], [15, 2, 2], [0, 0, 0, '仿單不建議用於未接受血液透析者；無資料時可考慮 500 mg Q12H（UpToDate, 2026/11/16）', '<15']],
   ld: (c) => (c.rrt === 'CRRT' || c.rrt === 'SLED' ? 'Loading 1,250 mg 單次，之後接續維持劑量' : ''),
-  rr: { HD: [2, 2, 'after dialysis (AD) 給藥'], PD: [1, 1, '仿單未研究；無資料時可考慮 500 mg Q8H（UpToDate）'], CRRT: [3, 3, '1,250 mg 首劑後 750 mg Q6H（UpToDate）'], SLED: [3, 3, '1,250 mg 首劑後：PIRRT 當天 750 mg Q8H 或 Q6H；非 PIRRT 日 500 mg Q8H（UpToDate）'] },
+  rr: { HD: [2, 2, 'after dialysis (AD) 給藥'], PD: [1, 1, '仿單未研究；無資料時可考慮 500 mg Q8H（UpToDate, 2026/11/16）'], CRRT: [3, 3, '1,250 mg 首劑後 750 mg Q6H（UpToDate, 2026/11/16）'], SLED: [3, 3, '1,250 mg 首劑後：PIRRT 當天 750 mg Q8H 或 Q6H；非 PIRRT 日 500 mg Q8H（UpToDate, 2026/11/16）'] },
   aki: 'w', tox: ['癲癇', CARBA_VPA], nx: CARBA_VPA,
   inf: { dil: { NS: '室溫 2 h、冷藏 24 h', D5W: '室溫 2 h、冷藏 24 h' }, v: [100], t: [0.5], ti: 0 } });
 
@@ -1407,6 +1422,8 @@ function score(d, q) {
 
 /* ================= Render: patient ================= */
 let C = {};
+const linkify = (html, span) => Object.keys(REFS).sort((a, b) => b.length - a.length).reduce((h, k) => { const e = esc(k); return h.split(e).join(span ? `<span class="rl" data-href="${REFS[k]}" role="link" tabindex="0">${e}</span>` : `<a class="rl" href="${REFS[k]}" target="_blank" rel="noopener">${e}</a>`); }, html);
+document.addEventListener('click', (ev) => { const r = ev.target.closest('[data-href]'); if (r) { ev.preventDefault(); ev.stopPropagation(); window.open(r.dataset.href, '_blank', 'noopener'); } }, true);
 function renderPatient() {
   C = patient();
   const wT = $('wTable'), rT = $('rTable');
@@ -1430,7 +1447,7 @@ function renderPatient() {
   rT.querySelectorAll('input[name=crp]').forEach((el) => el.addEventListener('change', () => { S.crPick = el.value; update(); }));
   $('basis').innerHTML = off
     ? `<div class="basis rrt"><span>劑量依據</span><b>${RRTNAME[C.rrt]}</b><span>接受 RRT：以 RRT 劑量為準，不採用腎功能估算</span></div>`
-    : `<div class="basis"><span>劑量依據：${C.crLabel}</span><b>${r0(C.cr)} <small style="font-size:12px">mL/min</small></b>${C.arc ? '<span>≥130：ARC</span>' : ''}</div><p class="hint" style="margin:6px 2px 0">${C.crKey === 'cg' ? `自動選擇：${C.cgW[2]} → C-G 以 ${C.cgW[0]} 計算。` : C.crKey === 'ucr' ? '已輸入尿液資料：以實測 CrCl 為準。' : ''}多數藥物仿單與臨床試驗以 C-G CrCl 作為腎劑量調整依據，CKD-EPI 僅供參考。${C.age >= 65 && C.scr < 0.8 ? '<br><b>Scr 未進位</b>：對高齡且 Scr 較低者，將 Scr 進位到 0.8 或 1.0 代入 C-G 並不會提升準確度，反而會低估 CrCl 而給予不適當的低劑量（Winter MA, et al. Pharmacotherapy 2012;32:604-12）。' : ''}</p>`;
+    : `<div class="basis"><span>劑量依據：${C.crLabel}</span><b>${r0(C.cr)} <small style="font-size:12px">mL/min</small></b>${C.arc ? '<span>≥130：ARC</span>' : ''}</div><p class="hint" style="margin:6px 2px 0">${C.crKey === 'cg' ? `自動選擇：${C.cgW[2]} → C-G 以 ${C.cgW[0]} 計算。` : C.crKey === 'ucr' ? '已輸入尿液資料：以實測 CrCl 為準。' : ''}多數藥物仿單與臨床試驗以 C-G CrCl 作為腎劑量調整依據，CKD-EPI 僅供參考。${C.age >= 65 && C.scr < 0.8 ? '<br><b>Scr 未進位</b>：對高齡且 Scr 較低者，將 Scr 進位到 0.8 或 1.0 代入 C-G 並不會提升準確度，反而會低估 CrCl 而給予不適當的低劑量（<a class="rl" href="https://pubmed.ncbi.nlm.nih.gov/22576791/" target="_blank" rel="noopener">Winter MA, et al. Pharmacotherapy 2012;32:604-12</a>）。' : ''}</p>`;
   $('pAlerts').innerHTML = patientAlerts(C).map(([t, h]) => `<div class="al ${t}">${h}</div>`).join('');
 }
 
@@ -1533,7 +1550,7 @@ function renderDetail() {
     } else { const m3 = sub.match(/([\d–]+ h) 後開始維持/); step1 = { t: '首劑 Loading dose', big, sub, arr: m3 ? `${m3[1]} 後` : ivH ? `${ivH} h 後` : '接續' }; }
   } else if (d._m && bx) {
     const x0 = tierText({ ...d, _m: null }, d.L[p.idx], CC);
-    step1 = { t: '首劑標準輸注', big: `${x0.mg != null ? fmtMg(x0.mg, d.unit) : x0.main}（30 min）`, sub: `作為 loading dose，以快速達到目標濃度。請於醫囑註明首劑輸注時間（Stanford Health Care Extended-Infusion β-Lactam Protocol 2026）`, arr: d._m === 'pif' ? (d.pifStart ? '依原間隔' : '下一劑起') : '立即接續' };
+    step1 = { t: '首劑標準輸注', big: `${d.L[p.idx].lb ? d.L[p.idx].lb : x0.mg != null ? fmtMg(x0.mg, d.unit) : x0.main}（30 min）`, sub: `作為 loading dose，以快速達到目標濃度。請於醫囑註明首劑輸注時間（Stanford Health Care Extended-Infusion β-Lactam Protocol 2026）`, arr: d._m === 'pif' ? (d.pifStart ? '依原間隔' : '下一劑起') : '立即接續' };
   }
   if (step1) {
     const s2 = bx ? `<div class="stepC m"><span class="n">2</span><div><div class="t">${d._m && !ld ? (d._m === 'pif' ? `維持劑量（${d.pifH} h 延長輸注）` : '維持劑量（24 h 持續輸注）') : '維持劑量'}</div><div class="d">${esc(bx.main)}${bx.po ? `<span style="font-size:14px;font-weight:600;opacity:.9">（${esc(String(bx.po).replace(/^→\s*/, ''))}）</span>` : ''}</div><div class="s">詳見下方劑量階梯</div></div></div>` : '';
@@ -1551,7 +1568,7 @@ function renderDetail() {
   else if (d.R.length > 1 || !d.rf) d.R.forEach((r, bi) => addB(r[colI], bandLabel(d.R, bi, d.basis === 'egfr' ? 'eGFR' : 'CrCl')));
   if (d.rf) d.rf.forEach((r, bi) => { if (d.R.length === 1) (bandMap[d.R[0][colI]] = bandMap[d.R[0][colI]] || []).push(`${bandLabel(d.rf, bi, 'CrCl')}${r[1] < 1 ? `（×${Math.round(r[1] * 100)}%）` : ''}`); });
   if (d.rr && !d.rrt && !d._lad) Object.entries(d.rr).forEach(([k, e]) => { if (Array.isArray(e)) addB(e[colI - 1], RRTNAME[k]); });
-  const refOf = (i) => { if (d.L[i] && d.L[i].ref) return d.L[i].ref; const bs = bandMap[i] || []; const onlyRRT = bs.length && bs.every((b) => /^(iHD|PD|CRRT|SLED)$/.test(b)); return d._m === 'pif' ? 'UpToDate' : onlyRRT ? (d.rrRef || d.ref || '') : (d.ref || ''); };
+  const refOf = (i) => { if (d.L[i] && d.L[i].ref) return d.L[i].ref; const bs = bandMap[i] || []; const onlyRRT = bs.length && bs.every((b) => /^(iHD|PD|CRRT|SLED)$/.test(b)); return d._m === 'pif' && !d.pifRefKeep ? 'UpToDate' : onlyRRT ? (d.rrRef || d.ref || '') : (d.ref || ''); };
   const banned = new Set(d.ban ? d.ban(CC) : []);
   const LA = L.filter(({ i }) => !banned.has(i)), pos = LA.findIndex((x) => x.i === p.idx);
   /* β-lactam（時間依賴型）：上下一階優先選「同給藥間隔」的較高／較低劑量（例：1,000 mg Q8H 的上一階為 2,000 mg Q8H，而非 2,000 mg Q12H） */
@@ -1570,7 +1587,7 @@ function renderDetail() {
   h += '<div class="ladder">' + [...visible].reverse().map(({ t, i, x }) => {
     const cls = best(i) ? 'best' : near(i) ? 'near' : 'dim';
     const lv = best(i) ? (p.mark === 'ARC' ? '建議（ARC）' : p.mark === 'AKI-48h' ? '建議（AKI 48h）' : p.mark === 'AKI' ? '建議（AKI 進展中）' : '最適建議') : near(i) ? (i > p.idx ? '上一階' : '下一階') : `階層 ${i + 1}`;
-    return `<button class="tier ${cls} ${S.tierSel === i ? 'sel' : ''}" data-i="${i}"><span class="lv">${lv}</span><span><span class="dose">${esc(x.main)}${d._m === 'pif' ? `<span class="xb">${d.pifH}-h pIF</span>` : t.x ? `<span class="xb">${esc(t.x)}</span>` : ''}${t.ps ? `<span class="ps">${esc(t.ps)}</span>` : ''}${x.po ? `<span class="poc">→ ${esc(x.po)}</span>` : ''}${t.hd ? '<span class="hdt">高劑量</span>' : ''}</span>${x.sub ? `<div class="why">${esc(x.sub)}</div>` : ''}${t.t ? `<div class="why">${esc(t.t)}</div>` : ''}</span><span class="bands">${(bandMap[i] || []).length ? esc((bandMap[i] || []).join('・')) : '<span style="opacity:.6">—</span>'}${refOf(i) ? `<i>${esc(refOf(i))}</i>` : ''}</span></button>`;
+    return `<button class="tier ${cls} ${S.tierSel === i ? 'sel' : ''}" data-i="${i}"><span class="lv">${lv}</span><span><span class="dose">${esc(x.main)}${d._m === 'pif' ? `<span class="xb">${d.pifH}-h pIF</span>` : t.x ? `<span class="xb">${esc(t.x)}</span>` : ''}${t.ps ? `<span class="ps">${esc(t.ps)}</span>` : ''}${x.po ? `<span class="poc">→ ${esc(x.po)}</span>` : ''}${t.hd ? '<span class="hdt">高劑量</span>' : ''}</span>${x.sub ? `<div class="why">${esc(x.sub)}</div>` : ''}${t.t ? `<div class="why">${esc(t.t)}</div>` : ''}</span><span class="bands">${(bandMap[i] || []).length ? esc((bandMap[i] || []).join('・')) : '<span style="opacity:.6">—</span>'}${refOf(i) ? `<i>${linkify(esc(refOf(i)), 1)}</i>` : ''}</span></button>`;
   }).join('') + '</div>';
   if (LA.length > visible.length || S.showAll) h += `<button class="morebtn" id="moreBtn">${S.showAll ? '只顯示建議與上下一階' : `顯示完整劑量階梯（${LA.length} 階）`}</button>`;
   { const bn = typeof d.banNote === 'function' ? d.banNote(CC) : d.banNote; if (banned.size && bn) h += `<p class="al w" style="margin-top:6px">${esc(bn)}</p>`; }
@@ -1585,18 +1602,18 @@ function renderDetail() {
   if (C.ecmo && d.ex) condNotes.push(d.ex);
   if (C.cs && d.cx) condNotes.push(d.cx);
   if (C.obese && d.ob) condNotes.push(d.ob);
-  if (condNotes.length) h += `<div class="box cond"><h4>依此病人狀態之提醒</h4><div class="bd"><ul>${condNotes.map((n) => `<li>${esc(fq(n))}</li>`).join('')}</ul></div></div>`;
-  if (d.care) h += Object.entries(d.care).map(([k, v]) => `<div class="box"><h4>${esc(k)}</h4><div class="bd"><ul>${v.map((n) => `<li>${esc(fq(n))}</li>`).join('')}</ul></div></div>`).join('');
+  if (condNotes.length) h += `<div class="box cond"><h4>依此病人狀態之提醒</h4><div class="bd"><ul>${condNotes.map((n) => `<li>${linkify(esc(fq(n)))}</li>`).join('')}</ul></div></div>`;
+  if (d.care) h += Object.entries(d.care).map(([k, v]) => `<div class="box"><h4>${esc(k)}</h4><div class="bd"><ul>${v.map((n) => `<li>${linkify(esc(fq(n)))}</li>`).join('')}</ul></div></div>`).join('');
   if (d.tdm) h += `<div class="box"><h4>${d.tdmIcon ? '<span class="tdmi">TDM</span> 建議監測' : 'TDM'}</h4><div class="bd">${esc(d.tdm)}${d.tdmFn ? d.tdmFn(CC) : ''}</div></div>`;
   // tox
   const selT = sel != null && sel >= 0 ? d.L[sel] : null;
   const isHd = selT && selT.hd;
-  if (d.tox) h += `<div class="box ${isHd ? 'tox' : ''}"><h4>${isHd ? '高劑量：劑量相關不良反應與監測' : '不良反應與監測'}</h4><div class="bd"><ul>${d.tox.map((n) => `<li>${esc(fq(n))}</li>`).join('')}</ul></div></div>`;
+  if (d.tox) h += `<div class="box ${isHd ? 'tox' : ''}"><h4>${isHd ? '高劑量：劑量相關不良反應與監測' : '不良反應與監測'}</h4><div class="bd"><ul>${d.tox.map((n) => `<li>${linkify(esc(fq(n)))}</li>`).join('')}</ul></div></div>`;
   // infusion
   if (d.rt === 'inj' && d.inf) h += infusionHTML(d, sel);
   if (d.naD && selT0 && selT0.x.mg != null && PERDAY[selT0.t.f]) { const daily = selT0.x.mg * PERDAY[selT0.t.f], naMg = daily * d.naD[0] / d.naD[1], meq = naMg / 23;
     h += `<details class="box nabox" ${d.naOpen ? 'open' : ''}><summary><h4>每日鈉含量（依所選劑量）<span class="nasum">${r1(meq)} mEq／${r0(naMg).toLocaleString('en-US')} mg Na/day</span></h4></summary><div class="bd"><div class="infout" style="margin-top:0"><div class="kv"><span>每日劑量</span><b>${d.unit === 'MU' ? +daily.toFixed(1) + ' MU' : daily.toLocaleString('en-US') + ' mg'}</b></div><div class="kv ${meq >= 50 ? 'bad' : ''}"><span>Na（mEq/day）</span><b>${r1(meq)}</b></div><div class="kv ${meq >= 50 ? 'bad' : ''}"><span>Na（mg/day）</span><b>${r0(naMg).toLocaleString('en-US')}</b></div></div><p class="note">依《FEMH 常用藥品之鈉含量》（2019.07.01）：每 ${d.unit === 'MU' ? d.naD[1] + ' MU' : d.naD[1].toLocaleString('en-US') + ' mg'} 含 Na ${d.naD[0]} mg；1 mEq Na = 23 mg。${d.rb ? '' : '未含稀釋輸液（NS 每 100 mL 含 Na 15.4 mEq）。'}</p></div></details>`; }
-  if (d.nt) h += `<div class="box"><h4>備註</h4><div class="bd"><ul>${d.nt.map((n) => `<li>${esc(fq(n))}</li>`).join('')}</ul></div></div>`;
+  if (d.nt) h += `<div class="box"><h4>備註</h4><div class="bd"><ul>${d.nt.map((n) => `<li>${linkify(esc(fq(n)))}</li>`).join('')}</ul></div></div>`;
   h += refsHTML();
   el.innerHTML = h;
   el.querySelectorAll('.tier[data-i]').forEach((b) => b.onclick = () => { const i = +b.dataset.i; S.tierSel = S.tierSel === i ? null : i; renderDetail(); });
