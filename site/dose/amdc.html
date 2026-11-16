@@ -341,6 +341,9 @@ const EI_NOTE = '重症／高 MIC：可改用 pIF（3–4 h）或 cIF 以提高 
 
 /* 非仿單／UpToDate 之文獻：顯示文字 → PubMed 連結（tier 右側參考與備註中自動加超連結） */
 const REFS = {
+  'Nation RL, Clin Infect Dis 2017': 'https://pubmed.ncbi.nlm.nih.gov/?term=10.1093%2Fcid%2Fciw839',
+  'Lam SW, AAC 2019': 'https://pubmed.ncbi.nlm.nih.gov/31235624/',
+  'Honore PM, Crit Care 2018': 'https://pubmed.ncbi.nlm.nih.gov/?term=10.1186%2Fs13054-018-2231-6',
   'El-Gaml, Eur J Clin Pharmacol 2022': 'https://pubmed.ncbi.nlm.nih.gov/35610318/',
   'IDSA MDRG(-) infection guideline 2024': 'https://pubmed.ncbi.nlm.nih.gov/39108079/',
   'IJID 2024 Dec;149:107267': 'https://pubmed.ncbi.nlm.nih.gov/?term=10.1016%2Fj.ijid.2024.107267',
@@ -680,10 +683,10 @@ add({ id: 'lvxiv', utd: '2026/11/16', utdSrc: 'Levofloxacin (systemic): Drug inf
 add({ id: 'lvxpo', utd: '2026/11/16', utdSrc: 'Levofloxacin (systemic): Drug information', ref: 'UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', ind: ['500 mg 系列（UTI 等）', '750 mg 系列（肺炎／P. aeruginosa）'], indDef: 2, g: 'Levofloxacin', b: 'Cravit', zh: '可樂必妥', st: '500 mg/tab（CDC 供應 750 mg/tab）', cls: 'bac', sub: 'fq', rt: 'po', kw: 'levo quinolone tb',
   L: LEVO_L, R: LEVO_R, rr: LEVO_RR, arc: LEVO_ARC, aki: 'w', tox: FQ_TOX, nx: FQ_NX, nt: [FQ_PO] });
 
-add({ id: 'mxfiv', ref: 'PI', rrRef: 'UpToDate・SG', naD: [781.6, 400], g: 'Moxifloxacin', b: 'Avelox (Moflodal)', zh: '摩西淨菌', st: '400 mg/250 mL/vial', cls: 'bac', sub: 'fq', rt: 'inj', kw: 'moxi quinolone',
+add({ id: 'mxfiv', utd: '2026/11/16', utdSrc: 'Moxifloxacin (systemic): Drug information', ref: 'PI', rrRef: 'UpToDate, 2026/11/16', naD: [781.6, 400], g: 'Moxifloxacin', b: 'Avelox (Moflodal)', zh: '摩西淨菌', st: '400 mg/250 mL/vial', cls: 'bac', sub: 'fq', rt: 'inj', kw: 'moxi quinolone',
   L: [T(400, 'q24h')], R: NA(0, 0, '無需依腎功能調整'), rr: SAME(0, 0, '不被透析移除'), tox: FQ_TOX, nx: FQ_NX,
   inf: { rb: 250, t: [1], ti: 0, dil: { '預混軟袋': '勿冷藏（結晶）' }, note: '輸注 60 min' }, nt: ['QT 延長風險為 FQ 中較高者；嚴重肝功能不全慎用。'] });
-add({ id: 'mxfpo', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Moxifloxacin', b: 'Avelox', zh: '威洛速', st: '400 mg/tab', cls: 'bac', sub: 'fq', rt: 'po', kw: 'moxi quinolone',
+add({ id: 'mxfpo', utd: '2026/11/16', utdSrc: 'Moxifloxacin (systemic): Drug information', ref: 'PI', rrRef: 'UpToDate, 2026/11/16', g: 'Moxifloxacin', b: 'Avelox', zh: '威洛速', st: '400 mg/tab', cls: 'bac', sub: 'fq', rt: 'po', kw: 'moxi quinolone',
   L: [T(400, 'q24h')], R: NA(0, 0, '無需依腎功能調整'), rr: SAME(0, 0), tox: FQ_TOX, nx: FQ_NX, nt: [FQ_PO] });
 
 const NEMO_R = [[30, 1, 1, '輕中度腎功能不全無需調整'], [0, 0, 0, 'CrCl <30：500 mg q48h（PTA 92.7%，MIC ≤1 mg/L）— 依 Br J Clin Pharmacol 2021, doi:10.1111/bcp.14881；仿單無明確分段，屬研究建議']];
@@ -787,7 +790,7 @@ add({ id: 'fus', ref: 'PI', rrRef: 'UpToDate・SG', ind: ['500 mg Q12H', '500 mg
   nt: ['治療 MRSA 骨關節感染應併用 rifampicin 以避免抗藥性。'] });
 
 /* ================= Tetracyclines & Macrolides ================= */
-add({ id: 'tgc', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Tigecycline', b: 'Tygacil', zh: '老虎黴素', st: '50 mg/vial', cls: 'bac', sub: 'tm', rt: 'inj', kw: 'glycylcycline crab xdrab cre',
+add({ id: 'tgc', utd: '2026/11/16', utdSrc: 'Tigecycline: Drug information', ref: 'PI', rrRef: 'UpToDate, 2026/11/16', g: 'Tigecycline', b: 'Tygacil', zh: '老虎黴素', st: '50 mg/vial', cls: 'bac', sub: 'tm', rt: 'inj', kw: 'glycylcycline crab xdrab cre',
   modes: [
     { k: 'std', lab: '標準劑量', L: [T(25, 'q12h', { t: 'Child-Pugh C' }), T(50, 'q12h')], R: NA(1, 1, '無需依腎功能調整'), rr: SAME(1, 1, '不被透析移除'), ld: 'Loading 100 mg IV stat',
       hook: (c, i) => c.cp === 'C' ? { i: 0, n: 'Child-Pugh C：loading 100 mg 不變，維持劑量減為 25 mg Q12H（仿單）' } : null },
@@ -796,7 +799,7 @@ add({ id: 'tgc', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Tigecycline', b: 'Tygaci
   ob: '肥胖：無需調整（Märtson 2025）。',
   tox: ['噁心嘔吐（高劑量更明顯）', '肝毒性：ALT/AST、bilirubin', '低纖維蛋白原血症／凝血異常：監測 fibrinogen、PT/aPTT', '急性胰臟炎', 'FDA 全因死亡率警語；血中濃度低，不宜單用於菌血症'],
   inf: { dil: { NS: '室溫 24 h、冷藏 48 h', D5W: '同 NS', LR: '相容' }, v: [100], t: [0.5, 1], ti: 1, c: [0, 1] },
-  nt: ['需依 Child-Pugh 分級調整：Child-Pugh A/B 不需調整；C 維持劑量減半。請於左側「進階」輸入 Child-Pugh。'] });
+  nt: ['高劑量或高血中濃度與低纖維蛋白原血症、凝血異常相關，需監測 fibrinogen（UpToDate）。', '需依 Child-Pugh 分級調整：Child-Pugh A/B 不需調整；C 維持劑量減半。請於左側「進階」輸入 Child-Pugh。'] });
 
 const MINO_RENAL = '無需依腎功能調整；腎功能不全且每日 >200 mg 時，理論上 BUN 可能上升（抗合成代謝作用），需頻繁監測 BUN、Scr 與尿毒症狀';
 add({ id: 'minoiv', utd: '2026/11/16', utdSrc: 'Minocycline (systemic): Drug information', ref: 'UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', g: 'Minocycline', b: 'Menocik', zh: '美諾幸', st: '100 mg/vial', cls: 'bac', sub: 'tm', rt: 'inj', kw: 'tetracycline crab stenotrophomonas',
@@ -806,7 +809,7 @@ add({ id: 'minoiv', utd: '2026/11/16', utdSrc: 'Minocycline (systemic): Drug inf
   tox: ['前庭毒性（頭暈、眩暈）', '肝毒性', '色素沉著、光敏感', 'DRESS', '加重氮血症'],
   inf: { dil: { NS: '依廠牌仿單', D5W: '依廠牌仿單', LR: '依廠牌仿單' }, v: [100, 250, 500], t: [1], ti: 0, note: '輸注 ≥60 min；勿與含鈣溶液同管' } });
 
-add({ id: 'doxy', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Doxycycline', b: 'Doxymycin (Doxynin)', zh: '得喜寧', st: '100 mg/cap', cls: 'bac', sub: 'tm', rt: 'po', kw: 'tetracycline rickettsia',
+add({ id: 'doxy', utd: '2026/11/16', utdSrc: 'Doxycycline: Drug information', ref: 'PI', rrRef: 'UpToDate, 2026/11/16', g: 'Doxycycline', b: 'Doxymycin (Doxynin)', zh: '得喜寧', st: '100 mg/cap', cls: 'bac', sub: 'tm', rt: 'po', kw: 'tetracycline rickettsia',
   L: [T(100, 'q12h')], R: NA(0, 0, '無需依腎功能調整'), rr: SAME(0, 0),
   tox: ['食道潰瘍（足量水、服後勿平躺 30 min）', '光敏感'], nt: ['與 Ca/Mg/Al/Fe 間隔 2–3 h。'] });
 
@@ -820,29 +823,31 @@ add({ id: 'azm', utd: '2026/11/16', utdSrc: 'Azithromycin (systemic): Drug infor
   modes: [{ k: 'a3', lab: '500 mg QD ×3 天', L: [X('500 mg（2#）QD ×3 天')] }, { k: 'a5', lab: '500 mg 第 1 天 → 250 mg QD ×4 天', L: [X('第 1 天 500 mg（2#），第 2–5 天 250 mg（1#）QD')] }],
   R: NA(0, 0, '無需依腎功能調整'), rr: SAME(0, 0, '無需調整'), tox: ['QTc 延長', '肝功能異常', '聽力受損（長期）'] });
 
-add({ id: 'clr', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Clarithromycin', b: 'Klaricid', zh: '開羅理黴素', st: '500 mg/tab', cls: 'bac', sub: 'tm', rt: 'po', kw: 'macrolide h pylori mac',
-  L: [T(250, 'q12h'), T(500, 'q12h')], R: [[30, 1, 1], [0, 0, 0, '或 500 mg q24h']], rr: SAME(0, 0),
+add({ id: 'clr', utd: '2026/11/16', utdSrc: 'Clarithromycin: Drug information', ref: 'PI', rrRef: 'UpToDate, 2026/11/16', g: 'Clarithromycin', b: 'Klaricid', zh: '開羅理黴素', st: '500 mg/tab', cls: 'bac', sub: 'tm', rt: 'po', kw: 'macrolide h pylori mac',
+  L: [T(250, 'q12h'), T(500, 'q12h')], R: [[30, 1, 1], [0, 0, 0, '或 500 mg QD']], rr: { HD: [0, 0, '透析日於 after dialysis (AD) 給藥'], PD: [0, 0], CRRT: [0, 0, '比照 CrCl <30；一般建議改 IV 抗生素'], SLED: [0, 0, '比照 CrCl <30；一般建議改 IV 抗生素'] },
   tox: ['強效 CYP3A4／P-gp 抑制：statin（simvastatin/lovastatin 禁用）、colchicine（腎功能不全可致命）、DOAC、CCB、tacrolimus', 'QTc 延長', '味覺異常'] });
 
 /* ================= Anti-GNB (Polymyxins & Aminoglycosides) ================= */
 const COL_CBA = [130, 145, 160, 175, 195, 220, 245, 275, 300, 340, 360, 440];
 const cba2miu = (m) => +(m / 33.4).toFixed(2);
-add({ id: 'col', ref: 'Consensus 2019', rrRef: 'UpToDate・SG', g: 'Colistin (CMS)', b: 'Colimycin', zh: '克痢黴素', st: '2 MIU/vial (≈ 66.8 mg CBA)', cls: 'bac', sub: 'oth', rt: 'inj', kw: 'polymyxin e colistimethate crab cre',
-  L: COL_CBA.map((m, i) => X(`${Math.max(0.5, Math.round(m / 33.4 / 2 * 2) / 2)} MIU q12h`, { sub: `每日 CBA ${m} mg（≈${cba2miu(m)} MIU）；每劑四捨五入至 0.5 MIU`, hd: i >= 10 ? 1 : 0, t: i === 11 ? 'CRRT' : '' })),
+add({ id: 'col', utd: '2026/11/16', utdSrc: 'Colistin (colistimethate): Drug information', ref: 'Consensus 2019・UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', g: 'Colistin (CMS)', b: 'Colimycin', zh: '克痢黴素', st: '2 MIU/vial (≈ 66.8 mg CBA)', cls: 'bac', sub: 'oth', rt: 'inj', kw: 'polymyxin e colistimethate crab cre',
+  L: [...COL_CBA.map((m, i) => X(`${Math.max(0.5, Math.round(m / 33.4 / 2 * 2) / 2)} MIU q12h`, { sub: `每日 CBA ${m} mg（≈${cba2miu(m)} MIU）；每劑四捨五入至 0.5 MIU`, hd: i >= 10 ? 1 : 0, t: i === 11 ? 'CRRT' : '' })), X('4.5–6 MIU QD', { sub: 'CBA 150–200 mg/day；loading 後 24 h 開始' })],
   R: [[90, 10, 10], [80, 9, 9], [70, 8, 8], [60, 7, 7], [50, 6, 6], [40, 5, 5], [30, 4, 4], [20, 3, 3], [10, 2, 2], [5, 1, 1], [0, 0, 0]],
-  rr: { HD: [0, 0, '非透析日 CBA 130 mg/day；透析日 AD追加 CBA 40 mg（≈1.2 MIU，3–4 h HD）'], PD: [0, 0, '資料有限'], CRRT: [11, 11, 'CBA 440 mg/day（≈13.3 MIU）÷ q12h'], SLED: [3, 3, '資料有限，請會診藥師'] },
+  rr: { HD: [0, 0, '非透析日：約 3.9 MIU/day（CBA 130 mg），分 Q12H；透析日：約 5.4 MIU/day（CBA 180 mg），於 after dialysis (AD) 給予'], PD: [12, 12, 'Loading 後 24 h 開始：4.5–6 MIU QD（CBA 150–200 mg/day）'], CRRT: [11, 11, '約 13.2 MIU/day（CBA 440 mg），分 Q12H，於 loading 後 12 h 開始'], SLED: [7, 7, '依殘餘腎功能之基礎劑量，每 1 h PIRRT 再加 10%；例：無尿者（基礎約 3.9 MIU/day）每日 PIRRT 10 h → 約 7.8 MIU/day（約 4 MIU Q12H）；PIRRT 於下午／晚間劑量後 1–2 h 開始'] },
+  arc: { i: 10, t: 'ARC：約 10.8 MIU/day（CBA 360 mg，約 5.5 MIU Q12H）；尚無確定研究，ARC 病人以常規劑量治療所需療程較長。' },
   ld: (c) => { const w = Math.min(c.wt, c.ibw), miu = Math.min(9, Math.round(0.12 * w * 2) / 2); return `Loading 0.12 MIU/kg × ${w.toFixed(1)} kg（${c.wt < c.ibw ? 'TBW' : 'IBW'}，取 TBW 與 IBW 較低者）→ <b class="num">${miu} MIU</b>（上限 9 MIU = CBA 300 mg），輸注 0.5–1 h；12–24 h 後開始維持劑量（不受腎功能影響）`; },
   aki: 'n', tdm: '維持 Css,avg ≈2 mg/L（國際共識 2019）。每日監測 Scr。',
   tox: ['腎毒性（AKI 發生率高）：每日 Scr、避免併用其他腎毒性藥物', '神經毒性：感覺異常、神經肌肉阻斷／呼吸抑制', '全身性感染（非泌尿道）建議優先 polymyxin B'],
   inf: { dil: { NS: '溶解後儘速使用（CMS 會水解為 colistin）', D5W: '同 NS' }, v: [50, 100], t: [0.5, 1], ti: 0 },
-  nt: ['劑量依 2019 International Consensus（Tsuji BT, Pharmacotherapy）；loading 依 Garonzik 2011（體重取理想與實際體重之較低者）。', '吸入輔助：2 MIU q8h（每劑加 NS 3 mL，vibrating mesh nebulizer）。'] });
+  nt: ['劑量依 2019 International Consensus（Tsuji BT, Pharmacotherapy）及 UpToDate, 2026/11/16；loading 依 Nation RL, Clin Infect Dis 2017（LD〔CBA mg〕= Css,avg 目標 2 mg/L × 2.0 × 體重；體重為 colistimethate 分布體積之顯著共變數；IBW 75 kg 對應 CBA 300 mg ≈ 9 MIU，為建議上限）。本計算器取 TBW 與 IBW 較低者；UpToDate 及共識採固定 CBA 300 mg。', '維持劑量之 CrCl：UpToDate 建議以 Cockcroft-Gault 搭配 AdjBW（IBW + 0.4 ×〔TBW − IBW〕）估算。', '肥胖：以 IBW 給藥之肥胖病人，菌血症 global cure 與非肥胖者無顯著差異，但微生物清除率較低（Lam SW, AAC 2019）。', '吸入輔助：2 MIU q8h（每劑加 NS 3 mL，vibrating mesh nebulizer）。'] });
 
-add({ id: 'pmb', ref: 'Consensus 2019', rrRef: 'UpToDate・SG', g: 'Polymyxin B', b: 'Bobimixyn', zh: '寶比黴素', st: '50 mg/vial (500,000 IU)', cls: 'bac', sub: 'oth', rt: 'inj', kw: 'polymyxin crab cre', wt: 'TBW', rd: 5,
-  L: [K(1.25, 'q12h'), K(1.5, 'q12h', { hd: 1 })], R: NA(0, 1, '無需依腎功能調整（國際共識 2019）'), rr: SAME(0, 1, '無需調整'),
+add({ id: 'pmb', utd: '2026/11/16', utdSrc: 'Polymyxin B: Drug information', ref: 'Consensus 2019・UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', g: 'Polymyxin B', b: 'Bobimixyn', zh: '寶比黴素', st: '50 mg/vial (500,000 IU)', cls: 'bac', sub: 'oth', rt: 'inj', kw: 'polymyxin crab cre', wt: 'TBW', rd: 5,
+  L: [K(1.25, 'q12h'), K(1.5, 'q12h', { hd: 1 })], R: NA(0, 1, '無需依腎功能調整（國際共識 2019）'), rr: { HD: [0, 1, '無需調整；透析日其中一劑於 after dialysis (AD) 給予'], PD: [0, 1, '無需調整'], CRRT: [0, 1, '無需調整'], SLED: [0, 1, '無需調整；其中一劑於 SLED 後給予'] },
+  arc: { i: 1, t: 'ARC：無特定調整，可能需較高劑量；建議 TDM（UpToDate）。' },
   ld: { k: () => 2.5, rd: 10, t: '2–2.5 mg/kg（TBW），輸注 1 h' }, aki: 'n',
-  ob: '共識建議使用 TBW；極度肥胖者需審慎（資料有限）。',
+  ob: '共識建議使用 TBW，PK 不支持設定劑量上限；病態肥胖資料有限，可考慮 AdjBW（UpToDate）。單次 >2,000,000 IU 安全性資料有限，輸注相關反應隨劑量增加。',
   tox: ['腎毒性（低於 colistin）', '神經毒性、神經肌肉阻斷', '皮膚色素沉著', '組織胺樣反應', '不適用於下泌尿道感染'],
-  inf: { dil: { D5W: '冷藏 72 h', NS: '相容' }, v: [250, 500], t: [1, 1.5], ti: 0, note: '1 mg = 10,000 IU' } });
+  inf: { dil: { D5W: '冷藏 72 h', NS: '相容' }, v: [250, 500], t: [1, 1.5], ti: 0, note: '1 mg = 10,000 IU' }, nt: ['腎功能不全時減量可能導致暴露不足、治療失敗與抗藥性（UpToDate）。', 'UTI 需使用 polymyxin 時，優先選擇 colistin（CMS）。'] });
 
 const AG_TOX = ['腎毒性（與 trough 及療程相關）', '耳毒性／前庭毒性（累積劑量相關，不可逆）', '神經肌肉阻斷', '應避免用於重症肌無力者'];
 add({ id: 'amk', utd: '2026/11/16', utdSrc: 'Amikacin (systemic): Drug information', ref: 'SG・UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', ind: ['一般（15 mg/kg）', '重症首劑（25 mg/kg）'], g: 'Amikacin', b: 'Aminfec', zh: '安炎', st: '250 mg/2 mL/vial（CDC 供應 500 mg）', cls: 'bac', sub: 'tm', rt: 'inj', kw: 'aminoglycoside', wt: 'AG', rd: 25,
@@ -866,44 +871,47 @@ add({ id: 'gen', utd: '2026/11/16', utdSrc: 'Gentamicin (systemic): Drug informa
   nt: ['G+ 心內膜炎 synergy：1 mg/kg q8h（Streptococcus 可 3 mg/kg q24h）。'] });
 
 /* ================= Others ================= */
-const TMP_RF = [[30, 1], [15, 0.5], [0, 0.5, 'CrCl <15：不建議；若必須使用給 50% 並密切監測']];
+const TMP_RF = [[30, 1], [15, 0.5], [0, 0.5, 'CrCl <15：不建議；若必須使用給 50% 並密切監測（UpToDate：約 25–50%，謹慎並監測）']];
 const TMP_TOX = ['急性精神病（劑量相關；TMP >15 mg/kg/day 風險上升，併用類固醇亦增加）', '高血鉀（高劑量、併 ACEI/ARB/spironolactone、腎功能不全）', 'Scr 上升（抑制腎小管分泌，非真正 GFR 下降）與 AKI', '骨髓抑制、低血鈉', 'SJS/TEN、肝炎、無菌性腦膜炎', 'G6PD 缺乏：溶血'];
-add({ id: 'smxiv', ref: 'SG・UpToDate', rrRef: 'UpToDate・SG', g: 'TMP-SMX', b: 'Septrin (Sevatrim)', zh: '雪白淨', st: '480 mg/5 mL/amp (TMP 80/SMX 400)', cls: 'bac', sub: 'oth', rt: 'inj', kw: 'tmp smx trimethoprim sulfamethoxazole bactrim baktar septra pjp stenotrophomonas nocardia toxoplasma', wt: 'OB',
+add({ id: 'smxiv', utd: '2026/11/16', utdSrc: 'Trimethoprim-sulfamethoxazole (co-trimoxazole): Drug information', ref: 'SG・UpToDate', rrRef: 'UpToDate, 2026/11/16', g: 'TMP-SMX', b: 'Septrin (Sevatrim)', zh: '雪白淨', st: '480 mg/5 mL/amp (TMP 80/SMX 400)', cls: 'bac', sub: 'oth', rt: 'inj', kw: 'tmp smx trimethoprim sulfamethoxazole bactrim baktar septra pjp stenotrophomonas nocardia toxoplasma', wt: 'OB',
   amp: 80, unitNote: '劑量以 TMP 計',
   modes: [
     { k: 'pjp', lab: 'S. maltophilia／Nocardia／PJP', L: [{ kr: [10, 15], hd: 1, t: 'TMP 10–15 mg/kg/day（上限 15）' }], R: NA(0, 0) },
     { k: 'toxo', lab: 'Toxoplasma（治療）', L: [D(10, 2, 'q12h', { t: 'TMP 5 mg/kg Q12H' })], R: NA(0, 0) },
     { k: 'gen', lab: 'UTI／一般感染', L: [D(5, 2, 'q12h'), D(8, 3, 'q8h')], R: NA(1, 1) }],
-  rf: TMP_RF, rrf: { HD: [0.5, 'after dialysis (AD) 給藥'], PD: [0.5], CRRT: [1, 'Sanford：5 mg/kg Q8H (PJP)'], SLED: [0.5, '資料有限'] },
-  ob: '肥胖：以 AdjBW（或 IBW）計算，避免 TBW 高估。', tox: TMP_TOX, nt: ['TMP 劑量上限 15 mg/kg/day：台灣多中心研究顯示 TMP 劑量愈高急性精神病 (acute psychosis) 發生率愈高（<12 mg/kg/day 0%；>18 mg/kg/day 23.5%；Lee KY, J Antimicrob Chemother 2012, PMID 22821870）；≥16 mg/kg/day 為不良反應獨立危險因子（Chang HM, J Chin Med Assoc 2016;79:314–9）。', 'S. maltophilia：IDSA AMR Guidance 2024 建議 TMP 8–12 mg/kg/day（最高 15）；Nocardia：TMP 5–10（嚴重 15）mg/kg/day；PJP：15–20 mg/kg/day（台灣經驗 10–15 即足）。', 'Toxoplasma 腦炎治療：TMP 5 mg/kg + SMX 25 mg/kg Q12H（即 TMP 10 mg/kg/day；IDSA/CDC OI Guidelines）。'],
+  rf: TMP_RF, rrf: { HD: [0.5, '比照 CrCl <15；透析日於 after dialysis (AD) 給藥'], PD: [0.5, '比照 CrCl <15'], CRRT: [1, 'CRRT 大量移除，無需調整（UpToDate）'], SLED: [1, '無需調整（UpToDate；6–8 h session）'] },
+  ob: '肥胖：以 AdjBW（或 IBW）計算，避免 TBW 高估。', tox: TMP_TOX, nt: ['嚴重感染：部分專家建議前 1–2 天不依腎功能減量（UpToDate）。', '本院無法檢測 TMP 濃度（UpToDate 建議 PJP 透析病人可 TDM，目標 TMP 5–8 mcg/mL）。', 'TMP 劑量上限 15 mg/kg/day：台灣多中心研究顯示 TMP 劑量愈高急性精神病 (acute psychosis) 發生率愈高（<12 mg/kg/day 0%；>18 mg/kg/day 23.5%；Lee KY, J Antimicrob Chemother 2012, PMID 22821870）；≥16 mg/kg/day 為不良反應獨立危險因子（Chang HM, J Chin Med Assoc 2016;79:314–9）。', 'S. maltophilia：IDSA AMR Guidance 2024 建議 TMP 8–12 mg/kg/day（最高 15）；Nocardia：TMP 5–10（嚴重 15）mg/kg/day；PJP：15–20 mg/kg/day（台灣經驗 10–15 即足）。', 'Toxoplasma 腦炎治療：TMP 5 mg/kg + SMX 25 mg/kg Q12H（即 TMP 10 mg/kg/day；IDSA/CDC OI Guidelines）。'],
   inf: { dil: { D5W: '每 amp 稀釋於 125 mL：6 h；100 mL：4 h；75 mL：2 h' }, perAmp: [125, 100, 75], t: [1, 1.5], ti: 0, note: '每 5 mL amp 需稀釋；輸注 60–90 min' } });
 
-add({ id: 'smxpo', ref: 'SG・UpToDate', rrRef: 'UpToDate・SG', g: 'TMP-SMX', b: 'Baktar (Morcasin)', zh: '孟克杏', st: '80/400 mg/tab', cls: 'bac', sub: 'oth', rt: 'po', kw: 'tmp smx trimethoprim sulfamethoxazole bactrim baktar pjp nocardia toxoplasma', wt: 'OB', tab: 80, unitNote: '劑量以 TMP 計',
+add({ id: 'smxpo', utd: '2026/11/16', utdSrc: 'Trimethoprim-sulfamethoxazole (co-trimoxazole): Drug information', ref: 'SG・UpToDate', rrRef: 'UpToDate, 2026/11/16', g: 'TMP-SMX', b: 'Baktar (Morcasin)', zh: '孟克杏', st: '80/400 mg/tab', cls: 'bac', sub: 'oth', rt: 'po', kw: 'tmp smx trimethoprim sulfamethoxazole bactrim baktar pjp nocardia toxoplasma', wt: 'OB', tab: 80, unitNote: '劑量以 TMP 計',
   modes: [
     { k: 'pjp', lab: 'S. maltophilia／Nocardia／PJP', L: [{ kr: [10, 15], hd: 1, t: 'TMP 10–15 mg/kg/day（上限 15）' }], R: NA(0, 0) },
     { k: 'toxo', lab: 'Toxoplasma（治療）', L: [D(10, 2, 'q12h', { t: 'TMP 5 mg/kg Q12H' })], R: NA(0, 0) },
     { k: 'gen', lab: 'UTI／SSTI', L: [X('2# Q12H', { t: '= 1 DS Q12H' }), D(8, 3, 'q8h')], R: NA(0, 0) },
     { k: 'pro', lab: 'PJP／Toxoplasma 預防', L: [X('1# QD', { t: '本院常規預防劑量' })], R: NA(0, 0) }],
-  rf: TMP_RF, rrf: { HD: [0.5, 'after dialysis (AD) 給藥'], PD: [0.5], CRRT: [1], SLED: [0.5] }, tox: TMP_TOX, nt: ['TMP 劑量上限 15 mg/kg/day：台灣多中心研究顯示 TMP 劑量愈高急性精神病 (acute psychosis) 發生率愈高（<12 mg/kg/day 0%；>18 mg/kg/day 23.5%；Lee KY, J Antimicrob Chemother 2012, PMID 22821870）；≥16 mg/kg/day 為不良反應獨立危險因子（Chang HM, J Chin Med Assoc 2016;79:314–9）。', 'S. maltophilia：IDSA AMR Guidance 2024 建議 TMP 8–12 mg/kg/day（最高 15）；Nocardia：TMP 5–10（嚴重 15）mg/kg/day；PJP：15–20 mg/kg/day（台灣經驗 10–15 即足）。', 'Toxoplasma 腦炎治療：TMP 5 mg/kg + SMX 25 mg/kg Q12H（即 TMP 10 mg/kg/day；IDSA/CDC OI Guidelines）。'] });
+  rf: TMP_RF, rrf: { HD: [0.5, '比照 CrCl <15；透析日於 after dialysis (AD) 給藥'], PD: [0.5, '比照 CrCl <15'], CRRT: [1, 'CRRT 大量移除，無需調整（UpToDate）'], SLED: [1, '無需調整（UpToDate）'] }, tox: TMP_TOX, nt: ['嚴重感染：部分專家建議前 1–2 天不依腎功能減量（UpToDate）。', '本院無法檢測 TMP 濃度（UpToDate 建議 PJP 透析病人可 TDM，目標 TMP 5–8 mcg/mL）。', 'TMP 劑量上限 15 mg/kg/day：台灣多中心研究顯示 TMP 劑量愈高急性精神病 (acute psychosis) 發生率愈高（<12 mg/kg/day 0%；>18 mg/kg/day 23.5%；Lee KY, J Antimicrob Chemother 2012, PMID 22821870）；≥16 mg/kg/day 為不良反應獨立危險因子（Chang HM, J Chin Med Assoc 2016;79:314–9）。', 'S. maltophilia：IDSA AMR Guidance 2024 建議 TMP 8–12 mg/kg/day（最高 15）；Nocardia：TMP 5–10（嚴重 15）mg/kg/day；PJP：15–20 mg/kg/day（台灣經驗 10–15 即足）。', 'Toxoplasma 腦炎治療：TMP 5 mg/kg + SMX 25 mg/kg Q12H（即 TMP 10 mg/kg/day；IDSA/CDC OI Guidelines）。'] });
 
-add({ id: 'fosiv', naOpen: 1, ref: 'SG', rrRef: 'UpToDate・SG', naD: [666.7, 2000], ind: ['一般 MDR 感染（12,000 mg/day）', '嚴重感染（16,000–24,000 mg/day）'], rdD: 500, g: 'Fosfomycin sodium', b: 'UFO', zh: '優福', st: '2,000 mg/vial', cls: 'bac', sub: 'oth', rt: 'inj', kw: 'mdr combination',
+add({ id: 'fosiv', naOpen: 1, utd: '2026/11/16', utdSrc: 'Fosfomycin: Drug information', ref: 'SG', rrRef: 'UpToDate, 2026/11/16', naD: [666.7, 2000], ind: ['一般 MDR 感染（12,000 mg/day）', '嚴重感染（16,000–24,000 mg/day）'], rdD: 500, g: 'Fosfomycin sodium', b: 'UFO', zh: '優福', st: '2,000 mg/vial', cls: 'bac', sub: 'oth', rt: 'inj', kw: 'mdr combination',
   L: [T(2000, 'q8h'), T(4000, 'q8h'), T(4000, 'q6h', { hd: 1 }), T(8000, 'q8h', { hd: 1, t: '骨髓炎／院內肺炎／腦膜炎 (24,000 mg/day)' })],
   R: NA(1, 2), rf: [[40, 1], [30, 0.7], [20, 0.6], [10, 0.4], [0, 0.2]],
-  rrt: { HD: 'Loading 2,000–4,000 mg，之後 2,000 mg q48h AD', PD: '1,000 mg IV／IP q48h（Bouchet 1988）', CRRT: '4,000 mg q6h 或 8,000 mg q12h（Jiang 2014；Gattringer 2006）', SLED: '資料有限' },
+  rrt: { HD: '起始 2,000–4,000 mg，之後 2,000–4,000 mg TIW，於 after dialysis (AD) 給予（UpToDate, 2026/11/16）', PD: '2,000–4,000 mg Q48H（UpToDate, 2026/11/16）', CRRT: '6,000–8,000 mg Q12H（UpToDate, 2026/11/16；臨床資料極少）', SLED: '4,000–6,000 mg QD，另於每次 PIRRT 後補充 4,000–6,000 mg（UpToDate, 2026/11/16）' },
+  arc: { i: 3, t: 'ARC：使用該適應症最大劑量（通常 24,000 mg/day 分 3–4 次；UTI 除外）（UpToDate）。' },
   ob: '肥胖：深部感染可考慮較高或更頻繁劑量（Märtson 2025）。',
   tox: ['鈉負荷（每日 Na 量見上方計算）— 心衰竭、水腫', '低血鉀（延長輸注 4 h 可減少）', '靜脈炎', '單用易產生抗藥性，應併用其他抗生素'],
-  inf: { dil: { D5W: '仿單建議溶劑（或 SWFI）；室溫 24 h' }, v: [100, 250], t: [1, 4], ti: 0, note: '建議輸注速率 ≤8,000 mg/h' } });
-add({ id: 'fospo', ref: 'PI', rrRef: 'UpToDate・SG', ind: ['單純性膀胱炎', '複雜性／MDR 下泌尿道'], g: 'Fosfomycin trometamol', b: 'Monurol', zh: '梅樂黴素', st: '3,000 mg/pack', cls: 'bac', sub: 'oth', rt: 'po', kw: 'cystitis uti',
+  inf: { dil: { D5W: '仿單建議溶劑（或 SWFI）；室溫 24 h' }, v: [100, 250], t: [1, 4], ti: 0, note: '建議輸注速率 ≤8,000 mg/h' }, nt: ['RRT 劑量高端保留給對 fosfomycin 感受性下降之嚴重感染。'] });
+const FOSPO_RENAL = '任何腎功能無需調整；但 CrCl <50 或透析時排除明顯延長，長期使用需密切監測不良反應與耐受性';
+add({ id: 'fospo', utd: '2026/11/16', utdSrc: 'Fosfomycin: Drug information', ref: 'PI', rrRef: 'UpToDate, 2026/11/16', ind: ['單純性膀胱炎', '複雜性／MDR 下泌尿道'], g: 'Fosfomycin trometamol', b: 'Monurol', zh: '梅樂黴素', st: '3,000 mg/pack', cls: 'bac', sub: 'oth', rt: 'po', kw: 'cystitis uti',
   L: [X('3,000 mg 單次（睡前空腹）', { t: '單純性膀胱炎' }), X('3,000 mg q48–72h ×3 劑', { t: '複雜性／MDR 下泌尿道（off-label）' })],
-  R: [[10, 0, 1], [0, -1, -1, 'CrCl <10 不建議']], rr: { HD: [-1, -1], PD: [-1, -1], CRRT: [0, 0], SLED: [-1, -1] }, tox: ['腹瀉'] });
+  R: [[50, 0, 1, '無需依腎功能調整'], [0, 0, 1, FOSPO_RENAL]], rr: { HD: [0, 1, '無需調整；透析日於 after dialysis (AD) 給藥。' + FOSPO_RENAL], PD: [0, 1, FOSPO_RENAL], CRRT: [0, 1, '無需調整'], SLED: [0, 1, '無需調整'] }, tox: ['腹瀉'] });
 
-add({ id: 'mtz', ref: 'PI・SG', rrRef: 'UpToDate・SG', naD: [310.4, 500], g: 'Metronidazole', b: 'SABS', zh: '沙普', st: '500 mg/100 mL/bot', cls: 'bac', sub: 'oth', rt: 'inj', kw: 'nitroimidazole anaerobe c diff brain abscess',
+const MTZ_RENAL = '無需依腎功能調整；但代謝物蓄積，CNS 副作用（神經病變、腦病變、癲癇）風險較高，長療程需密切監測';
+const MTZ_RR = (i) => ({ HD: [i, i, '透析日於 after dialysis (AD) 給藥（無法錯開時 AD 補一劑）；長療程監測神經毒性'], PD: [i, i, '無需調整；療程 >1–2 週監測代謝物蓄積'], CRRT: [i, i, '無需調整'], SLED: [i, i, '無需調整；於 SLED 後給藥'] });
+add({ id: 'mtz', utd: '2026/11/16', utdSrc: 'Metronidazole (systemic): Drug information', ref: 'PI・SG', rrRef: 'UpToDate, 2026/11/16', naD: [310.4, 500], g: 'Metronidazole', b: 'SABS', zh: '沙普', st: '500 mg/100 mL/bot', cls: 'bac', sub: 'oth', rt: 'inj', kw: 'nitroimidazole anaerobe c diff brain abscess',
   modes: [
-    { k: 'gen', lab: '一般 anaerobes 感染', L: [T(500, 'q12h', { t: 'PK 支持 Q12H（多數感染非劣性）' }), T(500, 'q8h')], R: NA(1, 1, '無需依腎功能調整') },
-    { k: 'cns', lab: 'CNS 感染（腦膿瘍）／嚴重感染', L: [T(500, 'q8h'), T(500, 'q6h', { hd: 1 })], R: NA(1, 1, '無需依腎功能調整'),
+    { k: 'gen', lab: '一般 anaerobes 感染', L: [T(500, 'q12h', { t: 'PK 支持 Q12H（多數感染非劣性）' }), T(500, 'q8h')], R: [[30, 1, 1, '無需依腎功能調整'], [0, 1, 1, MTZ_RENAL]], rr: MTZ_RR(1) },
+    { k: 'cns', lab: 'CNS 感染（腦膿瘍）／嚴重感染', L: [T(500, 'q12h', { t: 'Child-Pugh C' }), T(500, 'q8h'), T(500, 'q6h', { hd: 1 })], R: [[30, 2, 2, '無需依腎功能調整'], [0, 2, 2, MTZ_RENAL]], rr: MTZ_RR(2),
       nt: ['CNS／腦膿瘍：500 mg Q6–8H（IDSA 細菌性腦膜炎指引 2004：30 mg/kg/day 分 Q6–12H；Sanford：7.5 mg/kg Q6H；每日上限 4,000 mg）。'] }],
-  rr: { HD: [1, 1, '透析日於 after dialysis (AD) 給藥'], PD: [1, 1], CRRT: [1, 1], SLED: [1, 1] },
-  hook: (c, i) => c.cp === 'C' ? { i: 0, n: 'Child-Pugh C：劑量減 50%（仿單）' } : null,
+  hook: (c, i) => c.cp === 'C' ? { i: 0, n: 'Child-Pugh C：每劑劑量不變，頻次改為 Q12H（原 Q12H 者不需調整）（UpToDate）' } : null,
   tox: ['神經毒性：腦病變 (encephalopathy)、小腦症狀（MRI dentate nucleus）、周邊神經病變（>4 週、累積劑量）', 'Disulfiram-like reaction', 'Warfarin 作用增強', 'QTc 延長'],
   nx: 'Metronidazole 腦病變 (encephalopathy)可類似神經惡化（構音障礙、步態不穩、意識改變）；長期使用者需鑑別。',
   inf: { rb: 100, t: [0.5, 1], ti: 1, dil: { '預混輸液': '勿冷藏' }, note: '預混輸液' } });
@@ -915,31 +923,32 @@ add({ id: 'neo', utd: '2026/11/16', utdSrc: 'Neomycin: Drug information', ref: '
 
 /* ================= Anti-TB ================= */
 const TB_NOTE = '依《結核病診治指引》（疾管署）。肥胖者以理想或 lean body weight 估算，避免 PZA/EMB 過量。';
-add({ id: 'inh', ref: 'TB 指引', rrRef: 'UpToDate・SG', g: 'Isoniazid', b: 'INAH', zh: '異菸鹼醯胼', st: '100 mg/tab', cls: 'bac', sub: 'tb', rt: 'po', kw: 'inh tb', wt: 'LEAN', rd: 100,
-  L: [K(5, 'q24h', { mx: 300, t: '最大 300 mg' })], R: NA(0, 0, '無需依腎功能調整'), rr: SAME(0, 0, '透析日於 after dialysis (AD) 給藥'),
+add({ id: 'inh', utd: '2026/11/16', utdSrc: 'Isoniazid: Drug information', ref: 'TB 指引', rrRef: 'UpToDate, 2026/11/16', g: 'Isoniazid', b: 'INAH', zh: '異菸鹼醯胼', st: '100 mg/tab', cls: 'bac', sub: 'tb', rt: 'po', kw: 'inh tb', wt: 'LEAN', rd: 100,
+  L: [K(5, 'q24h', { mx: 300, t: '最大 300 mg' })], R: NA(0, 0, '無需依腎功能調整（清除率主要取決於乙醯化速率）'), rr: SAME(0, 0, '無需調整；透析日於 after dialysis (AD) 給藥。ESRD／透析者神經毒性風險增加，需併用 pyridoxine 並密切監測'),
   tox: ['肝毒性（併 RIF/PZA 更高）', '周邊神經病變：併用 pyridoxine 25–50 mg/day（腎衰竭、糖尿病、酒癮、孕婦、營養不良）', 'CYP2C19/3A4 抑制（phenytoin、carbamazepine）'], nt: [TB_NOTE] });
-add({ id: 'rif', ddi: RIF_DDI, ref: 'TB 指引', rrRef: 'UpToDate・SG', g: 'Rifampicin', b: 'Rifampicin', zh: '立泛黴素', st: '300 mg/cap', cls: 'bac', sub: 'tb', rt: 'po', kw: 'rifampin tb',
-  L: [X('', { fn: (c, W) => (W < 50 ? 450 : 600), f: 'q24h 空腹', t: '<50 kg 450 mg；≥50 kg 600 mg（10 mg/kg）' })], R: NA(0, 0, '無需依腎功能調整'), rr: SAME(0, 0),
+const RIF_RENAL = '≤600 mg/day 無需調整；若使用 ≥900 mg/day（膽道排除飽和），考慮限制為 600 mg/day 或密切監測不良反應';
+add({ id: 'rif', ddi: RIF_DDI, utd: '2026/11/16', utdSrc: 'Rifampin (rifampicin): Drug information', ref: 'TB 指引', rrRef: 'UpToDate, 2026/11/16', g: 'Rifampicin', b: 'Rifampicin', zh: '立泛黴素', st: '300 mg/cap', cls: 'bac', sub: 'tb', rt: 'po', kw: 'rifampin tb',
+  L: [X('', { fn: (c, W) => (W < 50 ? 450 : 600), f: 'q24h 空腹', t: '<50 kg 450 mg；≥50 kg 600 mg（10 mg/kg）' })], R: [[15, 0, 0, '無需依腎功能調整'], [0, 0, 0, RIF_RENAL]], rr: SAME(0, 0, RIF_RENAL),
   tox: ['強效 CYP3A4/2C9/2C19/P-gp 誘導：抗凝血、免疫抑制劑、抗病毒藥、azole、口服避孕藥等大量交互作用', '肝毒性', '體液橘紅色', '血小板低下／流感樣症候群（間歇給藥）'], nt: [TB_NOTE] });
-add({ id: 'emb', ref: 'TB 指引', rrRef: 'UpToDate・SG', g: 'Ethambutol', b: 'Myambutol (E-BUTOL)', zh: '醫肺必妥', st: '400 mg/tab', cls: 'bac', sub: 'tb', rt: 'po', kw: 'emb tb', wt: 'LEAN', rd: 200,
+add({ id: 'emb', utd: '2026/11/16', utdSrc: 'Ethambutol: Drug information', ref: 'TB 指引', rrRef: 'UpToDate, 2026/11/16', g: 'Ethambutol', b: 'Myambutol (E-BUTOL)', zh: '醫肺必妥', st: '400 mg/tab', cls: 'bac', sub: 'tb', rt: 'po', kw: 'emb tb', wt: 'LEAN', rd: 200,
   L: [K(15, '3×/週 AD', { rng: [15, 20] }), K(15, 'q24h', { rng: [15, 20] })],
-  R: [[30, 1, 1], [0, 0, 0, 'CrCl <30：每週 3 次']], rr: { HD: [0, 0, 'after dialysis (AD) 給藥'], PD: [0, 0], CRRT: [0, 0, '資料有限'], SLED: [0, 0] },
-  tox: ['視神經炎：基準及每月視力、色覺檢查（腎功能不全風險高）'], nt: ['15–20 mg/kg/dose，四捨五入至 200 mg（0.5#）以利給藥。', TB_NOTE] });
+  R: [[30, 1, 1], [0, 0, 0, 'CrCl <30：每週 3 次']], rr: { HD: [0, 0, 'after dialysis (AD) 給藥；即使已調整劑量，仍可能發生視神經毒性'], PD: [0, 0], CRRT: [0, 0, '比照 CrCl <30（未經研究）；可行時 TDM'], SLED: [0, 0, '比照 CrCl <30，於 SLED 後給藥'] },
+  tox: ['視神經炎：基準及每月視力、色覺檢查（腎功能不全風險高）'], nt: ['嚴重腎功能不全或 RRT：可行時以 TDM 避免蓄積（視神經病變）；腎功能不全不建議使用每週 2–3 次之 DOT 方案（UpToDate）。', '15–20 mg/kg/dose，四捨五入至 200 mg（0.5#）以利給藥。', TB_NOTE] });
 
-add({ id: 'pza', ref: 'TB 指引', rrRef: 'UpToDate・SG', g: 'Pyrazinamide', b: 'Pyramide', zh: '匹井梭安', st: '500 mg/tab', cls: 'bac', sub: 'tb', rt: 'po', kw: 'pza tb', wt: 'LEAN', rd: 250,
+add({ id: 'pza', utd: '2026/11/16', utdSrc: 'Pyrazinamide: Drug information', ref: 'TB 指引', rrRef: 'UpToDate, 2026/11/16', g: 'Pyrazinamide', b: 'Pyramide', zh: '匹井梭安', st: '500 mg/tab', cls: 'bac', sub: 'tb', rt: 'po', kw: 'pza tb', wt: 'LEAN', rd: 250,
   L: [K(25, '3×/週 AD', { rng: [25, 30] }), K(25, 'q24h', { rng: [25, 30] })],
-  R: [[30, 1, 1], [0, 0, 0, 'CrCl <30：每週 3 次']], rr: { HD: [0, 0, 'after dialysis (AD) 給藥'], PD: [0, 0], CRRT: [0, 0, '資料有限'], SLED: [0, 0] },
-  tox: ['肝毒性', '高尿酸血症／痛風', '關節痛、皮疹'], nt: ['25–30 mg/kg/dose，四捨五入至 250 mg（0.5#）以利給藥。', TB_NOTE] });
+  R: [[30, 1, 1], [0, 0, 0, 'CrCl <30：每週 3 次']], rr: { HD: [0, 0, 'after dialysis (AD) 給藥；監測肝毒性'], PD: [0, 0, '監測肝毒性'], CRRT: [1, 1, '無資料；預期部分被 CRRT 移除，推測無需調整（每日給藥）'], SLED: [1, 1, 'PIRRT 日推測無需調整（每日給藥）；非 PIRRT 日比照 CrCl <30（每週 3 次）'] },
+  tox: ['肝毒性', '高尿酸血症／痛風', '關節痛、皮疹'], nt: ['CrCl <30 或體重 >90 kg：UpToDate 建議考慮 TDM。', '25–30 mg/kg/dose，四捨五入至 250 mg（0.5#）以利給藥。', TB_NOTE] });
 
-add({ id: 'rfb', ddi: RFB_DDI, ref: 'PI', rrRef: 'UpToDate・SG', g: 'Rifabutin', b: 'Mycobutin', zh: '淨核', st: '150 mg/cap', cls: 'bac', sub: 'tb', rt: 'po', kw: 'tb mac hiv',
-  L: [T(150, 'q24h', { t: '併 boosted PI' }), T(300, 'q24h')], R: [[30, 1, 1], [0, 0, 0, 'CrCl <30：減 50%']], rr: SAME(0, 0),
+add({ id: 'rfb', ddi: RFB_DDI, utd: '2026/11/16', utdSrc: 'Rifabutin: Drug information', ref: 'PI・UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', g: 'Rifabutin', b: 'Mycobutin', zh: '淨核', st: '150 mg/cap', cls: 'bac', sub: 'tb', rt: 'po', kw: 'tb mac hiv',
+  L: [T(150, 'q24h', { t: '併 boosted PI' }), T(300, 'q24h')], R: [[30, 1, 1, '無需依腎功能調整'], [0, 1, 1, 'CrCl <30：無需調整（AUC 與健康者相近）；仿單：疑似毒性時可考慮減 50%']], rr: SAME(1, 1, '無需調整；仿單：疑似毒性時可考慮減 50%'),
   tox: ['葡萄膜炎（併 clarithromycin／azole）', '嗜中性球低下', '肝毒性'], nt: [TB_NOTE] });
-add({ id: 'rina', ddi: RIF_DDI, ref: 'TB 指引', rrRef: 'UpToDate・SG', g: 'Rifampicin/Isoniazid', b: 'Rina', zh: '利肺', st: '300/150 mg/cap', cls: 'bac', sub: 'tb', rt: 'po', kw: 'rifinah tb combination',
+add({ id: 'rina', ddi: RIF_DDI, utd: '2026/11/16', utdSrc: 'Rifampin (rifampicin): Drug information', ref: 'TB 指引', rrRef: 'UpToDate, 2026/11/16', g: 'Rifampicin/Isoniazid', b: 'Rina', zh: '利肺', st: '300/150 mg/cap', cls: 'bac', sub: 'tb', rt: 'po', kw: 'rifinah tb combination',
   L: [X('2# QD 空腹', { t: '≥50 kg（RIF 600/INH 300 mg）' })], R: NA(0, 0, '無需依腎功能調整'), rr: SAME(0, 0), nt: ['<50 kg 需另行調配 RIF 450 mg。', TB_NOTE] });
-add({ id: 'akurit', ddi: RIF_DDI, ref: 'TB 指引', rrRef: 'UpToDate・SG', g: 'HERZ 四合一', b: 'AKuriT-4', zh: '立剋核-4', st: 'R150/H75/Z400/E275 mg/tab', cls: 'bac', sub: 'tb', rt: 'po', kw: 'tb combination fixed dose',
+add({ id: 'akurit', ddi: RIF_DDI, utd: '2026/11/16', utdSrc: 'Rifampin (rifampicin): Drug information', ref: 'TB 指引', rrRef: 'UpToDate, 2026/11/16', g: 'HERZ 四合一', b: 'AKuriT-4', zh: '立剋核-4', st: 'R150/H75/Z400/E275 mg/tab', cls: 'bac', sub: 'tb', rt: 'po', kw: 'tb combination fixed dose',
   L: [X('', { fn: (c, W) => (W < 38 ? 2 : W < 55 ? 3 : W <= 70 ? 4 : 5), u: '#', f: 'QD', t: '30–37 kg 2#；38–54 kg 3#；55–70 kg 4#；≥71 kg 5#' })],
   R: [[30, 0, 0], [0, -1, -1, 'CrCl <30：複方不適用（PZA/EMB 需改每週 3 次），請改單方']], rr: { HD: [-1, -1, '改單方'], PD: [-1, -1], CRRT: [-1, -1], SLED: [-1, -1] }, nt: [TB_NOTE] });
-add({ id: 'sm', ref: 'SG', rrRef: 'UpToDate・SG', g: 'Streptomycin', b: 'Streptomycin', zh: '鏈黴素', st: '1,000 mg/vial', cls: 'bac', sub: 'tb', rt: 'inj', kw: 'aminoglycoside tb plague', wt: 'LEAN', rd: 50,
+add({ id: 'sm', utd: '2026/11/16', utdSrc: 'Streptomycin: Drug information', ref: 'SG', rrRef: 'UpToDate, 2026/11/16', g: 'Streptomycin', b: 'Streptomycin', zh: '鏈黴素', st: '1,000 mg/vial', cls: 'bac', sub: 'tb', rt: 'inj', kw: 'aminoglycoside tb plague', wt: 'LEAN', rd: 50,
   L: [K(15, '每週 2–3 次'), K(10, 'q24h', { mx: 750, t: '>59 歲（最大 750 mg）' }), K(15, 'q24h', { mx: 1000, t: '最大 1,000 mg' })],
   R: [[30, 2, 2], [0, 0, 0, 'CrCl <30：12–15 mg/kg 每週 2–3 次']],
   hook: (c, i) => c.age > 59 && i === 2 ? { i: 1, n: '年齡 >59 歲：10 mg/kg（最大 750 mg）' } : null,
@@ -948,36 +957,39 @@ add({ id: 'sm', ref: 'SG', rrRef: 'UpToDate・SG', g: 'Streptomycin', b: 'Strept
 /* ================= 抗黴菌 ================= */
 const AZ_TOX = ['QTc 延長', '肝毒性', 'CYP3A4 交互作用'];
 const FLC_CM_REF = 'Li Z, et al. Mycoses 2019;62:686–691（PMID 30470259, doi:10.1111/myc.12944）：非 HIV、非移植 cryptococcal meningitis fluconazole 400–800 mg/day + flucytosine 100 mg/kg/day 療效與 AmB + flucytosine 相當，不良反應顯著較少。';
-add({ id: 'flciv', ref: 'PI・IDSA', rrRef: 'UpToDate・SG', naD: [172.4, 100], g: 'Fluconazole', b: 'Diflucan', zh: '泰復肯', st: '100 mg/50 mL/vial', cls: 'fun', sub: 'azole', rt: 'inj', kw: 'triazole candida cryptococcus', wt: 'TBW', rd: 50,
+add({ id: 'flciv', utd: '2026/11/16', utdSrc: 'Fluconazole: Drug information', ref: 'PI・IDSA', rrRef: 'UpToDate, 2026/11/16', naD: [172.4, 100], g: 'Fluconazole', b: 'Diflucan', zh: '泰復肯', st: '100 mg/50 mL/vial', cls: 'fun', sub: 'azole', rt: 'inj', kw: 'triazole candida cryptococcus', wt: 'TBW', rd: 50,
   modes: [
     { k: 'cand', lab: 'Candida 感染', L: [T(200, 'q24h'), T(400, '每次 AD'), T(400, 'q24h'), T(800, 'q24h', { hd: 1, t: 'C. glabrata (SDD)／CRRT' })],
       R: [[51, 2, 2, '腎功能正常：固定 400 mg QD'], [0, 0, 0, 'CrCl ≤50：loading 後維持劑量減 50%']],
-      rr: { HD: [1, 1, '400 mg AD (TIW)，或 200 mg QD'], PD: [0, 0], CRRT: [3, 3, '400–800 mg QD（高流量 CVVHDF 可至 800–1,200 mg）'], SLED: [2, 2, '資料有限'] },
+      rr: { HD: [1, 1, 'TIW，透析後給予全量維持劑量', '或 200 mg QD'], PD: [0, 0, 'Loading 全量後，維持劑量減 50%'], CRRT: [3, 3, 'Loading 800 mg，之後 800 mg/day（分 1–2 次）；無尿者無腎小管再吸收，清除為健康者 1.5–2.3 倍'], SLED: [2, 2, 'Loading 全量後，400 mg QD 或 Q12H（依病原、MIC 與嚴重度）'] },
       ld: { k: () => 12, mx: 800, rd: 50, t: '12 mg/kg（上限 800 mg），不受腎功能影響' } },
-    { k: 'cm5fc', lab: 'cryptococcal meningitis：併 flucytosine（非 HIV／AmB 不耐）', L: [T(400, 'q24h'), T(800, 'q24h', { hd: 1 })],
-      R: [[51, 1, 1], [0, 0, 0, 'CrCl ≤50：減 50%']], rr: { HD: [1, 1, 'AD 給藥'], PD: [0, 0], CRRT: [1, 1], SLED: [1, 1, '資料有限'] },
+    { k: 'cm5fc', lab: 'cryptococcal meningitis：併 flucytosine（非 HIV／AmB 不耐）', L: [T(400, 'q24h'), T(800, '每次 AD'), T(800, 'q24h', { hd: 1 }), T(1200, 'q24h', { t: 'CRRT' })],
+      R: [[51, 2, 2], [0, 0, 0, 'CrCl ≤50：減 50%']], rr: { HD: [1, 1, 'TIW，透析後給予全量', '或 400 mg QD'], PD: [0, 0, 'Loading 全量後減 50%'], CRRT: [3, 3, 'Loading 1,200 mg，之後 1,200 mg/day（分 1–2 次）'], SLED: [2, 2, '400 mg Q12H（UpToDate PIRRT：400 mg QD–Q12H）'] },
       nt: ['誘導期 fluconazole 800 mg QD + flucytosine 100 mg/kg/day（分 Q6H）至少 2 週，之後 fluconazole 400–800 mg QD 鞏固 8 週。', FLC_CM_REF] },
-    { k: 'ambi', lab: 'cryptococcal meningitis：單劑高劑量 L-AmB + flucytosine（AMBITION）', L: [T(600, 'q24h'), T(1200, 'q24h', { hd: 1 })],
-      R: [[51, 1, 1], [0, 0, 0, 'CrCl ≤50：減 50%']], rr: { HD: [1, 1, 'AD 給藥'], PD: [0, 0], CRRT: [1, 1], SLED: [1, 1, '資料有限'] },
+    { k: 'ambi', lab: 'cryptococcal meningitis：單劑高劑量 L-AmB + flucytosine（AMBITION）', L: [T(600, 'q24h'), T(1200, '每次 AD'), T(1200, 'q24h', { hd: 1 })],
+      R: [[51, 2, 2], [0, 0, 0, 'CrCl ≤50：減 50%']], rr: { HD: [1, 1, 'TIW，透析後給予全量', '或 600 mg QD'], PD: [0, 0, 'Loading 全量後減 50%'], CRRT: [2, 2, 'UpToDate CRRT 建議最高列為 1,200 mg/day'], SLED: [2, 2, '資料有限（UpToDate PIRRT：400 mg QD–Q12H）'] },
       nt: ['Liposomal AmB 10 mg/kg 單劑 + flucytosine 100 mg/kg/day ×14 天 + fluconazole 1,200 mg QD ×14 天；之後 fluconazole 800 mg QD ×8 週鞏固、200 mg QD 維持（AMBITION-cm, Jarvis JN, NEJM 2022；WHO 2022 指引）。'] }],
   aki: 'w', ob: '肥胖：以 TBW 計算（Payne 2016），最大可至 1,200 mg/day。',
   tox: [...AZ_TOX, 'CYP2C9／2C19 抑制（warfarin、phenytoin）'],
   inf: { rb: 50, t: [0.5, 1, 2, 4, 6], ti: 2, dil: { '預混輸液': '室溫保存' }, note: '輸注速率 ≤200 mg/h' } });
 
-add({ id: 'flcpo', ref: 'PI', rrRef: 'UpToDate・SG', ind: ['oropharyngeal／esophageal candidiasis', 'invasive candidiasis 降階（≈6 mg/kg）'], g: 'Fluconazole', b: 'Diflucan', zh: '泰復肯', st: '150 mg/cap', cls: 'fun', sub: 'azole', rt: 'po', kw: 'triazole candida vvc',
-  L: [X('150 mg 單次', { t: 'vulvovaginal candidiasis' }), T(150, 'q48h'), T(150, 'q24h'), T(300, 'q24h'), T(450, 'q24h'), T(600, 'q24h', { hd: 1 })],
-  R: [[51, 3, 4], [0, 2, 3, 'Loading 後減 50%']], rr: { HD: [3, 3, 'after dialysis (AD) 給藥'], PD: [1, 2], CRRT: [4, 5], SLED: [3, 3] },
+add({ id: 'flcpo', utd: '2026/11/16', utdSrc: 'Fluconazole: Drug information', ref: 'PI', rrRef: 'UpToDate, 2026/11/16', ind: ['oropharyngeal／esophageal candidiasis', 'invasive candidiasis 降階（≈6 mg/kg）'], g: 'Fluconazole', b: 'Diflucan', zh: '泰復肯', st: '150 mg/cap', cls: 'fun', sub: 'azole', rt: 'po', kw: 'triazole candida vvc',
+  L: [X('150 mg 單次', { t: 'vulvovaginal candidiasis' }), T(150, 'q48h'), T(300, '每次 AD'), T(150, 'q24h'), T(450, '每次 AD'), T(300, 'q24h'), T(450, 'q24h'), T(600, 'q24h', { hd: 1 }), T(900, 'q24h', { t: 'CRRT' })],
+  R: [[51, 5, 6], [0, 3, 5, 'Loading 後減 50%']], rr: { HD: [2, 4, 'TIW，透析後給予全量', ['或 150 mg QD', '或 300 mg QD']], PD: [3, 5, 'Loading 全量後減 50%'], CRRT: [7, 8, '約為常規劑量 2 倍（UpToDate）'], SLED: [5, 6, 'Loading 全量後依常規劑量（UpToDate PIRRT：400 mg QD–Q12H）'] },
   ld: { k: () => 12, mx: 1600, rd: 150, t: '侵襲性感染首劑 12 mg/kg' }, aki: 'w', tox: AZ_TOX });
 
-add({ id: 'itr', ref: 'PI', rrRef: 'UpToDate・SG', ind: ['一般劑量', '侵襲性感染（含 loading）'], g: 'Itraconazole', b: 'Sporanox (Icomein)', zh: '易克黴', st: '100 mg/cap', cls: 'fun', sub: 'azole', rt: 'po', kw: 'triazole histoplasma aspergillus',
+add({ id: 'itr', utd: '2026/11/16', utdSrc: 'Itraconazole: Drug information', ref: 'PI', rrRef: 'UpToDate, 2026/11/16', ind: ['一般劑量', '侵襲性感染（含 loading）'], g: 'Itraconazole', b: 'Sporanox (Icomein)', zh: '易克黴', st: '100 mg/cap', cls: 'fun', sub: 'azole', rt: 'po', kw: 'triazole histoplasma aspergillus',
   L: [T(100, 'q24h'), T(200, 'q24h'), T(200, 'q12h'), X('200 mg q8h ×3 天 → 200 mg q12h', { hd: 1, t: '侵襲性感染 loading' })],
   R: NA(1, 3, '口服膠囊無需依腎功能調整'), rr: SAME(1, 3), tox: [...AZ_TOX, '心衰竭（負性肌力作用）', '低血鉀、高血壓'],
-  nt: ['膠囊需與食物及酸性飲料併服；避免 PPI。'] });
+  nt: ['UpToDate：起始不依腎功能或 RRT 調整，之後依 trough 調整；本院無法檢測 itraconazole 濃度。', '膠囊需與食物及酸性飲料併服；避免 PPI。'] });
 
-add({ id: 'voriv', ref: 'PI', rrRef: 'UpToDate・SG', naD: [217.6, 200], tdmIcon: 1, ind: ['Candida（3 mg/kg）', 'Aspergillus／侵襲性黴菌（4 mg/kg）'], indDef: 2, g: 'Voriconazole', b: 'Vfend', zh: '黴飛', st: '200 mg/vial', cls: 'fun', sub: 'azole', rt: 'inj', kw: 'triazole aspergillus', wt: 'VORI', rd: 10,
+const VORI_CP = (c, i) => c.cp === 'A' || c.cp === 'B' ? { i, n: `Child-Pugh ${c.cp}（既有肝硬化）：loading 全量，維持劑量減為 50%；依 TDM 調整（UpToDate）` } : c.cp === 'C' ? { i, n: 'Child-Pugh C（既有肝硬化）：loading 減為 50%，維持劑量減為 25%；依 TDM 調整（UpToDate）' } : null;
+add({ id: 'voriv', utd: '2026/11/16', utdSrc: 'Voriconazole: Drug information', ref: 'PI', rrRef: 'UpToDate, 2026/11/16', naD: [217.6, 200], tdmIcon: 1, ind: ['Candida（3 mg/kg）', 'Aspergillus／侵襲性黴菌（4 mg/kg）'], indDef: 2, g: 'Voriconazole', b: 'Vfend', zh: '黴飛', st: '200 mg/vial', cls: 'fun', sub: 'azole', rt: 'inj', kw: 'triazole aspergillus', wt: 'VORI', rd: 10,
   L: [K(3, 'q12h'), K(4, 'q12h'), K(5, 'q12h', { hd: 1, t: 'TDM 指引下' })],
   R: [[50, 0, 1], [0, 0, 1, 'CrCl <50：SBECD 蓄積，可評估改口服；若效益大於風險可續用 IV 並監測 Scr']],
-  rr: { HD: [1, 1, 'SBECD 可被 HD 移除；建議改口服'], PD: [1, 1, '建議改口服'], CRRT: [1, 1, 'CRRT 可移除 SBECD (~85%)；4 mg/kg q12h'], SLED: [1, 1, '資料有限'] },
+  rr: { HD: [0, 1, '建議改口服或其他抗黴菌藥（SBECD 暴露仍增加）；若用 IV 需審慎並儘早改口服'], PD: [0, 1, '建議改口服或其他抗黴菌藥；若用 IV 需審慎'], CRRT: [0, 1, 'CRRT 可移除 SBECD，可考慮常規 IV 劑量；仍以口服優先'], SLED: [0, 1, '必要時可用常規 IV 劑量，頻繁監測腎功能並儘早改口服'] },
+  arc: { i: 1, t: 'ARC：起始使用該適應症最高劑量，之後依 TDM 調整。' },
+  hook: (c, i) => VORI_CP(c, i),
   ld: { k: () => 6, rd: 10, t: '' }, ldm: 'q12h × 2 劑（第 1 天），第 2 天起（第 3 劑）開始維持劑量',
   hook: (c, i) => (c.cp === 'A' || c.cp === 'B') ? { i: 0, n: `Child-Pugh ${c.cp}：Loading 不變，維持劑量減 50%（約 2 mg/kg q12h）` } : c.cp === 'C' ? { i: 0, n: 'Child-Pugh C：無資料，審慎使用並密切 TDM' } : null,
   tdm: 'Trough 1–5.5 mg/L（第 3–5 天；invasive aspergillosis 2–5）；CYP2C19 基因型影響大。',
@@ -985,40 +997,40 @@ add({ id: 'voriv', ref: 'PI', rrRef: 'UpToDate・SG', naD: [217.6, 200], tdmIcon
   tox: ['視覺異常、幻覺／腦病變 (encephalopathy)（高濃度）', '肝毒性', 'QTc 延長', '光敏感、皮膚鱗狀細胞癌（長期）', '骨膜炎／氟中毒（長期）'],
   ex: 'ECMO：迴路吸附明顯，loading 與維持劑量常需提高，依 TDM 調整。',
   inf: { dil: { NS: '冷藏 24 h', D5W: '冷藏 24 h', LR: '相容' }, v: [100, 250], t: [1, 2], ti: 1, c: [0.5, 5], note: '以 19 mL SWFI 溶解（10 mg/mL）；輸注速率 ≤3 mg/kg/h' } });
-add({ id: 'vorpo', ref: 'PI', rrRef: 'UpToDate・SG', tdmIcon: 1, g: 'Voriconazole', b: 'Vfend', zh: '黴飛', st: '200 mg/tab', cls: 'fun', sub: 'azole', rt: 'po', kw: 'triazole aspergillus', wt: 'VORI', rd: 100,
+add({ id: 'vorpo', utd: '2026/11/16', utdSrc: 'Voriconazole: Drug information', ref: 'PI', rrRef: 'UpToDate, 2026/11/16', tdmIcon: 1, g: 'Voriconazole', b: 'Vfend', zh: '黴飛', st: '200 mg/tab', cls: 'fun', sub: 'azole', rt: 'po', kw: 'triazole aspergillus', wt: 'VORI', rd: 100,
   L: [K(3, 'q12h'), K(4, 'q12h'), K(5, 'q12h', { hd: 1, t: 'TDM 指引下' })], R: NA(1, 1, '口服無需依腎功能調整'), rr: SAME(1, 1),
   ld: { k: () => 6, rd: 100 }, ldm: 'q12h × 2 劑（第 1 天），第 2 天起開始維持劑量',
-  hook: (c, i) => (c.cp === 'A' || c.cp === 'B') && i >= 1 ? { i: 0, n: `Child-Pugh ${c.cp}：維持劑量減 50%（約 2 mg/kg）` } : null,
+  hook: (c, i) => VORI_CP(c, i),
   tdm: 'Trough 1–5.5 mg/L（第 3–5 天）。', tox: ['視覺異常、幻覺', '肝毒性', 'QTc 延長', '光敏感'],
   nt: ['以體重計算並四捨五入至 100 mg（0.5#）以利給藥；仿單固定劑量為 ≥40 kg loading 400 mg Q12H ×2 → 200 mg Q12H（可增至 300 mg）。', '飯前 1 h 或飯後 1 h 服用。'] });
 
-add({ id: 'pos', ref: 'PI', rrRef: 'UpToDate・SG', tdmIcon: 1, g: 'Posaconazole', b: 'Posanol', zh: '波賽特', st: '100 mg/DR tab', cls: 'fun', sub: 'azole', rt: 'po', kw: 'triazole mucor prophylaxis',
+add({ id: 'pos', utd: '2026/11/16', utdSrc: 'Posaconazole: Drug information', ref: 'PI', rrRef: 'UpToDate, 2026/11/16', tdmIcon: 1, g: 'Posaconazole', b: 'Posanol', zh: '波賽特', st: '100 mg/DR tab', cls: 'fun', sub: 'azole', rt: 'po', kw: 'triazole mucor prophylaxis',
   L: [T(300, 'q24h'), T(400, 'q24h', { hd: 1, t: 'TDM 指引下' })], R: NA(0, 0, '無需依腎功能調整'), rr: SAME(0, 0), ld: 'Loading 300 mg（3#）', ldm: 'q12h × 2 劑（第 1 天），第 2 天起 300 mg（3#）QD',
   tdm: 'Trough：預防 ≥0.7 mg/L；治療 ≥1–1.25 mg/L。', tox: [...AZ_TOX, '假性醛固酮過多症 (pseudohyperaldosteronism)（高血壓、低血鉀）'], ex: 'ECMO：高脂溶性，迴路吸附可能明顯，建議 TDM。', nt: ['與食物併服。'] });
 
-const ISA = { tdmIcon: 1, cls: 'fun', sub: 'azole', kw: 'triazole isavuconazonium mucor aspergillus', L: [T(200, 'q24h')], R: NA(0, 0, '無需依腎功能調整（不含 SBECD）'), rr: SAME(0, 0),
+const ISA = { tdmIcon: 1, cls: 'fun', sub: 'azole', kw: 'triazole isavuconazonium mucor aspergillus', L: [T(200, 'q24h')], R: NA(0, 0, '無需依腎功能調整（不含 SBECD）'), rr: { HD: [0, 0, '無需調整'], PD: [0, 0, '無需調整'], CRRT: [0, 0, '起始無需調整；重症 RRT 病人曾報告濃度偏低，建議 TDM（本院可測）'], SLED: [0, 0, '起始無需調整；可能吸附於 PIRRT 管路，建議 TDM（本院可測）'] },
   ld: (c, i, d) => d.rt === 'po' ? 'Loading 200 mg（2#）' : 'Loading 200 mg', ldm: 'q8h × 6 劑（共 48 h），第 3 天起 200 mg QD（末次 loading 後 12–24 h 開始）', tox: ['QTc 縮短（家族性短 QT 禁用）', '肝毒性', '輸注反應'], tdm: '本院可檢測。建議第 5–7 天測 trough，目標約 2–5 mg/L（>5 mg/L 與肝毒性、GI 不良反應相關）；重症、ECMO、肥胖、治療失敗或疑似毒性時尤其建議。' };
-add({ ...ISA, id: 'isaiv', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Isavuconazole', b: 'Cresemba', zh: '驅黴霸', st: '200 mg/vial (= isavuconazonium 372 mg)', rt: 'inj',
+add({ ...ISA, id: 'isaiv', utd: '2026/11/16', utdSrc: 'Isavuconazole (isavuconazonium sulfate): Drug information', ref: 'PI', rrRef: 'UpToDate, 2026/11/16', g: 'Isavuconazole', b: 'Cresemba', zh: '驅黴霸', st: '200 mg/vial (= isavuconazonium 372 mg)', rt: 'inj',
   inf: { dil: { NS: '冷藏 24 h、室溫 6 h', D5W: '同 NS' }, v: [250], t: [1], ti: 0, note: '以 5 mL SWFI 溶解；需 0.2–1.2 μm 線上過濾器，輸注 ≥1 h' } });
-add({ ...ISA, id: 'isapo', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Isavuconazole', b: 'Cresemba', zh: '驅黴霸', st: '100 mg/cap（每劑 2 粒）', rt: 'po' });
+add({ ...ISA, id: 'isapo', utd: '2026/11/16', utdSrc: 'Isavuconazole (isavuconazonium sulfate): Drug information', ref: 'PI', rrRef: 'UpToDate, 2026/11/16', g: 'Isavuconazole', b: 'Cresemba', zh: '驅黴霸', st: '100 mg/cap（每劑 2 粒）', rt: 'po' });
 
-add({ id: 'anf', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Anidulafungin', b: 'Eraxis', zh: '助黴飛', st: '100 mg/vial', cls: 'fun', sub: 'echino', rt: 'inj', kw: 'echinocandin candida',
+add({ id: 'anf', utd: '2026/11/16', utdSrc: 'Anidulafungin: Drug information', ref: 'PI', rrRef: 'UpToDate, 2026/11/16', g: 'Anidulafungin', b: 'Eraxis', zh: '助黴飛', st: '100 mg/vial', cls: 'fun', sub: 'echino', rt: 'inj', kw: 'echinocandin candida',
   L: [T(50, 'q24h', { t: 'esophageal candidiasis' }), T(100, 'q24h', { t: 'candidemia' }), T(125, 'q24h', { t: '體重 >140 kg（+25%）' }), T(200, 'q24h', { hd: 1, t: 'Candida 心內膜炎' })],
   R: NA(1, 1, '無需依腎功能調整'), rr: SAME(1, 1, '不被透析移除'),
   hook: (c, i) => c.wt > 140 && i === 1 ? { i: 2, n: '體重 >140 kg：loading 與維持劑量各增加 25%（Wasmann 2018）' } : null,
   ld: (c) => c.wt > 140 ? 'Loading 250 mg' : 'Loading 200 mg（esophageal candidiasis 100 mg）',
   tox: ['輸注相關組織胺反應（速率過快）', '肝功能異常'],
-  inf: { dil: { NS: '室溫 48 h', D5W: '室溫 48 h' }, v: [100, 250], t: [1.5, 3], ti: 0, c: [0, 0.77], note: '100 mg 以 30 mL SWFI 溶解；輸注速率 ≤1.1 mg/min' } });
+  inf: { dil: { NS: '室溫 48 h', D5W: '室溫 48 h' }, v: [100, 250], t: [1.5, 3], ti: 0, c: [0, 0.77], note: '100 mg 以 30 mL SWFI 溶解；輸注速率 ≤1.1 mg/min' }, nt: ['肥胖（UpToDate）：BMI ≥40，或 BMI 30–39 且 TBW >120 kg：第 1 天 300 mg，之後 150 mg QD。'] });
 
-add({ id: 'mcf', ref: 'PI', rrRef: 'UpToDate・SG', ind: ['candidemia（100 mg）', 'esophageal candidiasis／重症（150 mg）'], g: 'Micafungin', b: 'Mycamine (Myfungin)', zh: '米方淨', st: '50 mg/vial', cls: 'fun', sub: 'echino', rt: 'inj', kw: 'echinocandin candida',
+add({ id: 'mcf', utd: '2026/11/16', utdSrc: 'Micafungin: Drug information', ref: 'PI', rrRef: 'UpToDate, 2026/11/16', ind: ['candidemia（100 mg）', 'esophageal candidiasis／重症（150 mg）'], g: 'Micafungin', b: 'Mycamine (Myfungin)', zh: '米方淨', st: '50 mg/vial', cls: 'fun', sub: 'echino', rt: 'inj', kw: 'echinocandin candida',
   L: [T(50, 'q24h', { t: '預防' }), T(100, 'q24h', { t: 'candidemia' }), T(150, 'q24h', { t: 'esophageal candidiasis／肥胖重症' }), T(200, 'q24h', { hd: 1, t: 'BW 115–185 kg／ECMO' })],
-  R: NA(1, 2, '無需依腎功能調整'), rr: { HD: [1, 2], PD: [1, 2], CRRT: [2, 3, '150–200 mg q24h (Honore 2018)'], SLED: [1, 2] },
-  hook: (c, i) => c.wt >= 115 && i >= 1 ? { i: 3, n: '體重 ≥115 kg：建議 200 mg q24h（Maseda 2018）' } : null,
-  ob: '肥胖重症（Maseda 2018）：C. albicans <115 kg 150 mg、115–185 kg 200 mg；Payne 2016 建議 dose (mg) ≈ 體重 (kg) + 42。',
+  R: NA(1, 2, '無需依腎功能調整'), rr: { HD: [1, 2], PD: [1, 2], CRRT: [2, 3, '150–200 mg QD（Honore PM, Crit Care 2018；UpToDate 為無需調整）'], SLED: [1, 2] },
+  hook: (c, i) => c.obese && i >= 1 ? (c.wt >= 120 ? { i: 3, n: 'BMI ≥30 且體重 ≥120 kg：200 mg QD（C. albicans；MIC >0.032 mg/L 時 PD 可能不足）（UpToDate）' } : { i: Math.max(i, 2), n: 'BMI ≥30 且體重 <120 kg：C. albicans 150 mg QD；non-albicans 200 mg QD（UpToDate）' }) : null,
+  ob: '肥胖（BMI ≥30；UpToDate）：C. albicans 治療 — 體重 ≥120 kg 200 mg QD、<120 kg 150 mg QD；non-albicans 200 mg QD；MIC >0.032 mg/L 時 PD 可能不足，考慮其他方案；預防等其他適應症證據不足。',
   tox: ['肝功能異常', '溶血（罕見）'], ex: 'ECMO：Vd 與清除率增加，成人可考慮 200 mg q24h。',
   inf: { dil: { NS: '室溫 24 h（避光）', D5W: '同 NS' }, v: [100], t: [1], ti: 0, note: '以 5 mL NS 溶解，輕旋勿搖；輸注 1 h，避光' } });
 
-add({ id: 'amb', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Amphotericin B deoxycholate', b: 'Fungizone', zh: '防治黴', st: '50 mg/vial', cls: 'fun', sub: 'polyene', rt: 'inj', kw: 'polyene conventional', wt: 'TBW', rd: 5,
+add({ id: 'amb', utd: '2026/11/16', utdSrc: 'Amphotericin B deoxycholate (conventional): Drug information', ref: 'PI', rrRef: 'UpToDate, 2026/11/16', g: 'Amphotericin B deoxycholate', b: 'Fungizone', zh: '防治黴', st: '50 mg/vial', cls: 'fun', sub: 'polyene', rt: 'inj', kw: 'polyene conventional', wt: 'TBW', rd: 5,
   L: [K(0.7, 'q24h', { rng: [0.7, 1], t: '最大 1.5 mg/kg/day' })],
   R: NA(0, 0, '不需依腎功能調整；但具腎毒性，腎功能惡化時改用脂質劑型'), rr: SAME(0, 0, '不被透析移除'), aki: 'n',
   care: { '前置給藥（premedication）': ['給藥前 30–60 min：acetaminophen 500 mg/tab 1# PO stat ± diphenhydramine 30 mg IV stat', '曾發生嚴重輸注反應：hydrocortisone 25–50 mg IV stat'],
@@ -1026,101 +1038,111 @@ add({ id: 'amb', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Amphotericin B deoxychol
     '監測': ['Scr、BUN：治療前，之後每日至每 2 日', 'K、Mg：每日；常需補充（KCl、MgSO₄）', 'CBC：每週（貧血）', '輸注期間生命徵象：發燒、寒顫、低血壓、心律不整（高血鉀或快速輸注）'] },
   tox: ['腎毒性（劑量與累積劑量相關）', '低血鉀、低血鎂', '輸注反應（寒顫、發燒、低血壓）', '貧血'],
   inf: { dil: { D5W: '唯一相容溶劑（pH >4.2）；配製後避光，24 h 內使用' }, v: [250, 500, 1000], t: [6, 8, 12, 24], ti: 0, c: [0, 0.1], note: '周邊 ≤0.1 mg/mL（中心 ≤0.25）；預設 6 h，可延長至 8／12／24 h（持續輸注可降低腎毒性與輸注反應）；遇 NS 會沉澱，輸注前後以 D5W 沖管' },
-  nt: ['建議 0.7–1 mg/kg/day（TBW），四捨五入至 5 mg。'] });
+  nt: ['既有腎功能不全（含仍有殘餘腎功能之 HD／PD）優先使用 lipid 劑型（UpToDate）。', '治療中腎毒性：考慮改用 lipid 劑型或其他藥物；若續用可暫停 24–48 h 後以半量重啟，再逐步調至最大耐受量（嚴重感染急性期避免）（UpToDate）。', '建議 0.7–1 mg/kg/day（TBW），四捨五入至 5 mg。'] });
 
-add({ id: 'lamb', ref: 'PI・ECMM 2019', rrRef: 'UpToDate・SG', g: 'Amphotericin B liposomal', b: 'Ampholipad', zh: '安畢黴微脂粒', st: '50 mg/vial', cls: 'fun', sub: 'polyene', rt: 'inj', kw: 'ambisome lipid mucor cryptococcus', wt: 'TBW', rd: 50,
+add({ id: 'lamb', utd: '2026/11/16', utdSrc: 'Liposomal amphotericin B: Drug information', ref: 'PI・ECMM 2019', rrRef: 'UpToDate, 2026/11/16', g: 'Amphotericin B liposomal', b: 'Ampholipad', zh: '安畢黴微脂粒', st: '50 mg/vial', cls: 'fun', sub: 'polyene', rt: 'inj', kw: 'ambisome lipid mucor cryptococcus', wt: 'TBW', rd: 50,
   modes: [
     { k: 'gen', lab: '一般侵襲性黴菌感染（3–5 mg/kg）', L: [K(3, 'q24h', { rng: [3, 5] })], R: NA(0, 0, '無需依腎功能調整'), rr: SAME(0, 0, '不被透析移除') },
     { k: 'muc', lab: 'Mucormycosis（CNS 侵犯或 SOT）', L: [K(10, 'q24h', { hd: 1 })], R: NA(0, 0, '無需依腎功能調整'), rr: SAME(0, 0, '不被透析移除'),
       nt: ['Mucormycosis 合併 CNS 侵犯或器官移植：10 mg/kg QD（ECMM/MSG ERC 2019 Global Guideline for Mucormycosis）。'] },
     { k: 'ambi', lab: 'cryptococcal meningitis：單劑高劑量（併 flucytosine + fluconazole）', L: [K(10, '單次 stat', { hd: 1 })], R: NA(0, 0, '無需依腎功能調整'), rr: SAME(0, 0, '不被透析移除'),
       nt: ['單劑 10 mg/kg + flucytosine 100 mg/kg/day ×14 天 + fluconazole 1,200 mg QD ×14 天（AMBITION-cm, Jarvis JN, NEJM 2022；WHO 2022）。'] }],
-  ob: '肥胖：可考慮 AdjBW 或 TBW（Payne 2016）；高劑量並未改善 aspergillosis 預後。',
+  ob: '肥胖：以 TBW 計算；部分專家建議多數適應症之劑量體重上限 100 kg（劑量越高毒性風險越高），但 life-threatening invasive fungal infection 宜逐案評估（UpToDate）。高劑量並未改善 aspergillosis 預後。',
   tox: ['腎毒性（低於傳統劑型）', '低血鉀、低血鎂', '輸注反應（胸痛、背痛、缺氧）'],
   inf: { dil: { D5W: '唯一相容溶劑；配製後冷藏 24 h' }, v: [250, 500], t: [1, 2], ti: 1, c: [0.2, 2], note: '遇 NS 會沉澱；Ampholipad 與 AmBisome 為不同微脂粒製劑，劑量參照各自仿單' },
-  nt: ['劑量四捨五入至 50 mg（一瓶）以避免浪費。'] });
+  nt: ['治療中 AKI：考慮停藥改用其他抗黴菌藥；若續用可暫停或減量（嚴重感染急性期避免）（UpToDate）。', '劑量四捨五入至 50 mg（一瓶）以避免浪費。'] });
 
-add({ id: '5fc', ref: 'SG', rrRef: 'UpToDate・SG', g: 'Flucytosine', b: 'Flusine', zh: '弗路欣', st: '500 mg/tab', cls: 'fun', sub: 'othf', rt: 'po', kw: '5-fc cryptococcus', wt: 'OB', rd: 250,
-  L: [K(25, 'q48h'), K(25, 'q24h'), K(25, 'q12h'), K(25, 'q6h')],
-  R: [[40, 3, 3], [20, 2, 2], [10, 1, 1], [0, 0, 0]], rr: { HD: [0, 0, '25–50 mg/kg AD (TIW)'], PD: [1, 1], CRRT: [2, 2], SLED: [1, 1, '資料有限'] }, aki: 'n', tox: ['骨髓抑制（劑量相關）：CBC 每週 2 次', '肝毒性', '噁心腹瀉'] });
+add({ id: '5fc', utd: '2026/11/16', utdSrc: 'Flucytosine: Drug information', ref: 'SG', rrRef: 'UpToDate, 2026/11/16', g: 'Flucytosine', b: 'Flusine', zh: '弗路欣', st: '500 mg/tab', cls: 'fun', sub: 'othf', rt: 'po', kw: '5-fc cryptococcus', wt: 'OB', rd: 250,
+  L: [K(25, 'TIW AD', { rng: [25, 50] }), K(25, 'q48h'), K(25, 'q24h'), K(25, 'q12h'), K(25, 'q6h')],
+  R: [[40, 4, 4], [20, 3, 3], [10, 2, 2], [0, 1, 1]], rr: { HD: [0, 0, '透析日於 after dialysis (AD) 給藥'], PD: [1, 1, '資料有限；個案：隱球菌腦膜炎 25 mg/kg QD 可耐受'], CRRT: [3, 3, '25 mg/kg Q12–24H'], SLED: [2, 2, '25 mg/kg Q12–24H，其中一劑於 PIRRT 後給予'] }, aki: 'n', tox: ['骨髓抑制（劑量相關）：CBC 每週 2 次', '肝毒性', '噁心腹瀉'], nt: ['UpToDate 建議 TDM；本院無法檢測 flucytosine 濃度，請依臨床反應與 CBC 監測。', 'ARC：無資料，以常規劑量起始。'] });
 
 /* ================= 抗病毒 ================= */
-add({ id: 'acviv', ref: 'PI・UpToDate', rrRef: 'UpToDate・SG', naD: [26, 250], ind: ['黏膜皮膚 HSV（5 mg/kg）', 'HSV 腦炎／播散性 VZV（10 mg/kg）'], indDef: 2, g: 'Acyclovir', b: 'Zovirax', zh: '熱威樂素', st: '250 mg/vial', cls: 'vir', sub: 'herpes', rt: 'inj', kw: 'aciclovir hsv vzv encephalitis', wt: 'OB', rd: 50,
+add({ id: 'acviv', utd: '2026/11/16', utdSrc: 'Acyclovir (systemic): Drug information', ref: 'PI・UpToDate', rrRef: 'UpToDate, 2026/11/16', naD: [26, 250], ind: ['黏膜皮膚 HSV（5 mg/kg）', 'HSV 腦炎／播散性 VZV（10 mg/kg）'], indDef: 2, g: 'Acyclovir', b: 'Zovirax', zh: '熱威樂素', st: '250 mg/vial', cls: 'vir', sub: 'herpes', rt: 'inj', kw: 'aciclovir hsv vzv encephalitis', wt: 'ACV', rd: 50,
   L: [K(2.5, 'q24h'), K(5, 'q24h'), K(5, 'q12h'), K(10, 'q24h'), K(5, 'q8h', { t: '黏膜皮膚 HSV' }), K(10, 'q12h'), K(10, 'q8h', { hd: 1, t: 'HSV 腦炎／播散性 VZV' })],
   R: [[51, 4, 6], [25, 2, 5], [10, 1, 3], [0, 0, 1, '50% 劑量 q24h']],
-  rr: { HD: [0, 1, '2.5–5 mg/kg q24h，after dialysis (AD) 給藥'], PD: [0, 1], CRRT: [2, 5, '5–10 mg/kg q12–24h'], SLED: [-1, -1, '資料有限'] },
-  ob: '肥胖：以 AdjBW（或 IBW）計算，避免腎毒性（Turner 2016）。',
+  rr: { HD: [0, 1, '2.5–5 mg/kg q24h，after dialysis (AD) 給藥'], PD: [0, 1], CRRT: [2, 5, '5–10 mg/kg Q12–24H（腦膜腦炎、VZV 取高端）'], SLED: [2, 5, '5–10 mg/kg Q12–24H（腦膜腦炎、VZV 取高端）；非 PIRRT 日比照 CrCl <10'] },
+  arc: { i: 4, t: 'ARC：使用該適應症最大劑量；可行時 TDM。' },
+  ob: '肥胖（BMI ≥30）：以 IBW 計算，避免過量與 AKI；BMI ≥40 之重症（如 HSV 腦炎，10 mg/kg 欄）考慮 AdjBW（UpToDate）。',
   tox: ['結晶性腎病變：充分水分、輸注 ≥1 h', '神經毒性（腎衰竭時：顫抖、譫妄、意識改變）', '靜脈炎（外滲）'],
   nx: 'Acyclovir 神經毒性易與腦炎惡化混淆；腎功能不全時需審慎劑量。',
-  inf: { dil: { NS: '室溫 24 h（勿冷藏：結晶）', D5W: '室溫 24 h' }, v: [100, 250], t: [1, 2], ti: 0, c: [0, 7], note: '濃度 ≤7 mg/mL（建議 ≤5）' } });
-add({ id: 'acvpo', ref: 'PI', rrRef: 'UpToDate・SG', ind: ['HSV', '帶狀疱疹'], g: 'Acyclovir', b: 'Acylo', zh: '克庖疹', st: '400 mg/tab', cls: 'vir', sub: 'herpes', rt: 'po', kw: 'aciclovir hsv vzv zoster',
-  L: [T(400, 'q24h'), T(400, 'q12h'), T(400, 'q8h', { t: 'HSV' }), T(800, 'q12h'), T(800, 'q8h'), T(800, '5 次/日', { t: '帶狀疱疹' })],
-  R: [[26, 2, 5], [10, 2, 4], [0, 1, 3]], rr: { HD: [1, 3, 'after dialysis (AD) 給藥'], PD: [1, 3], CRRT: [2, 4], SLED: [2, 2] }, tox: ['腎衰竭時神經毒性'] });
-add({ id: 'vacv', ref: 'PI', rrRef: 'UpToDate・SG', ind: ['HSV', '帶狀疱疹'], g: 'Valacyclovir', b: 'Valtrex', zh: '袪疹易', st: '500 mg/tab', cls: 'vir', sub: 'herpes', rt: 'po', kw: 'valaciclovir zoster hsv',
+  inf: { dil: { NS: '室溫 24 h（勿冷藏：結晶）', D5W: '室溫 24 h' }, v: [100, 250], t: [1, 2], ti: 0, c: [0, 7], note: '濃度 ≤7 mg/mL（建議 ≤5）' }, nt: ['治療中 AKI（多為結晶性腎病變）：儘可能停藥改用其他抗病毒藥並 IV 水化；僅對 acyclovir 有效之嚴重感染，可依腎功能調整後續用（UpToDate）。'] });
+add({ id: 'acvpo', utd: '2026/11/16', utdSrc: 'Acyclovir (systemic): Drug information', ref: 'PI・UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', ind: ['HSV', '帶狀疱疹'], g: 'Acyclovir', b: 'Acylo', zh: '克庖疹', st: '400 mg/tab', cls: 'vir', sub: 'herpes', rt: 'po', kw: 'aciclovir hsv vzv zoster',
+  L: [T(200, 'q12h'), T(400, 'q24h'), T(400, 'q12h'), T(400, 'q8h', { t: 'HSV' }), T(800, 'q12h'), T(800, 'q8h'), T(800, '5 次/日', { t: '帶狀疱疹' }), X('Loading 400 mg → 200 mg Q12H，另每次 HD 後追加 400 mg'), X('600–800 mg QD')],
+  R: [[26, 3, 6], [10, 3, 5], [0, 0, 2, 'ESRD 有神經毒性報告，UpToDate 建議減量（仿單：800 mg Q12H）', '', ['', '或 200 mg Q12H']]],
+  rr: { HD: [0, 7, '透析日於 after dialysis (AD) 給藥（或 AD 追加一劑）'], PD: [0, 8], CRRT: [3, 5, 'UpToDate 未列口服劑量，建議改 IV'], SLED: [3, 3, 'UpToDate 未列口服劑量，建議改 IV'] }, tox: ['腎衰竭時神經毒性'] });
+add({ id: 'vacv', utd: '2026/11/16', utdSrc: 'Valacyclovir: Drug information', ref: 'PI', rrRef: 'UpToDate, 2026/11/16', ind: ['HSV', '帶狀疱疹'], g: 'Valacyclovir', b: 'Valtrex', zh: '袪疹易', st: '500 mg/tab', cls: 'vir', sub: 'herpes', rt: 'po', kw: 'valaciclovir zoster hsv',
   L: [T(500, 'q24h'), T(500, 'q12h', { t: '復發型 HSV' }), T(1000, 'q24h'), T(1000, 'q12h', { t: '初發 HSV' }), T(1000, 'q8h', { t: '帶狀疱疹' })],
-  R: [[50, 3, 4], [30, 3, 3], [10, 2, 2], [0, 0, 0]], rr: { HD: [0, 0, 'after dialysis (AD) 給藥'], PD: [0, 0], CRRT: [2, 3], SLED: [2, 2] },
+  R: [[50, 3, 4], [30, 3, 3], [10, 2, 2], [0, 0, 0]], rr: { HD: [0, 0, 'after dialysis (AD) 給藥'], PD: [0, 0], CRRT: [2, 3, '500–1,000 mg Q12–24H；非嚴重感染每日最多 1,500 mg'], SLED: [2, 2, '500–1,000 mg Q12–24H；非嚴重感染每日最多 1,500 mg'] },
   tox: ['ESRD 神經毒性（譫妄、幻覺）', 'TTP/HUS（高劑量、免疫低下）'] });
 
 const GCV_R = [[70, 4, 4], [50, 3, 3], [25, 2, 2], [10, 1, 1], [0, 0, 0]];
 const GCV_TOX = ['骨髓抑制：嗜中性球、血小板低下（誘導期 CBC 每週 2–3 次）', '致畸胎、危害性藥品（hazardous drug）操作', 'Scr 上升'];
-add({ id: 'gcv', ref: 'PI', rrRef: 'UpToDate・SG', phase: { ind: '誘導期 14–21 天（至病毒血症清除且症狀改善），之後轉維持期／二次預防' }, g: 'Ganciclovir', b: 'Cymevene', zh: '西美芬', st: '500 mg/vial', cls: 'vir', sub: 'cmv', rt: 'inj', kw: 'cmv', wt: 'OB', rd: 25, tox: GCV_TOX,
+add({ id: 'gcv', utd: '2026/11/16', utdSrc: 'Ganciclovir (systemic): Drug information', ref: 'PI', rrRef: 'UpToDate, 2026/11/16', phase: { ind: '誘導期 14–21 天（至病毒血症清除且症狀改善），之後轉維持期／二次預防' }, g: 'Ganciclovir', b: 'Cymevene', zh: '西美芬', st: '500 mg/vial', cls: 'vir', sub: 'cmv', rt: 'inj', kw: 'cmv', wt: 'OB', rd: 25, tox: GCV_TOX,
   ob: '肥胖：多以 AdjBW（或 IBW）計算以降低骨髓抑制。',
   inf: { dil: { NS: '冷藏 24 h', D5W: '冷藏 24 h' }, v: [100, 250], t: [1], ti: 0, c: [0, 10], note: '輸注 1 h；危害性藥品' },
   modes: [
     { k: 'ind', lab: '誘導期（治療）', L: [K(1.25, 'TIW AD'), K(1.25, 'q24h'), K(2.5, 'q24h'), K(2.5, 'q12h'), K(5, 'q12h')], R: GCV_R,
-      rr: { HD: [0, 0, 'after dialysis (AD) 給藥'], PD: [0, 0], CRRT: [2, 3, '2.5 mg/kg q12–24h'], SLED: [1, 1, '資料有限'] } },
+      rr: { HD: [0, 0, 'after dialysis (AD) 給藥'], PD: [0, 0], CRRT: [2, 2, '2.5 mg/kg QD'], SLED: [2, 2, '2.5 mg/kg QD，於 PIRRT 後給藥'] } },
     { k: 'mt', lab: '維持期／預防', L: [K(0.625, 'TIW AD'), K(0.625, 'q24h'), K(1.25, 'q24h'), K(2.5, 'q24h'), K(5, 'q24h')], R: GCV_R,
-      rr: { HD: [0, 0, 'after dialysis (AD) 給藥'], PD: [0, 0], CRRT: [2, 2, '1.25 mg/kg q24h'], SLED: [1, 1, '資料有限'] } }] });
-const VGC_L = [T(450, '每週 2 次'), T(450, 'q48h'), T(450, 'q24h'), T(450, 'q12h'), T(900, 'q24h'), T(900, 'q12h')];
-const VGC_RR = { HD: [-1, -1, '錠劑不建議；改 ganciclovir IV'], PD: [-1, -1, '改 ganciclovir IV'], CRRT: [-1, -1, '改 ganciclovir IV'], SLED: [-1, -1] };
-add({ id: 'vgc', ref: 'PI', rrRef: 'UpToDate・SG', phase: { ind: '誘導期 14–21 天（至病毒血症清除且症狀改善），之後轉維持期／二次預防' }, g: 'Valganciclovir', b: 'Valcyte', zh: '克毒癒', st: '450 mg/tab', cls: 'vir', sub: 'cmv', rt: 'po', kw: 'cmv', tox: GCV_TOX,
+      rr: { HD: [0, 0, 'after dialysis (AD) 給藥'], PD: [0, 0], CRRT: [2, 2, '1.25 mg/kg QD'], SLED: [2, 2, '1.25 mg/kg QD，於 PIRRT 後給藥'] } }],
+  nt: ['重症腎功能不全：Monte Carlo 模擬（Krens 2020）建議高於仿單之劑量以達 trough >1.5 mg/L，但風險效益未經評估，需個人化給藥（UpToDate）。'] });
+const VGC_L = [T(450, '每週 2 次'), T(450, 'TIW'), T(450, 'q48h'), T(450, 'q24h'), T(450, 'q12h'), T(900, 'q24h'), T(900, 'q12h')];
+const VGC_LO = '（仿單不建議）';
+const VGC_RR = (i) => ({ HD: [i, i, 'HHS 2025；透析日於 after dialysis (AD) 給藥', VGC_LO], PD: [i, i, 'HHS 2025；一般應避免，必要時比照 CrCl <10', VGC_LO], CRRT: [-1, -1, '避免（個體差異大）；改 ganciclovir IV'], SLED: [-1, -1, '改 ganciclovir IV'] });
+add({ id: 'vgc', utd: '2026/11/16', utdSrc: 'Valganciclovir: Drug information', ref: 'PI・UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', phase: { ind: '誘導期 14–21 天（至病毒血症清除且症狀改善），之後轉維持期／二次預防' }, g: 'Valganciclovir', b: 'Valcyte', zh: '克毒癒', st: '450 mg/tab', cls: 'vir', sub: 'cmv', rt: 'po', kw: 'cmv', tox: GCV_TOX,
   modes: [
-    { k: 'ind', lab: '誘導期（治療）', L: VGC_L, R: [[60, 5, 5], [40, 3, 3], [25, 2, 2], [10, 1, 1], [0, -1, -1, 'CrCl <10：不建議錠劑']], rr: VGC_RR },
-    { k: 'mt', lab: '維持期／預防', L: VGC_L, R: [[60, 4, 4], [40, 2, 2], [25, 1, 1], [10, 0, 0], [0, -1, -1, 'CrCl <10：不建議錠劑']], rr: VGC_RR }] });
-add({ id: 'ltv', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Letermovir', b: 'Prevymis', zh: '滅巨斯', st: '240 mg/tab', cls: 'vir', sub: 'cmv', rt: 'po', kw: 'cmv prophylaxis hsct',
-  L: [T(240, 'q24h', { t: '併 cyclosporine' }), T(480, 'q24h')], R: [[10, 1, 1], [0, 1, 1, 'CrCl <10：無資料']], rr: SAME(1, 1, '無資料'),
-  tox: ['CYP3A 抑制：tacrolimus、sirolimus、voriconazole（↓）交互作用'] });
-add({ id: 'mbv', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Maribavir', b: 'Livtencity', zh: '克巨染', st: '200 mg/tab', cls: 'vir', sub: 'cmv', rt: 'po', kw: 'cmv refractory',
+    { k: 'ind', lab: '誘導期（治療）', L: VGC_L, R: [[60, 6, 6], [40, 4, 4], [25, 3, 3], [10, 2, 2], [0, 1, 1, 'HHS 2025', '', VGC_LO]], rr: VGC_RR(1) },
+    { k: 'mt', lab: '維持期／預防', L: VGC_L, R: [[60, 5, 5], [40, 3, 3], [25, 2, 2], [10, 0, 0], [0, 0, 0, 'HHS 2025', '', VGC_LO]], rr: VGC_RR(0) }],
+  nt: ['依 Cockcroft-Gault CrCl 調整（以 MDRD eGFR 會造成劑量不足）；腎功能不全之減量可能與 CMV 感染風險增加相關（UpToDate）。'] });
+add({ id: 'ltv', utd: '2026/11/16', utdSrc: 'Letermovir: Drug information', ref: 'PI', rrRef: 'UpToDate, 2026/11/16', g: 'Letermovir', b: 'Prevymis', zh: '滅巨斯', st: '240 mg/tab', cls: 'vir', sub: 'cmv', rt: 'po', kw: 'cmv prophylaxis hsct',
+  L: [T(240, 'q24h', { t: '併 cyclosporine' }), T(480, 'q24h')], R: [[10, 1, 1], [0, 1, 1, 'CrCl ≤10：仿單無建議；尿液排除少，可能不需調整']], rr: SAME(1, 1, '仿單無建議；尿液排除少，可能不需調整'),
+  tox: ['CYP3A 抑制：tacrolimus、sirolimus、voriconazole（↓）交互作用'], nt: ['Child-Pugh C 不建議使用；IV 劑型含 hydroxypropyl betadex，CrCl <50 可能蓄積，需監測 Scr。'] });
+add({ id: 'mbv', utd: '2026/11/16', utdSrc: 'Maribavir: Drug information', ref: 'PI', rrRef: 'UpToDate, 2026/11/16', g: 'Maribavir', b: 'Livtencity', zh: '克巨染', st: '200 mg/tab', cls: 'vir', sub: 'cmv', rt: 'po', kw: 'cmv refractory',
   L: [T(400, 'q12h'), T(800, 'q12h', { t: '併強效誘導劑' })], R: NA(0, 0, '無需依腎功能調整'), rr: SAME(0, 0), tox: ['味覺異常', '升高 tacrolimus 濃度', '拮抗 ganciclovir 作用（勿併用）'] });
 
-add({ id: 'osv', ref: 'PI・UpToDate', rrRef: 'UpToDate・SG', g: 'Oseltamivir', b: 'Tamiflu', zh: '克流感', st: '75 mg/cap', cls: 'vir', sub: 'resp', rt: 'po', kw: 'influenza flu', frac: 0.1,
-  L: [T(30, '每次 AD'), T(30, 'q24h'), T(30, 'q12h'), T(75, 'q12h')],
-  R: [[61, 3, 3], [31, 2, 2], [11, 1, 1], [0, -1, -1, 'CrCl ≤10 未透析：不建議']],
-  rr: { HD: [0, 0, '30 mg 每次 AD（治療 5 天內）'], PD: [0, 0, '30 mg 單次（每週一次）'], CRRT: [3, 3, '75 mg Q12H（CVVHDF；資料有限）'], SLED: [0, 0, '資料有限'] },
-  tox: ['噁心嘔吐（與食物併服）', '神經精神症狀（兒童青少年）'], nt: ['治療 5 天；重症不建議常規雙倍劑量。', '若覺得膠囊太難吞或需要服用較低劑量，可將 1 粒膠囊打開，把裡面的藥粉倒入 12.5 mL 冷開水混勻，再依需求量喝：0.4 粒取 5 mL、0.6 粒取 7.5 mL、0.8 粒取 10 mL、1 粒取 12.5 mL。'] });
+add({ id: 'osv', utd: '2026/11/16', utdSrc: 'Oseltamivir: Drug information', ref: 'PI・UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', g: 'Oseltamivir', b: 'Tamiflu', zh: '克流感', st: '75 mg/cap', cls: 'vir', sub: 'resp', rt: 'po', kw: 'influenza flu', frac: 0.1,
+  L: [T(30, '每次 AD'), T(30, 'q48h'), T(30, 'q24h'), T(30, 'q12h'), X('75 mg 單次（涵蓋 5 天療程）'), T(75, 'q24h'), T(75, 'q12h')],
+  R: [[61, 6, 6], [31, 3, 3, '首劑 75 mg，之後 30 mg Q12H（Jones 2021）'], [11, 2, 2], [0, 1, 1, '專家意見', '', '（仿單：ESRD 未透析不建議）']],
+  rr: { HD: [0, 0, '30 mg 立即給予，之後每次 HD 後 30 mg（至少 5 天）'], PD: [4, 4, '', '（仿單：30 mg 單次）'], CRRT: [5, 5], SLED: [5, 5, 'PIRRT 日 75 mg QD（於 PIRRT 後給予）；非 PIRRT 日比照 CrCl ≤10（30 mg QOD）'] },
+  arc: { i: 6, t: 'ARC：75 mg Q12H，可考慮至 150 mg Q12H（無臨床資料）。' },
+  tox: ['噁心嘔吐（與食物併服）', '神經精神症狀（兒童青少年）'], nt: ['預防（75 mg QD 基準；UpToDate）：CrCl >30–<60 30 mg QD；>10–30 30 mg QOD；≤10 30 mg 每週一次；iHD 30 mg 後每隔一次 HD 後 30 mg；PD 30 mg 後每週 30 mg。', '治療 5 天；重症不建議常規雙倍劑量。', '若覺得膠囊太難吞或需要服用較低劑量，可將 1 粒膠囊打開，把裡面的藥粉倒入 12.5 mL 冷開水混勻，再依需求量喝：0.4 粒取 5 mL、0.6 粒取 7.5 mL、0.8 粒取 10 mL、1 粒取 12.5 mL。'] });
 
-add({ id: 'blx', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Baloxavir marboxil', b: 'Xofluza', zh: '紓伏效', st: '20 mg/tab', cls: 'vir', sub: 'resp', rt: 'po', kw: 'influenza flu',
+add({ id: 'blx', utd: '2026/11/16', utdSrc: 'Baloxavir: Drug information', ref: 'PI', rrRef: 'UpToDate, 2026/11/16', g: 'Baloxavir marboxil', b: 'Xofluza', zh: '紓伏效', st: '20 mg/tab', cls: 'vir', sub: 'resp', rt: 'po', kw: 'influenza flu',
   L: [X('', { fn: (c, W) => (W >= 80 ? 80 : 40), f: '單次', t: '40–<80 kg 40 mg；≥80 kg 80 mg' })], R: NA(0, 0, '無需依腎功能調整'), rr: SAME(0, 0),
   nt: ['勿與乳製品、含多價陽離子之制酸劑／營養品併服。'] });
-add({ id: 'prv', ref: 'PI（日本）', rrRef: 'UpToDate・SG', naD: [212.4, 300], ind: ['一般（300 mg 單次）', '重症／高風險（600 mg）'], g: 'Peramivir', b: 'Rapiacta', zh: '瑞貝塔', st: '300 mg/60 mL/bag', cls: 'vir', sub: 'resp', rt: 'inj', kw: 'influenza flu',
-  L: [T(50, 'q24h'), T(100, 'q24h'), T(200, 'q24h'), T(300, '單次'), T(600, 'q24h', { t: '重症／高風險，可連續數日' })],
-  R: [[50, 3, 4], [30, 1, 2], [10, 0, 1], [0, 0, 0, '資料有限']], rr: { HD: [1, 1, '100 mg AD（美國仿單）'], PD: [0, 0, '資料有限'], CRRT: [1, 2, '資料有限'], SLED: [1, 1, '資料有限'] },
+add({ id: 'prv', utd: '2026/11/16', utdSrc: 'Peramivir: Drug information', ref: 'UpToDate, 2026/11/16・ラピアクタ®日本仿單', rrRef: 'UpToDate, 2026/11/16・ラピアクタ®日本仿單', naD: [212.4, 300], ind: ['一般（300 mg 單次）', '重症／高風險（600 mg）'], g: 'Peramivir', b: 'Rapiacta', zh: '瑞貝塔', st: '300 mg/60 mL/bag', cls: 'vir', sub: 'resp', rt: 'inj', kw: 'influenza flu',
+  L: [X('50 mg 單次'), X('50–100 mg 單次'), X('100 mg 單次 AD'), X('100–200 mg 單次'), X('300–600 mg 單次', { t: '日本 300 mg；美國 600 mg' }), X('Day 1 100 mg → 15 mg QD'), X('Day 1 100 mg → 每次 HD 後 2 h 100 mg'), X('100 mg QD'), X('150–200 mg QD', { t: '美國 150 mg；日本 200 mg' }), X('600 mg QD', { t: '重症／住院，可連續數日' })],
+  R: [[50, 4, 9], [30, 3, 8], [10, 1, 7], [0, 0, 5, '一般：資料有限（日本仿單比例推估）', '', ['', '（UpToDate；日本仿單未列）']]],
+  rr: { HD: [2, 6], PD: [0, 5, '資料有限，比照 CrCl <10'], CRRT: (c) => { const cl = c.eff > 0 ? c.eff * 1000 / 60 : null; const r = cl == null ? [3, 8] : cl >= 50 ? [4, 9] : cl >= 30 ? [3, 8] : [1, 7]; return [r[0], r[1], `總清除 = 殘餘腎功能 + CRRT 清除（CVVH 用置換液流速、CVVHD 用透析液流速、CVVHDF 兩者相加，mL/min），再對照腎功能分段${cl == null ? '' : `；目前 effluent 約 ${Math.round(cl)} mL/min（未計殘餘腎功能）`}`]; }, SLED: [1, 7, '資料有限'] },
   tox: ['腹瀉', '嗜中性球低下', '神經精神症狀'],
-  inf: { rb: 60, t: [0.25, 0.5], ti: 0, dil: { '預混輸液': '室溫保存' }, note: '輸注 ≥15 min' }, nt: ['腎劑量依日本仿單（CrCl 30–50：100 mg［重症 200］；10–30：50 mg［重症 100］）。'] });
+  inf: { rb: 60, t: [0.25, 0.5], ti: 0, dil: { '預混輸液': '室溫保存' }, note: '輸注 ≥15 min' }, nt: ['劑量範圍下限依日本仿單（ラピアクタ®；CrCl 30–50：100 mg〔重症 200〕；10–30：50 mg〔重症 100〕），上限依 UpToDate, 2026/11/16（美國仿單：非複雜性 CrCl ≥50 600 mg、30–49 200 mg、10–29 100 mg 單次；住院 ≥50 600 mg、31–49 150 mg、10–30 100 mg QD）。'] });
 
-add({ id: 'etv', ref: 'PI', rrRef: 'UpToDate・SG', ind: ['未曾治療（0.5 mg）', 'lamivudine 抗藥／失代償（1 mg）'], g: 'Entecavir', b: 'Baraclude', zh: '貝樂克', st: '0.5 mg / 1 mg tab', cls: 'vir', sub: 'hep', rt: 'po', kw: 'hbv hepatitis b',
-  L: [X('0.5 mg q7d（或 0.05 mg q24h）'), X('0.5 mg q72h（或 0.15 mg q24h）'), X('0.5 mg q48h（或 0.25 mg q24h）'), T(0.5, 'q24h', { t: '未曾治療' }), T(1, 'q24h', { t: 'lamivudine 抗藥／失代償肝硬化' })],
-  R: [[50, 3, 4], [30, 2, 2], [10, 1, 1], [0, 0, 0]], rr: { HD: [0, 0, 'after dialysis (AD) 給藥'], PD: [0, 0], CRRT: [1, 1, '資料有限'], SLED: [0, 0] },
-  nt: ['空腹服用（餐前或餐後 2 h）。', '失代償肝病（1 mg）之腎調整：上表劑量 ×2。'] });
-add({ id: 'tdf', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Tenofovir disoproxil fumarate', b: 'Viread', zh: '惠立妥', st: '300 mg/tab', cls: 'vir', sub: 'hep', rt: 'po', kw: 'tdf hbv',
-  L: [X('300 mg q7d AD'), X('300 mg q72–96h'), T(300, 'q48h'), T(300, 'q24h')],
-  R: [[50, 3, 3], [30, 2, 2], [10, 1, 1], [0, -1, -1, 'CrCl <10 未透析：無建議']], rr: { HD: [0, 0, '每週一次 AD'], PD: [-1, -1, '無資料'], CRRT: [-1, -1, '無資料'], SLED: [-1, -1] },
-  tox: ['近端腎小管病變（Fanconi）、Scr 上升', '骨密度下降；可考慮改 TAF'] });
-add({ id: 'taf', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Tenofovir alafenamide', b: 'Vemlidy', zh: '韋立得', st: '25 mg/tab', cls: 'vir', sub: 'hep', rt: 'po', kw: 'taf hbv',
-  L: [T(25, 'q24h')], R: [[15, 0, 0], [0, -1, -1, 'CrCl <15 未透析：不建議']], rr: { HD: [0, 0, '透析日於 after dialysis (AD) 給藥'], PD: [-1, -1, '無資料'], CRRT: [-1, -1, '無資料'], SLED: [-1, -1] } });
-add({ id: 'rbv', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Ribavirin', b: 'Rebetol (Ribarin)', zh: '摩舒肝清', st: '200 mg/cap', cls: 'vir', sub: 'hep', rt: 'po', kw: 'hcv rsv',
+add({ id: 'etv', utd: '2026/11/16', utdSrc: 'Entecavir: Drug information', ref: 'PI', rrRef: 'UpToDate, 2026/11/16', ind: ['未曾治療（0.5 mg）', 'lamivudine 抗藥／失代償（1 mg）'], g: 'Entecavir', b: 'Baraclude', zh: '貝樂克', st: '0.5 mg / 1 mg tab', cls: 'vir', sub: 'hep', rt: 'po', kw: 'hbv hepatitis b',
+  L: [X('0.5 mg 每 7 天（或 0.05 mg QD）'), X('0.5 mg Q3D（或 0.15 mg QD）'), X('0.5 mg QOD（或 0.25 mg QD）'), T(0.5, 'q24h', { t: '未曾治療' }), T(1, 'q24h', { t: 'lamivudine 抗藥／失代償肝硬化' }), X('1 mg 每 7 天（或 0.1 mg QD）'), X('1 mg Q3D（或 0.3 mg QD）'), X('1 mg QOD（或 0.5 mg QD）')],
+  R: [[50, 3, 4], [30, 2, 7], [10, 1, 6], [0, 0, 5]], rr: { HD: [0, 5, 'after dialysis (AD) 給藥'], PD: [0, 5], CRRT: [0, 5, '無資料；清除有限，比照 CrCl <10'], SLED: [0, 5, '比照 CrCl <10，於 PIRRT 後給藥'] },
+  nt: ['空腹服用（餐前或餐後 2 h）。', '以每日給藥為優先（括號內為每日劑量）。'] });
+add({ id: 'tdf', utd: '2026/11/16', utdSrc: 'Tenofovir disoproxil fumarate: Drug information', ref: 'PI', rrRef: 'UpToDate, 2026/11/16', g: 'Tenofovir disoproxil fumarate', b: 'Viread', zh: '惠立妥', st: '300 mg/tab', cls: 'vir', sub: 'hep', rt: 'po', kw: 'tdf hbv',
+  L: [X('300 mg 每 7 天 AD'), X('300 mg 每 7 天'), X('300 mg 每週 2 次（Q72–96H）'), T(300, 'q48h'), T(300, 'q24h')],
+  R: [[50, 4, 4], [30, 3, 3, '或 150 mg QD；盡量避免使用'], [10, 2, 2, '盡量避免使用'], [0, 1, 1, 'CrCl <10 未透析：未經研究，應避免；無替代時 300 mg 每 7 天並密切監測']],
+  rr: { HD: [0, 0, '盡量避免；無法避免時 300 mg 每 7 天 AD，並密切監測'], PD: [1, 1, '盡量避免；無替代時 300 mg 每 7 天（個案報告 trough 偏高，改每 2 週後達治療範圍）'], CRRT: [2, 2, '比照 CrCl 10–<30（單一個案報告）'], SLED: [-1, -1, '無資料'] },
+  tox: ['近端腎小管病變（Fanconi）、Scr 上升', '骨密度下降；可考慮改 TAF'], nt: ['腎小管傷害、Fanconi syndrome 與 CKD 惡化：CrCl <50（GFR <60）盡量避免，尤其近端腎小管異常者；HBV 可考慮改用 TAF 或 entecavir（UpToDate）。'] });
+add({ id: 'taf', utd: '2026/11/16', utdSrc: 'Tenofovir alafenamide: Drug information', ref: 'PI', rrRef: 'UpToDate, 2026/11/16', g: 'Tenofovir alafenamide', b: 'Vemlidy', zh: '韋立得', st: '25 mg/tab', cls: 'vir', sub: 'hep', rt: 'po', kw: 'taf hbv',
+  L: [T(25, 'q24h')], R: [[30, 0, 0], [15, 0, 0, '無需調整；PopPK 模擬：25 mg QOD 可降低毒性並維持細胞內濃度'], [0, -1, -1, 'CrCl <15 未透析：不建議（PopPK 模擬：25 mg Q3D）']],
+  rr: { HD: [0, 0, '透析日於 after dialysis (AD) 給藥'], PD: [-1, -1, '資料少（個案血中濃度約為正常 15 倍）；考慮其他藥物以減少毒性並保留殘餘腎功能'], CRRT: [0, 0, '無需調整'], SLED: [0, 0, '無需調整；於 PIRRT 後給藥'] },
+  nt: ['Child-Pugh B／C（失代償）不建議；治療中顯著腎功能下降或 Fanconi syndrome 應停藥（UpToDate）。'] });
+add({ id: 'rbv', utd: '2026/11/16', utdSrc: 'Ribavirin (systemic): Drug information', ref: 'PI', rrRef: 'UpToDate, 2026/11/16', g: 'Ribavirin', b: 'Rebetol (Ribarin)', zh: '摩舒肝清', st: '200 mg/cap', cls: 'vir', sub: 'hep', rt: 'po', kw: 'hcv rsv',
   L: [T(200, 'q24h'), X('200 mg / 400 mg 隔日交替'), X('', { txtFn: (c, W) => W < 75 ? '400 mg AM + 600 mg PM（1000 mg/day）' : '600 mg q12h（1200 mg/day）', t: '<75 kg 1000；≥75 kg 1200 mg/day' })],
   R: [[50, 2, 2], [30, 1, 1], [0, 0, 0]], rr: SAME(0, 0, 'after dialysis (AD) 給藥'),
-  tox: ['溶血性貧血（Hb 每 2 週）', '致畸胎（男女雙方用藥期間及停藥後 6 個月避孕）'] });
+  tox: ['溶血性貧血（Hb 每 2 週）', '致畸胎（男女雙方用藥期間及停藥後 6 個月避孕）'], nt: ['部分專家建議 eGFR <30 或透析者起始 200 mg TIW，並密切監測 Hb／Hct、必要時併用 EPO（UpToDate）。'] });
 
 const HCV_NT = ['開始前篩檢 HBV（HBsAg、anti-HBc）：再活化風險。'];
-add({ id: 'epc', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Sofosbuvir/Velpatasvir', b: 'Epclusa', zh: '宜譜莎', st: '400/100 mg/tab', cls: 'vir', sub: 'hep', rt: 'po', kw: 'hcv',
+add({ id: 'epc', utd: '2026/11/16', utdSrc: 'Sofosbuvir and velpatasvir: Drug information', ref: 'PI', rrRef: 'UpToDate, 2026/11/16', g: 'Sofosbuvir/Velpatasvir', b: 'Epclusa', zh: '宜譜莎', st: '400/100 mg/tab', cls: 'vir', sub: 'hep', rt: 'po', kw: 'hcv',
   L: [X('1# QD ×12 週')], R: NA(0, 0, '任何程度腎功能不全（含透析）無需調整'), rr: SAME(0, 0),
-  tox: ['Amiodarone 併用：嚴重心搏過緩', '制酸劑／PPI 降低 velpatasvir 吸收'], nt: HCV_NT });
-add({ id: 'mav', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Glecaprevir/Pibrentasvir', b: 'Maviret', zh: '艾百樂', st: '100/40 mg/tab', cls: 'vir', sub: 'hep', rt: 'po', kw: 'hcv',
+  tox: ['Amiodarone 併用：嚴重心搏過緩', '制酸劑／PPI 降低 velpatasvir 吸收'], nt: [...HCV_NT, '肝功能：Child-Pugh A／B／C 皆無需調整（失代償者依指引併用 ribavirin）。'] });
+add({ id: 'mav', utd: '2026/11/16', utdSrc: 'Glecaprevir and pibrentasvir: Drug information', ref: 'PI', rrRef: 'UpToDate, 2026/11/16', g: 'Glecaprevir/Pibrentasvir', b: 'Maviret', zh: '艾百樂', st: '100/40 mg/tab', cls: 'vir', sub: 'hep', rt: 'po', kw: 'hcv',
   L: [X('3# QD 隨餐 ×8 週')], R: NA(0, 0, '任何程度腎功能不全（含透析）無需調整'), rr: SAME(0, 0),
-  tox: ['Child-Pugh B/C 禁用', '禁併 atazanavir、rifampicin'], nt: HCV_NT });
-add({ id: 'vos', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Sofosbuvir/Velpatasvir/Voxilaprevir', b: 'Vosevi', zh: '沃士維', st: '400/100/100 mg/tab', cls: 'vir', sub: 'hep', rt: 'po', kw: 'hcv retreatment',
+  tox: ['Child-Pugh B/C 禁用', '禁併 atazanavir、rifampicin'], nt: [...HCV_NT, '肝功能：Child-Pugh B／C 或曾失代償者禁用。'] });
+add({ id: 'vos', utd: '2026/11/16', utdSrc: 'Sofosbuvir, velpatasvir, and voxilaprevir: Drug information', ref: 'PI', rrRef: 'UpToDate, 2026/11/16', g: 'Sofosbuvir/Velpatasvir/Voxilaprevir', b: 'Vosevi', zh: '沃士維', st: '400/100/100 mg/tab', cls: 'vir', sub: 'hep', rt: 'po', kw: 'hcv retreatment',
   L: [X('1# QD 隨餐 ×12 週')], R: NA(0, 0, '無需調整（含透析）'), rr: SAME(0, 0), tox: ['Child-Pugh B/C 不建議', 'Amiodarone 併用：心搏過緩'], nt: HCV_NT });
 
 /* ================= Engine ================= */
@@ -1217,6 +1239,7 @@ function dosingWeight(d, c) {
     case 'OB': return c.obese ? ['AdjBW', c.adj] : ['TBW', c.wt];
     case 'VORI': return c.obese ? (c.sev === 'sev' ? ['AdjBW', c.adj] : ['IBW', c.ibw]) : ['TBW', c.wt];
     case 'LEAN': return c.obese ? ['IBW', c.ibw] : ['TBW', c.wt];
+    case 'ACV': return c.obese ? (c.bmi >= 40 && d.col === 2 ? ['AdjBW', c.adj] : ['IBW', c.ibw]) : ['TBW', c.wt];
     default: return ['TBW', c.wt];
   }
 }
@@ -1256,7 +1279,7 @@ function pick(d0, c0) {
     else {
       let e = d.rr && d.rr[c.rrt];
       if (typeof e === 'function') e = e(c);
-      if (!e) notes.push('此 RRT 模式資料有限，請會診藥師。');
+      if (!e && d.rrf) { idx = normal; } else if (!e) notes.push('此 RRT 模式資料有限，請會診藥師。');
       else { idx = sevI === 2 ? e[1] : e[0]; if (e[2]) notes.push(e[2]); alt = altOf(e[3], sevI); }
     }
   } else {
