@@ -35,6 +35,7 @@ header.top{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-block
 @media (max-width:760px){.femh{align-items:flex-start;text-align:left;width:100%}}
 .mark{width:28px;height:28px;border-radius:7px;background:var(--accent);display:grid;place-items:center;color:var(--accent-ink);font-weight:700;font-family:var(--f-mono);font-size:13px;flex:none}
 .top .spacer{flex:0 1 0}
+.tag.utd{background:#E3F2EA;color:#1F6B47;border:1px solid #A9D6BC;font-weight:600}
 .grp.org{background:var(--accent-soft);color:var(--accent)}
 .clr{display:inline-flex;align-items:center;gap:6px;font:600 13px var(--f-sans);color:var(--accent);background:var(--surface);border:1px solid var(--accent);border-radius:8px;padding:6px 11px;cursor:pointer}.clr:hover,#backRes:hover{background:var(--accent-soft)}
 .pill-ex{font-size:11px;padding:3px 8px;border-radius:99px;background:var(--warn-soft);color:var(--warn);font-weight:600}
@@ -501,7 +502,7 @@ add({ id: 'cpt', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'ceph', g: 'Ceftaroline
   inf: { dil: { NS: '室溫 6 h、冷藏 24 h', D5W: '室溫 6 h、冷藏 24 h', LR: '相容' }, v: [50, 100, 250], t: [1, 2], ti: 0 },
   nt: ['給藥間隔依感染類型選擇：q8h（嚴重 MRSA 菌血症／肺炎，或與 daptomycin 等合併治療 VRE），q12h（其他感染）；每劑劑量依腎功能決定（>50：600 mg；31–50：400 mg；15–30：300 mg；<15／HD：200 mg）。'] });
 
-add({ id: 'fdc', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'ceph', novel: 1, g: 'Cefiderocol', b: 'Fetroja', zh: '伏驖佳', st: '1,000 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'siderophore crab cre',
+add({ id: 'fdc', utd: '2026-11-16', utdSrc: 'Cefiderocol: Drug information', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'ceph', novel: 1, g: 'Cefiderocol', b: 'Fetroja', zh: '伏驖佳', st: '1,000 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'siderophore crab cre',
   L: [T(750, 'q12h'), T(1000, 'q8h'), T(1500, 'q12h'), T(2000, 'q12h'), T(1500, 'q8h'), T(2000, 'q8h'), T(2000, 'q6h', { t: 'ARC (CrCl ≥120)' })],
   R: [[120, 6, 6], [60, 5, 5], [30, 4, 4], [15, 1, 1], [0, 0, 0]],
   rr: { HD: [0, 0, 'after dialysis (AD) 給藥'], PD: [0, 0, '參考 CrCl <15'], SLED: [4, 4, '資料有限'],
@@ -510,25 +511,25 @@ add({ id: 'fdc', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'ceph', novel: 1, g: 'C
   aki: 'w', tox: ['肝功能異常', 'CREDIBLE-CR trial 指出，相較於對照組，cefiderocol 於 CRAB infection 的死亡率似乎較高'],
   inf: { dil: { NS: '室溫 6 h；冷藏 24 h（之後室溫 6 h 內用完）', D5W: '同 NS' }, v: [100, 250], t: [3], ti: 0, fixed: 1, note: '本院規定一律 3-h 延長輸注（仿單 3 h）' } });
 
-add({ id: 'cza', ref: 'UpToDate・PI', rrRef: 'UpToDate', blg: 'ceph', novel: 1, g: 'Ceftazidime/Avibactam', b: 'Zavicefta', zh: '贊飛得', st: '2,500 mg/vial (2,000 mg/500 mg)', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'avycaz kpc oxa-48 cre', cf: 0.8,
+add({ id: 'cza', utd: '2026-11-16', utdSrc: 'Ceftazidime and avibactam: Drug information（Topic 100152 v172.0，2026-08-07 更新）', ref: 'UpToDate・PI', rrRef: 'UpToDate', blg: 'ceph', novel: 1, g: 'Ceftazidime/Avibactam', b: 'Zavicefta', zh: '贊飛得', st: '2,500 mg/vial (2,000 mg/500 mg)', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'avycaz kpc oxa-48 cre', cf: 0.8,
   L: [T(937.5, 'q48h', { lb: '940 mg (750/187.5 mg)' }), T(937.5, 'q24h', { lb: '940 mg (750/187.5 mg)' }), T(937.5, 'q12h', { lb: '940 mg (750/187.5 mg)' }), T(1250, 'q12h', { lb: '1,250 mg (1,000/250 mg)' }), T(1250, 'q8h', { lb: '1,250 mg (1,000/250 mg)' }), T(2500, 'q8h', { lb: '2,500 mg (2,000/500 mg)' })],
   R: [[50.0001, 5, 5, '', '>50'], [30.0001, 4, 4, '', '>30–50'], [15.0001, 2, 2, '', '>15–30'], [5.0001, 1, 1, '', '>5–15'], [0, 0, 0, '', '≤5']],
-  rr: { HD: [1, 1, '透析日於 after dialysis (AD) 給藥'], PD: [1, 1], CRRT: [4, 4], SLED: [3, 3, 'PIRRT 當天：1,250 mg Q12H（其中一劑於 PIRRT 後給予）；每日長時間 PIRRT（如 12 h/day）可能需 Q8H；非 PIRRT 日比照 CrCl ≤15（940 mg QD）'] },
+  rr: { HD: [1, 1, '透析日於 after dialysis (AD) 給藥'], PD: [1, 1], CRRT: [4, 4, '1,250 mg Q8H（UpToDate）；高 effluent 可考慮 2,500 mg Q8H（Wenzler E, AAC 2017）'], SLED: [3, 3, 'PIRRT 當天：1,250 mg Q12H（其中一劑於 PIRRT 後給予）；每日長時間 PIRRT（如 12 h/day）可能需 Q8H；非 PIRRT 日比照 CrCl ≤15（940 mg QD）（UpToDate）'] },
   aki: 'w', tox: [BL_TOX_NEURO],
   inf: { dil: { NS: '8 mg/mL：冷藏 12 h + 室溫 4 h；>8–40 mg/mL：室溫 4 h（EU）', D5W: '同 NS', LR: '相容' }, v: [100, 250], t: [3], ti: 0, fixed: 1, c: [8, 40], note: '本院一律 3-h 延長輸注（仿單 2 h）。濃度以 ceftazidime 計 8–40 mg/mL' },
   adjWarn: 'CRKP／KPC-Kp 嚴重感染：依腎功能減量可能略為降低治療成功率。仿單於 cIAI 試驗中 CrCl 30–50 者臨床治癒率較低；統合分析顯示腎劑量調整與較高死亡率相關（OR 1.79, 95% CI 1.18–2.72；Gatti M, Br J Clin Pharmacol 2023, PMID 36337045）；KPC-Kp 菌血症減量組 30 天死亡率較高（HR 4.47；Oliva A, JAC-AMR 2024;6:dlae201）。AKI 初期或重症可考慮先給全劑量，密切監測腎功能與神經毒性，必要時 TDM。',
   nt: ['MBL (NDM) 菌株：需併用 aztreonam（或改 Emblaveo）。', 'CRKP 嚴重感染腎劑量調整之療效疑慮：Gatti M, Br J Clin Pharmacol 2023（PMID 36337045）；Oliva A, JAC Antimicrob Resist 2024;6(6):dlae201；Avycaz 美國仿單 Warnings 5.1。'] });
 
-add({ id: 'czt', ref: 'UpToDate・PI', rrRef: 'UpToDate', blg: 'ceph', novel: 1, ind: ['HAP／VAP／嚴重 MDR-GNB 感染', 'cIAI／cUTI'], g: 'Ceftolozane/Tazobactam', b: 'Zerbaxa', zh: '諾倍適', st: '1,500 mg/vial (1,000 mg/500 mg)', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'dtr pseudomonas',
+add({ id: 'czt', utd: '2026-11-16', utdSrc: 'Ceftolozane and tazobactam: Drug information', ref: 'UpToDate・PI', rrRef: 'UpToDate', blg: 'ceph', novel: 1, ind: ['HAP／VAP／嚴重 MDR-GNB 感染', 'cIAI／cUTI'], g: 'Ceftolozane/Tazobactam', b: 'Zerbaxa', zh: '諾倍適', st: '1,500 mg/vial (1,000 mg/500 mg)', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'dtr pseudomonas',
   L: [T(150, 'q8h', { t: 'HD（cIAI/cUTI）' }), T(375, 'q8h'), T(450, 'q8h', { t: 'HD（HAP/VAP）' }), T(750, 'q8h'), T(1500, 'q8h', { t: 'cIAI／cUTI（感受性菌）' }), T(3000, 'q8h', { t: 'HAP／VAP／嚴重 MDR-GNB（含 DTR-P. aeruginosa）' })],
   R: [[50.0001, 5, 4, '', '>50'], [30, 4, 3, '', '30–50'], [15, 3, 1, '', '15–29'], [0, -1, -1, 'CrCl <15 未透析：仿單無建議（未研究）', '<15']],
-  rr: { HD: [2, 0, 'Loading 2,250 mg（cIAI／cUTI 750 mg）單次，之後維持劑量；透析日於 after dialysis (AD) 立即給藥'], PD: [-1, -1, '無資料'], CRRT: [4, 4, '1,500 mg Q8H；24 h 後可考慮減為 750 mg Q8H 以避免蓄積，或 3,000 mg loading 後 750 mg Q8H（Monte Carlo 模擬）'], SLED: [0, 0, '750 mg loading 後，非 PIRRT 時 150 mg Q8H；PIRRT 開始 1 h 內與結束後 1 h 內各追加 750 mg（單一個案資料）'] },
+  rr: { HD: [2, 0, 'Loading 2,250 mg（cIAI／cUTI 750 mg）單次，之後維持劑量；透析日於 after dialysis (AD) 立即給藥（UpToDate）'], PD: [-1, -1, '無資料'], CRRT: [4, 4, '1,500 mg Q8H；24 h 後可考慮減為 750 mg Q8H 以避免蓄積，或 3,000 mg loading 後 750 mg Q8H（UpToDate，Monte Carlo 模擬）'], SLED: [0, 0, '750 mg loading 後，非 PIRRT 時 150 mg Q8H；PIRRT 開始 1 h 內與結束後 1 h 內各追加 750 mg（UpToDate，單一個案資料）'] },
   arc: { i: 5, t: 'ARC：經驗性治療可給 1,500 mg loading 後 4,500 mg／24 h 持續輸注；無法持續輸注則 3,000 mg Q8H（3-h 延長輸注）。目標治療（感受性菌）3,000 mg Q8H 3-h 延長輸注（UpToDate）' },
   nt: ['AKI 初期可考慮先給全劑量 48 h 後再依腎功能減量（試驗中 CrCl 30–50 者治癒率較低）（UpToDate）。'],
   aki: 'w', tox: ['低血鉀'],
   inf: { dil: { NS: '室溫 24 h、冷藏 7 d', D5W: '室溫 24 h、冷藏 7 d' }, v: [100], t: [3], ti: 0, fixed: 1, note: '本院一律 3-h 延長輸注（仿單 1 h）' } });
 
-add({ id: 'azavi', ref: 'UpToDate・PI', rrRef: 'UpToDate', blg: 'nov', novel: 1, g: 'Aztreonam/Avibactam', b: 'Emblaveo', zh: '', st: '2,000 mg/vial (1,500 mg/500 mg)', cls: 'bac', sub: 'bl', rt: 'inj', ext: '健保不給付', kw: 'mbl ndm aztreonam avibactam', unitNote: '劑量以 aztreonam 計',
+add({ id: 'azavi', utd: '2026-11-16', utdSrc: 'Aztreonam and avibactam: Drug information', ref: 'UpToDate・PI', rrRef: 'UpToDate', blg: 'nov', novel: 1, g: 'Aztreonam/Avibactam', b: 'Emblaveo', zh: '', st: '2,000 mg/vial (1,500 mg/500 mg)', cls: 'bac', sub: 'bl', rt: 'inj', ext: '健保不給付', kw: 'mbl ndm aztreonam avibactam', unitNote: '劑量以 aztreonam 計',
   L: [T(675, 'q12h', { lb: '675/225 mg' }), T(675, 'q8h', { lb: '675/225 mg' }), T(750, 'q6h', { lb: '750/250 mg' }), T(1500, 'q6h', { lb: '1,500/500 mg' })],
   R: [[50.0001, 3, 3, '', '>50'], [30.0001, 2, 2, '', '>30–50'], [15.0001, 1, 1, '', '>15–30'], [0, 0, 0, '', '≤15']],
   ld: (c) => c.rrt === 'PD' || c.rrt === 'SLED' ? '' : c.rrt === 'HD' || (c.rrt === 'none' && c.cr <= 15) ? 'Loading 1,000 mg/330 mg (3 h)' : c.rrt === 'none' && c.cr <= 30 ? 'Loading 1,350 mg/450 mg (3 h)' : 'Loading 2,000 mg/670 mg (3 h)，下一個給藥間隔開始維持劑量',
@@ -578,11 +579,11 @@ add({ id: 'ipm', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'carb', pifStart: '維�
   nx: 'Imipenem 癲癇閾值下降最明顯；CNS 感染或神經重症病人建議改用 meropenem。' + CARBA_VPA,
   inf: { dil: { NS: '≤5 mg/mL：室溫 4 h、冷藏 24 h', D5W: '室溫 4 h' }, v: [100, 250], t: [0.5, 1, 3], ti: 0, c: [0, 5] } });
 
-add({ id: 'rec', ref: 'UpToDate・PI', rrRef: 'UpToDate', blg: 'carb', novel: 1, g: 'Imipenem/Cilastatin/Relebactam', b: 'Recarbrio', zh: '', st: '1,250 mg/vial (500/500/250 mg)', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'kpc relebactam',
+add({ id: 'rec', utd: '2026-11-16', utdSrc: 'Imipenem, cilastatin, and relebactam: Drug information', ref: 'UpToDate・PI', rrRef: 'UpToDate', blg: 'carb', novel: 1, g: 'Imipenem/Cilastatin/Relebactam', b: 'Recarbrio', zh: '', st: '1,250 mg/vial (500/500/250 mg)', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'kpc relebactam',
   L: [T(500, 'q12h', { lb: '500 mg（總量）' }), T(500, 'q8h', { lb: '500 mg（總量）' }), T(500, 'q6h', { lb: '500 mg（總量）' }), T(750, 'q6h', { lb: '750 mg（總量）' }), T(1000, 'q6h', { lb: '1,000 mg（總量）' }), T(1250, 'q6h', { lb: '1,250 mg' })],
   R: [[90, 5, 5], [60, 4, 4], [30, 3, 3], [15, 2, 2], [0, 0, 0, '仿單不建議用於未接受血液透析者；無資料時可考慮 500 mg Q12H（UpToDate）', '<15']],
   ld: (c) => (c.rrt === 'CRRT' || c.rrt === 'SLED' ? 'Loading 1,250 mg 單次，之後接續維持劑量' : ''),
-  rr: { HD: [2, 2, 'after dialysis (AD) 給藥'], PD: [1, 1, '仿單未研究；無資料時可考慮 500 mg Q8H'], CRRT: [3, 3, '1,250 mg 首劑後 750 mg Q6H'], SLED: [3, 3, '1,250 mg 首劑後：PIRRT 當天 750 mg Q8H 或 Q6H；非 PIRRT 日 500 mg Q8H'] },
+  rr: { HD: [2, 2, 'after dialysis (AD) 給藥'], PD: [1, 1, '仿單未研究；無資料時可考慮 500 mg Q8H（UpToDate）'], CRRT: [3, 3, '1,250 mg 首劑後 750 mg Q6H（UpToDate）'], SLED: [3, 3, '1,250 mg 首劑後：PIRRT 當天 750 mg Q8H 或 Q6H；非 PIRRT 日 500 mg Q8H（UpToDate）'] },
   aki: 'w', tox: ['癲癇', CARBA_VPA], nx: CARBA_VPA,
   inf: { dil: { NS: '室溫 2 h、冷藏 24 h', D5W: '室溫 2 h、冷藏 24 h' }, v: [100], t: [0.5], ti: 0 } });
 
@@ -1504,7 +1505,7 @@ function renderDetail() {
   const [wl, W] = d.wt ? dosingWeight(d, CC) : [null, null];
   const sel = S.tierSel ?? p.idx;
   let h = `<div class="dh"><div><h3>${esc(d.g)}</h3><div class="bn">${esc(d.b)}${d.zh ? `｜${esc(d.zh)}` : ''}｜${esc(d.st)}</div>
-    <div class="meta"><span class="tag rt">${CLSNAME[d.cls]}・${subLab(d)}</span>${d.novel ? '<span class="tag rt">Novel Agent</span>' : ''}<span class="tag rt">${d.rt === 'inj' ? '針劑' : '口服'}</span>${d.ext ? `<span class="tag ext">${d.ext}</span>` : ''}${d.tdmIcon ? '<span class="tdmi big" title="建議 TDM">◎ 建議 TDM</span>' : ''}${d.unitNote ? `<span class="tag rt">${d.unitNote}</span>` : ''}</div></div>
+    <div class="meta"><span class="tag rt">${CLSNAME[d.cls]}・${subLab(d)}</span>${d.novel ? '<span class="tag rt">Novel Agent</span>' : ''}<span class="tag rt">${d.rt === 'inj' ? '針劑' : '口服'}</span>${d.ext ? `<span class="tag ext">${d.ext}</span>` : ''}${d.utd ? `<span class="tag utd" title="已以 UpToDate 現行版逐項核對${d.utdSrc ? '；' + esc(d.utdSrc) : ''}">UpToDate 已核對 ${d.utd}</span>` : ''}${d.tdmIcon ? '<span class="tdmi big" title="建議 TDM">◎ 建議 TDM</span>' : ''}${d.unitNote ? `<span class="tag rt">${d.unitNote}</span>` : ''}</div></div>
     <span class="tag ${TAG[p.status][0]}" style="font-size:12px;padding:4px 10px">${TAG[p.status][1]}</span></div>`;
   if (d.ddi) h += `<div class="ddi" role="alert"><div class="ddih"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>藥物交互作用警示</div><p>${esc(d.ddi)}</p></div>`;
   h += `<div class="ctxbar"><span>腎功能 <b>${C.rrt !== 'none' ? RRTNAME[C.rrt] : r0(d.basis === 'egfr' ? C.paxEgfr : C.cr) + ' mL/min'}</b></span><span>分段 <b>${esc(p.band)}</b></span>${wl ? `<span>劑量體重 <b>${wl} ${r1(W)} kg</b></span>` : ''}${d.basis === 'egfr' ? '<span>依仿單使用 <b>eGFR</b></span>' : ''}</div>`;
