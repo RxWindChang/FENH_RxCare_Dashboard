@@ -510,26 +510,28 @@ add({ id: 'fdc', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'ceph', novel: 1, g: 'C
   aki: 'w', tox: ['肝功能異常', 'CREDIBLE-CR trial 指出，相較於對照組，cefiderocol 於 CRAB infection 的死亡率似乎較高'],
   inf: { dil: { NS: '室溫 6 h；冷藏 24 h（之後室溫 6 h 內用完）', D5W: '同 NS' }, v: [100, 250], t: [3], ti: 0, fixed: 1, note: '本院規定一律 3-h 延長輸注（仿單 3 h）' } });
 
-add({ id: 'cza', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'ceph', novel: 1, g: 'Ceftazidime/Avibactam', b: 'Zavicefta', zh: '贊飛得', st: '2,500 mg/vial (2,000 mg/500 mg)', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'avycaz kpc oxa-48 cre', cf: 0.8,
-  L: [T(937.5, 'q48h', { lb: '940 mg (750/187.5 mg)' }), T(937.5, 'q24h', { lb: '940 mg (750/187.5 mg)' }), T(937.5, 'q12h', { lb: '940 mg (750/187.5 mg)' }), T(1250, 'q8h', { lb: '1,250 mg (1,000/250 mg)' }), T(2500, 'q8h', { lb: '2,500 mg (2,000/500 mg)' })],
-  R: [[51, 4, 4], [31, 3, 3], [16, 2, 2], [6, 1, 1], [0, 0, 0]],
-  rr: { HD: [0, 0, 'ESRD q48h；透析日於 after dialysis (AD) 給藥'], PD: [0, 0, '資料有限'], CRRT: [3, 4, '1,250 mg q8h (Wenzler 2017)；高 effluent 可考慮 2,500 mg q8h'], SLED: [3, 3, '資料有限'] },
+add({ id: 'cza', ref: 'UpToDate・PI', rrRef: 'UpToDate', blg: 'ceph', novel: 1, g: 'Ceftazidime/Avibactam', b: 'Zavicefta', zh: '贊飛得', st: '2,500 mg/vial (2,000 mg/500 mg)', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'avycaz kpc oxa-48 cre', cf: 0.8,
+  L: [T(937.5, 'q48h', { lb: '940 mg (750/187.5 mg)' }), T(937.5, 'q24h', { lb: '940 mg (750/187.5 mg)' }), T(937.5, 'q12h', { lb: '940 mg (750/187.5 mg)' }), T(1250, 'q12h', { lb: '1,250 mg (1,000/250 mg)' }), T(1250, 'q8h', { lb: '1,250 mg (1,000/250 mg)' }), T(2500, 'q8h', { lb: '2,500 mg (2,000/500 mg)' })],
+  R: [[50.0001, 5, 5, '', '>50'], [30.0001, 4, 4, '', '>30–50'], [15.0001, 2, 2, '', '>15–30'], [5.0001, 1, 1, '', '>5–15'], [0, 0, 0, '', '≤5']],
+  rr: { HD: [1, 1, '透析日於 after dialysis (AD) 給藥'], PD: [1, 1], CRRT: [4, 4], SLED: [3, 3, 'PIRRT 當天：1,250 mg Q12H（其中一劑於 PIRRT 後給予）；每日長時間 PIRRT（如 12 h/day）可能需 Q8H；非 PIRRT 日比照 CrCl ≤15（940 mg QD）'] },
   aki: 'w', tox: [BL_TOX_NEURO],
   inf: { dil: { NS: '8 mg/mL：冷藏 12 h + 室溫 4 h；>8–40 mg/mL：室溫 4 h（EU）', D5W: '同 NS', LR: '相容' }, v: [100, 250], t: [3], ti: 0, fixed: 1, c: [8, 40], note: '本院一律 3-h 延長輸注（仿單 2 h）。濃度以 ceftazidime 計 8–40 mg/mL' },
   adjWarn: 'CRKP／KPC-Kp 嚴重感染：依腎功能減量可能略為降低治療成功率。仿單於 cIAI 試驗中 CrCl 30–50 者臨床治癒率較低；統合分析顯示腎劑量調整與較高死亡率相關（OR 1.79, 95% CI 1.18–2.72；Gatti M, Br J Clin Pharmacol 2023, PMID 36337045）；KPC-Kp 菌血症減量組 30 天死亡率較高（HR 4.47；Oliva A, JAC-AMR 2024;6:dlae201）。AKI 初期或重症可考慮先給全劑量，密切監測腎功能與神經毒性，必要時 TDM。',
   nt: ['MBL (NDM) 菌株：需併用 aztreonam（或改 Emblaveo）。', 'CRKP 嚴重感染腎劑量調整之療效疑慮：Gatti M, Br J Clin Pharmacol 2023（PMID 36337045）；Oliva A, JAC Antimicrob Resist 2024;6(6):dlae201；Avycaz 美國仿單 Warnings 5.1。'] });
 
-add({ id: 'czt', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'ceph', novel: 1, ind: ['cIAI／cUTI', 'HAP／VAP'], g: 'Ceftolozane/Tazobactam', b: 'Zerbaxa', zh: '諾倍適', st: '1,500 mg/vial (1,000 mg/500 mg)', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'dtr pseudomonas',
-  L: [T(150, 'q8h', { t: 'HD（cIAI/cUTI）' }), T(375, 'q8h'), T(450, 'q8h', { t: 'HD（HAP/VAP）' }), T(750, 'q8h'), T(1500, 'q8h', { t: 'cIAI／cUTI' }), T(3000, 'q8h', { t: 'HAP／VAP' })],
-  R: [[51, 4, 5], [30, 3, 4], [15, 1, 3], [0, -1, -1, 'CrCl <15 未透析：無資料']],
-  rr: { HD: [0, 2, 'Loading 750 mg（HAP 2,250 mg），after dialysis (AD) 給藥'], PD: [-1, -1, '無資料'], CRRT: [4, 5, '文獻 1,500–3,000 mg q8h'], SLED: [-1, -1, '無資料'] },
+add({ id: 'czt', ref: 'UpToDate・PI', rrRef: 'UpToDate', blg: 'ceph', novel: 1, ind: ['HAP／VAP／嚴重 MDR-GNB 感染', 'cIAI／cUTI'], g: 'Ceftolozane/Tazobactam', b: 'Zerbaxa', zh: '諾倍適', st: '1,500 mg/vial (1,000 mg/500 mg)', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'dtr pseudomonas',
+  L: [T(150, 'q8h', { t: 'HD（cIAI/cUTI）' }), T(375, 'q8h'), T(450, 'q8h', { t: 'HD（HAP/VAP）' }), T(750, 'q8h'), T(1500, 'q8h', { t: 'cIAI／cUTI（感受性菌）' }), T(3000, 'q8h', { t: 'HAP／VAP／嚴重 MDR-GNB（含 DTR-P. aeruginosa）' })],
+  R: [[50.0001, 5, 4, '', '>50'], [30, 4, 3, '', '30–50'], [15, 3, 1, '', '15–29'], [0, -1, -1, 'CrCl <15 未透析：仿單無建議（未研究）', '<15']],
+  rr: { HD: [2, 0, 'Loading 2,250 mg（cIAI／cUTI 750 mg）單次，之後維持劑量；透析日於 after dialysis (AD) 立即給藥'], PD: [-1, -1, '無資料'], CRRT: [4, 4, '1,500 mg Q8H；24 h 後可考慮減為 750 mg Q8H 以避免蓄積，或 3,000 mg loading 後 750 mg Q8H（Monte Carlo 模擬）'], SLED: [0, 0, '750 mg loading 後，非 PIRRT 時 150 mg Q8H；PIRRT 開始 1 h 內與結束後 1 h 內各追加 750 mg（單一個案資料）'] },
+  arc: { i: 5, t: 'ARC：經驗性治療可給 1,500 mg loading 後 4,500 mg／24 h 持續輸注；無法持續輸注則 3,000 mg Q8H（3-h 延長輸注）。目標治療（感受性菌）3,000 mg Q8H 3-h 延長輸注（UpToDate）' },
+  nt: ['AKI 初期可考慮先給全劑量 48 h 後再依腎功能減量（試驗中 CrCl 30–50 者治癒率較低）（UpToDate）。'],
   aki: 'w', tox: ['低血鉀'],
   inf: { dil: { NS: '室溫 24 h、冷藏 7 d', D5W: '室溫 24 h、冷藏 7 d' }, v: [100], t: [3], ti: 0, fixed: 1, note: '本院一律 3-h 延長輸注（仿單 1 h）' } });
 
-add({ id: 'azavi', ref: 'PI（FDA/EMA）', rrRef: 'UpToDate・SG', blg: 'nov', novel: 1, g: 'Aztreonam/Avibactam', b: 'Emblaveo', zh: '', st: '2,000 mg/vial (1,500 mg/500 mg)', cls: 'bac', sub: 'bl', rt: 'inj', ext: '健保不給付', kw: 'mbl ndm aztreonam avibactam', unitNote: '劑量以 aztreonam 計',
+add({ id: 'azavi', ref: 'UpToDate・PI', rrRef: 'UpToDate', blg: 'nov', novel: 1, g: 'Aztreonam/Avibactam', b: 'Emblaveo', zh: '', st: '2,000 mg/vial (1,500 mg/500 mg)', cls: 'bac', sub: 'bl', rt: 'inj', ext: '健保不給付', kw: 'mbl ndm aztreonam avibactam', unitNote: '劑量以 aztreonam 計',
   L: [T(675, 'q12h', { lb: '675/225 mg' }), T(675, 'q8h', { lb: '675/225 mg' }), T(750, 'q6h', { lb: '750/250 mg' }), T(1500, 'q6h', { lb: '1,500/500 mg' })],
-  R: [[51, 3, 3], [31, 2, 2], [16, 1, 1], [0, -1, -1, 'CrCl ≤15 且未透析：不建議使用']],
-  ld: (c) => c.rrt === 'HD' ? 'Loading 1,000 mg/330 mg (3 h)' : c.rrt === 'none' && c.cr <= 30 ? 'Loading 1,350 mg/450 mg (3 h)' : 'Loading 2,000 mg/670 mg (3 h)，下一個給藥間隔開始維持劑量',
+  R: [[50.0001, 3, 3, '', '>50'], [30.0001, 2, 2, '', '>30–50'], [15.0001, 1, 1, '', '>15–30'], [0, 0, 0, '', '≤15']],
+  ld: (c) => c.rrt === 'PD' || c.rrt === 'SLED' ? '' : c.rrt === 'HD' || (c.rrt === 'none' && c.cr <= 15) ? 'Loading 1,000 mg/330 mg (3 h)' : c.rrt === 'none' && c.cr <= 30 ? 'Loading 1,350 mg/450 mg (3 h)' : 'Loading 2,000 mg/670 mg (3 h)，下一個給藥間隔開始維持劑量',
   rr: { HD: [0, 0, 'after dialysis (AD) 給藥'], PD: [-1, -1, '資料不足'], CRRT: [2, 3, '資料不足；需高於 HD 劑量，依 CRRT clearance 評估'], SLED: [-1, -1, '資料不足'] },
   aki: 'w', tox: ['肝功能異常（ALT/AST 上升）', BL_TOX_NEURO],
   inf: { dil: { NS: '冷藏 24 h + ≤30°C 12 h', D5W: '冷藏 24 h + ≤30°C 6 h', LR: '冷藏 24 h + ≤30°C 12 h' }, v: [50, 100, 250], t: [3], ti: 0, fixed: 1, c: [1.5, 40], note: '一律 3-h 輸注（仿單）。溶解 10 mL SWFI（aztreonam 131.2 mg/mL），30 分鐘內完成稀釋' },
@@ -576,10 +578,11 @@ add({ id: 'ipm', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'carb', pifStart: '維�
   nx: 'Imipenem 癲癇閾值下降最明顯；CNS 感染或神經重症病人建議改用 meropenem。' + CARBA_VPA,
   inf: { dil: { NS: '≤5 mg/mL：室溫 4 h、冷藏 24 h', D5W: '室溫 4 h' }, v: [100, 250], t: [0.5, 1, 3], ti: 0, c: [0, 5] } });
 
-add({ id: 'rec', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'carb', novel: 1, g: 'Imipenem/Cilastatin/Relebactam', b: 'Recarbrio', zh: '', st: '1,250 mg/vial (500/500/250 mg)', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'kpc relebactam',
-  L: [T(500, 'q6h', { lb: '500 mg（總量）' }), T(750, 'q6h', { lb: '750 mg（總量）' }), T(1000, 'q6h', { lb: '1,000 mg（總量）' }), T(1250, 'q6h', { lb: '1,250 mg' })],
-  R: [[90, 3, 3], [60, 2, 2], [30, 1, 1], [15, 0, 0], [0, -1, -1, 'CrCl <15 未透析：不建議']],
-  rr: { HD: [0, 0, 'after dialysis (AD) 給藥'], PD: [-1, -1, '無資料'], CRRT: [-1, -1, '無資料'], SLED: [-1, -1, '無資料'] },
+add({ id: 'rec', ref: 'UpToDate・PI', rrRef: 'UpToDate', blg: 'carb', novel: 1, g: 'Imipenem/Cilastatin/Relebactam', b: 'Recarbrio', zh: '', st: '1,250 mg/vial (500/500/250 mg)', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'kpc relebactam',
+  L: [T(500, 'q12h', { lb: '500 mg（總量）' }), T(500, 'q8h', { lb: '500 mg（總量）' }), T(500, 'q6h', { lb: '500 mg（總量）' }), T(750, 'q6h', { lb: '750 mg（總量）' }), T(1000, 'q6h', { lb: '1,000 mg（總量）' }), T(1250, 'q6h', { lb: '1,250 mg' })],
+  R: [[90, 5, 5], [60, 4, 4], [30, 3, 3], [15, 2, 2], [0, 0, 0, '仿單不建議用於未接受血液透析者；無資料時可考慮 500 mg Q12H（UpToDate）', '<15']],
+  ld: (c) => (c.rrt === 'CRRT' || c.rrt === 'SLED' ? 'Loading 1,250 mg 單次，之後接續維持劑量' : ''),
+  rr: { HD: [2, 2, 'after dialysis (AD) 給藥'], PD: [1, 1, '仿單未研究；無資料時可考慮 500 mg Q8H'], CRRT: [3, 3, '1,250 mg 首劑後 750 mg Q6H'], SLED: [3, 3, '1,250 mg 首劑後：PIRRT 當天 750 mg Q8H 或 Q6H；非 PIRRT 日 500 mg Q8H'] },
   aki: 'w', tox: ['癲癇', CARBA_VPA], nx: CARBA_VPA,
   inf: { dil: { NS: '室溫 2 h、冷藏 24 h', D5W: '室溫 2 h、冷藏 24 h' }, v: [100], t: [0.5], ti: 0 } });
 
