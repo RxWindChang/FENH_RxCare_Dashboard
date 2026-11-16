@@ -1100,7 +1100,7 @@ function patient() {
     c.obese = c.bmi >= 30;
   }
   if (!c.ok) return c;
-  c.cgW = c.noHt ? ['TBW', c.wt, '未輸入身高，以 TBW 計算'] : c.bmi < 18.5 || c.wt < c.ibw ? ['TBW', c.wt, '過瘦（BMI <18.5）或 TBW < IBW'] : c.obese ? ['AdjBW', c.adj, '肥胖（BMI ≥30）'] : ['IBW', c.ibw, 'BMI 18.5–29.9（正常／過重）'];
+  c.cgW = c.noHt ? ['TBW', c.wt, '未輸入身高，以 TBW 計算'] : c.bmi < 18.5 || c.wt < c.ibw ? ['TBW', c.wt, '過瘦（BMI <18.5）或 TBW < IBW'] : c.bmi >= 25 ? ['AdjBW', c.adj, c.obese ? '肥胖（BMI ≥30）' : '過重（BMI 25–29.9）'] : ['IBW', c.ibw, '正常體重（BMI 18.5–24.9）']; /* Winter 2012：<18.5 TBW；18.5–24.9 IBW；≥25 AdjBW(0.4) */
   const cg = (w, scr = c.scr) => (140 - c.age) * w / (72 * scr) * (F ? 0.85 : 1);
   c.cgT = cg(c.wt); c.cgI = c.noHt ? null : cg(c.ibw); c.cgA = c.noHt ? null : cg(c.adj); c.cgAuto = cg(c.cgW[1]);
   const k = F ? 0.7 : 0.9, a = F ? -0.241 : -0.302;
@@ -1426,7 +1426,7 @@ function renderPatient() {
   rT.querySelectorAll('input[name=crp]').forEach((el) => el.addEventListener('change', () => { S.crPick = el.value; update(); }));
   $('basis').innerHTML = off
     ? `<div class="basis rrt"><span>劑量依據</span><b>${RRTNAME[C.rrt]}</b><span>接受 RRT：以 RRT 劑量為準，不採用腎功能估算</span></div>`
-    : `<div class="basis"><span>劑量依據：${C.crLabel}</span><b>${r0(C.cr)} <small style="font-size:12px">mL/min</small></b>${C.arc ? '<span>≥130：ARC</span>' : ''}</div><p class="hint" style="margin:6px 2px 0">${C.crKey === 'cg' ? `自動選擇：${C.cgW[2]} → C-G 以 ${C.cgW[0]} 計算。` : C.crKey === 'ucr' ? '已輸入尿液資料：以實測 CrCl 為準。' : ''}多數藥物仿單與臨床試驗以 C-G CrCl 作為腎劑量調整依據，CKD-EPI 僅供參考。</p>`;
+    : `<div class="basis"><span>劑量依據：${C.crLabel}</span><b>${r0(C.cr)} <small style="font-size:12px">mL/min</small></b>${C.arc ? '<span>≥130：ARC</span>' : ''}</div><p class="hint" style="margin:6px 2px 0">${C.crKey === 'cg' ? `自動選擇：${C.cgW[2]} → C-G 以 ${C.cgW[0]} 計算。` : C.crKey === 'ucr' ? '已輸入尿液資料：以實測 CrCl 為準。' : ''}多數藥物仿單與臨床試驗以 C-G CrCl 作為腎劑量調整依據，CKD-EPI 僅供參考。${C.age >= 65 && C.scr < 0.8 ? '<br><b>Scr 未進位</b>：對高齡且 Scr 較低者，將 Scr 進位到 0.8 或 1.0 代入 C-G 並不會提升準確度，反而會低估 CrCl 而給予不適當的低劑量（Winter MA, et al. Pharmacotherapy 2012;32:604-12）。' : ''}</p>`;
   $('pAlerts').innerHTML = patientAlerts(C).map(([t, h]) => `<div class="al ${t}">${h}</div>`).join('');
 }
 
