@@ -355,11 +355,12 @@ const REFS = {
 };
 const UTD_D = '2026/11/16';
 /* ================= 抗細菌：β-lactams & combinations ================= */
-add({ id: 'amp', ref: 'SG・UpToDate', rrRef: 'UpToDate・SG', blg: 'pen', naD: [33.35, 500], g: 'Ampicillin', b: 'Ampolin', zh: '安博黴素', st: '500 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'penicillin aminopenicillin',
-  L: [T(1000, 'q12h'), T(1000, 'q8h'), T(2000, 'q12h'), T(1000, 'q6h'), T(2000, 'q8h'), T(2000, 'q6h'), T(2000, 'q4h', { hd: 1, t: '腦膜炎／Enterococcus 心內膜炎' })],
+add({ id: 'amp', utd: '2026/11/16', utdSrc: 'Ampicillin: Drug information', ref: 'SG・UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', blg: 'pen', naD: [33.35, 500], g: 'Ampicillin', b: 'Ampolin', zh: '安博黴素', st: '500 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'penicillin aminopenicillin',
+  L: [T(2000, 'q24h'), T(1000, 'q12h'), T(1000, 'q8h'), T(2000, 'q12h'), T(1000, 'q6h'), T(2000, 'q8h'), T(2000, 'q6h'), T(2000, 'q4h', { hd: 1, t: '腦膜炎／Enterococcus 心內膜炎' })],
   ind: ['一般感染', 'Listeria／Enterococcus・Streptococcus 心內膜炎／CNS 感染'],
-  R: [[50, 5, 6], [30, 4, 5], [10, 2, 4], [0, 0, 2]],
-  rr: { HD: [0, 2, '透析日於 after dialysis (AD) 給藥'], PD: [0, 2], CRRT: [4, 5, 'Loading 2,000 mg'], SLED: [4, 5] },
+  R: [[50, 6, 7], [30, 5, 6], [15, 3, 5], [0, 0, 3, '', '', ['或 1,000 mg Q12H', '']]],
+  rr: { HD: [0, 3, '透析日於 after dialysis (AD) 給藥', ['或 1,000 mg Q12H', '']], PD: [0, 3, '', ['或 1,000 mg Q12H', '']], CRRT: [5, 6, 'Loading 2,000 mg；2,000 mg Q8–12H｜2,000 mg Q6–8H'], SLED: [5, 5, '2,000 mg Q8–12H｜2,000 mg Q8H；一劑排在 PIRRT 後'] },
+  arc: { i: 7, t: 'ARC：一般感染改 2,000 mg Q4H；原已 2,000 mg Q4H 者可能仍未達 PK/PD 目標，考慮延長或持續輸注。' },
   aki: 'w', tox: [BL_TOX_NEURO, '皮疹（尤其併 EBV 感染）、間質性腎炎'],
   inf: { dil: { NS: '≤30 mg/mL：室溫 8 h、冷藏 48 h', D5W: '安定性差（約 1–2 h），不建議' }, v: [50, 100], t: [0.25, 0.5], ti: 1, c: [0, 30] },
   nt: ['E. faecalis 心內膜炎：2,000 mg q4h + ceftriaxone 2,000 mg q12h。'] });
@@ -367,11 +368,14 @@ add({ id: 'amp', ref: 'SG・UpToDate', rrRef: 'UpToDate・SG', blg: 'pen', naD: 
 const SUL_CRAB_NOTE = 'CRAB 高劑量：IDSA 2024 AMR Guidance 建議 sulbactam 每日 9,000 mg（ampicillin-sulbactam 9,000 mg q8h 輸注 4 h，或 27,000 mg/24 h 持續輸注），須併用第二種活性藥物。IDSA 劑量表假設腎功能正常；腎功能不全之分段係依 sulbactam 每日總量比例推算（專家意見，無 RCT 驗證），AKI 初期與重症建議勿過早減量。';
 const SUL_TOX = ['高劑量：鈉負荷、肝功能異常（ALT/AST）、血球低下', BL_TOX_NEURO, '腹瀉'];
 const SAM_R = [[30, 3, 3], [15, 1, 1], [0, 0, 0]];
-const SAM_RR = { HD: [1, 1, '或 Q24H；透析日於 after dialysis (AD) 給藥'], PD: [0, 0], CRRT: [2, 2, 'Q8–12H'], SLED: [2, 2, '資料有限'] };
-add({ id: 'sam', ref: 'UpToDate', rrRef: 'UpToDate・SG', blg: 'pen', naD: [115, 1500], g: 'Ampicillin/Sulbactam', b: 'Unasyn (Sulampi)', zh: '舒安比', st: '1.5 g/vial (1 g/0.5 g)', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'unasyn sulampi',
+const SAM_RRB = { HD: [1, 1, '或 Q24H；透析日於 after dialysis (AD) 給藥'], SLED: [2, 2, '首劑 3,000 mg，之後 1,500–3,000 mg Q8–12H（一劑排在 PIRRT 後）'] };
+const SAM_ARC = { i: 3, t: 'ARC：1,500–3,000 mg Q4–6H。' };
+add({ id: 'sam', utd: '2026/11/16', utdSrc: 'Ampicillin and sulbactam: Drug information', ref: 'UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', blg: 'pen', naD: [115, 1500], g: 'Ampicillin/Sulbactam', b: 'Unasyn (Sulampi)', zh: '舒安比', st: '1.5 g/vial (1 g/0.5 g)', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'unasyn sulampi',
   modes: [
-    { k: 'd15', lab: '1,500 mg/dose', L: [T(1500, 'q24h'), T(1500, 'q12h'), T(1500, 'q8h'), T(1500, 'q6h')], R: SAM_R, rr: SAM_RR },
-    { k: 'd30', lab: '3,000 mg/dose', L: [T(3000, 'q24h'), T(3000, 'q12h'), T(3000, 'q8h'), T(3000, 'q6h')], R: SAM_R, rr: SAM_RR }],
+    { k: 'd15', lab: '1,500 mg/dose', L: [T(1500, 'q24h'), T(1500, 'q12h'), T(1500, 'q8h'), T(1500, 'q6h'), T(3000, 'q8h', { t: 'CRRT' })], R: SAM_R, arc: SAM_ARC,
+      rr: { ...SAM_RRB, PD: [1, 1, '或 3,000 mg Q24H'], CRRT: [4, 4, '建議每劑 3,000 mg', '或 3,000 mg Q12H'] } },
+    { k: 'd30', lab: '3,000 mg/dose', L: [T(3000, 'q24h'), T(3000, 'q12h'), T(3000, 'q8h'), T(3000, 'q6h')], R: SAM_R, arc: SAM_ARC,
+      rr: { ...SAM_RRB, PD: [0, 0, '或 1,500 mg Q12H'], CRRT: [2, 2, '', '或 3,000 mg Q12H'] } }],
   modeDefault: () => 'd30', aki: 'w', tox: [BL_TOX_NEURO, '皮疹、肝功能異常'],
   inf: { dil: { NS: '≤45 mg/mL：室溫 8 h', D5W: '室溫約 2 h，僅限短時輸注' }, v: [100, 250], t: [0.5], ti: 0, c: [0, 45] },
   nt: ['依腎功能延長給藥間隔，每劑 1,500 mg 或 3,000 mg（UpToDate／Lexicomp：CrCl ≥30 Q6H；15–29 Q12H；<15 Q24H）。', 'CRAB 治療請改用本院 sulbactam 單方高劑量（每日 9,000 mg）。'] });
@@ -385,16 +389,18 @@ add({ id: 'sul', pifRefKeep: 1, ref: 'IDSA MDRG(-) infection guideline 2024・IJ
   inf: { dil: { NS: '室溫 8 h', D5W: '室溫 4 h' }, v: [100, 250], t: [0.5, 4], ti: 0, note: 'CRAB 高劑量建議 4-h 延長輸注（pIF）' },
   nt: ['本院 sulbactam 單方僅用於 CRAB，不提供其他用途之劑量；須併用第二種活性藥物（IDSA MDRG(-) infection guideline 2024）。', '劑量依據：IDSA MDRG(-) infection guideline 2024（sulbactam 每日 9,000 mg 以上）；IJID 2024 Dec;149:107267（colistin 合併 sulbactam 9 vs 12 g/day 治療 CRAB pneumonia RCT）：CrCl ≥30 維持 3–4 g Q8H；CrCl <30（含 HD、SLED、CRRT、CAPD）先 3–4 g Q8H × 24 h，之後 1.5–2 g Q8H。'] });
 
-add({ id: 'oxa', naOpen: 1, ref: 'PI', rrRef: 'UpToDate・SG', blg: 'pen', naD: [57.3, 500], ind: ['一般感染（如 SSTI）', 'MSSA 菌血症／心內膜炎／骨髓炎'], indDef: 2, g: 'Oxacillin', b: 'Prostaphyllin (Ocillina)', zh: '歐西林', st: '500 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'mssa anti-staphylococcal penicillin',
+add({ id: 'oxa', utd: '2026/11/16', utdSrc: 'Oxacillin: Drug information', ref: 'UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', naOpen: 1, blg: 'pen', naD: [57.3, 500], ind: ['一般感染（如 SSTI）', 'MSSA 菌血症／心內膜炎／骨髓炎'], indDef: 2, g: 'Oxacillin', b: 'Prostaphyllin (Ocillina)', zh: '歐西林', st: '500 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'mssa anti-staphylococcal penicillin',
   L: [T(1000, 'q6h'), T(2000, 'q6h'), T(2000, 'q4h', { hd: 1, t: 'MSSA 菌血症／心內膜炎' })],
-  R: NA(1, 2, '無需依腎功能調整'), rr: SAME(1, 2, '不被透析移除'),
+  R: [[10, 1, 2, '無需依腎功能調整'], [0, 1, 2, 'CrCl <10：無需調整，但需監測神經毒性；非嚴重感染可考慮每日上限 8,000 mg']],
+  rr: { HD: [1, 2, '不被透析移除；監測神經毒性，非嚴重感染可考慮每日上限 8,000 mg'], PD: [1, 2, '監測神經毒性，非嚴重感染可考慮每日上限 8,000 mg'], CRRT: [1, 2, '無需調整'], SLED: [1, 2, '無需調整'] },
   aki: 'w', tox: ['肝炎（膽汁滯留型）', '間質性腎炎', '長期高劑量：嗜中性球低下（每週 CBC）', '低血鉀'],
   inf: { dil: { NS: '室溫 24 h、冷藏 7 d', D5W: '室溫 24 h' }, v: [50, 100], t: [0.5, 1], ti: 0 } });
 
-add({ id: 'peng', ref: 'SG', rrRef: 'UpToDate・SG', blg: 'pen', naD: [38.6, 1], ind: ['一般 Streptococcus 感染', '神經梅毒／心內膜炎／腦膜炎'], g: 'Penicillin G sodium', b: 'Penicillin G sodium', zh: '', st: '3 MU/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'pcn neurosyphilis', unit: 'MU',
-  L: [T(1, 'q6h'), T(2, 'q6h'), T(2, 'q4h'), T(3, 'q4h'), T(4, 'q4h', { hd: 1, t: '神經梅毒／心內膜炎／腦膜炎' })],
-  R: [[50, 2, 4], [10, 1, 3, '約 75% 劑量'], [0, 0, 1, '約 20–50% 劑量']],
-  rr: { HD: [0, 1, '透析日於 after dialysis (AD) 給藥'], PD: [0, 1], CRRT: [2, 3], SLED: [2, 2, '資料有限'] },
+add({ id: 'peng', utd: '2026/11/16', utdSrc: 'Penicillin G (intravenous and short-acting intramuscular): Drug information', ref: 'SG・UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', blg: 'pen', naD: [38.6, 1], ind: ['一般 Streptococcus 感染', '神經梅毒／心內膜炎／腦膜炎'], g: 'Penicillin G sodium', b: 'Penicillin G sodium', zh: '', st: '3 MU/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'pcn neurosyphilis', unit: 'MU',
+  L: [T(1, 'q8h'), T(1, 'q6h'), T(1, 'q4h'), T(2, 'q6h'), T(2, 'q4h'), T(3, 'q4h'), T(4, 'q4h', { hd: 1, t: '神經梅毒／心內膜炎／腦膜炎' })],
+  R: [[50.0001, 4, 6, '', '>50'], [30.0001, 3, 5, '約 50–75% 劑量', '>30–50'], [10, 1, 3, '約 25–50% 劑量', '10–30'], [0, 0, 2, '約 20–25% 劑量', '<10']],
+  rr: { HD: [1, 3, '首劑給予完整劑量，之後 25–50% 劑量；透析日於 after dialysis (AD) 給藥'], PD: [0, 2, '同 CrCl <10'], CRRT: [3, 5, '首劑給予完整劑量，之後 50–75% 劑量'], SLED: [3, 5, 'PIRRT 日：首劑完整劑量，之後 50–75% 劑量；非 PIRRT 日同 CrCl <10'] },
+  arc: { i: 6, t: 'ARC：使用該適應症最大劑量，可行時採持續輸注。' },
   aki: 'w', tox: [BL_TOX_NEURO + '（腎功能不全時最常見）', '鈉負荷：約 1.7–2 mEq Na/MU', 'Jarisch-Herxheimer 反應（梅毒）'],
   inf: { dil: { NS: '配製後冷藏 7 d、室溫 24 h', D5W: '室溫 24 h' }, v: [50, 100], t: [0.25, 0.5], ti: 1, note: '亦可 24 h 持續輸注（總量 18–24 MU）' },
   nt: ['神經梅毒：3–4 MU q4h（或 18–24 MU/day 持續輸注）×10–14 天。'] });
@@ -410,33 +416,36 @@ add({ id: 'bpg', ref: 'CDC 2021', rrRef: 'UpToDate・SG', blg: 'pen', g: 'Benzat
   tox: ['僅限深部肌肉注射，嚴禁靜脈注射（Hoigne／Nicolau 症候群）', 'Jarisch-Herxheimer 反應（梅毒）'],
   nt: ['神經梅毒、眼梅毒、耳梅毒之主要治療為 penicillin G 水溶液 IV 3–4 MU Q4H ×10–14 天（CDC STI Treatment Guidelines 2021）。', 'Bicillin L-A 缺貨，院內以 Extencilline 替代。'] });
 
-add({ id: 'tzp', naOpen: 1, ref: 'PI・UpToDate', rrRef: 'UpToDate・SG', blg: 'pen', pifStart: '維持劑量於首劑後 4 h 開始（CrCl <20、iHD、PD：6 h 後）', naD: [128, 2250], g: 'Piperacillin/Tazobactam', b: 'Tazocin (Tapimycin)', zh: '達比黴素', st: '2,250 mg/vial (2,000 mg/250 mg)', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'pip tazo tazocin pipera',
+add({ id: 'tzp', utd: '2026/11/16', utdSrc: 'Piperacillin and tazobactam: Drug information', ref: 'UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', naOpen: 1, blg: 'pen', pifStart: '維持劑量於首劑後 4 h 開始（CrCl <20、iHD、PD：6 h 後）', naD: [128, 2250], g: 'Piperacillin/Tazobactam', b: 'Tazocin (Tapimycin)', zh: '達比黴素', st: '2,250 mg/vial (2,000 mg/250 mg)', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'pip tazo tazocin pipera',
   ind: ['社區型感染', '院內感染（nosocomial）／P. aeruginosa'], indDef: 2, 
-  L: [T(2250, 'q12h'), T(2250, 'q8h'), T(2250, 'q6h'), T(4500, 'q12h'), T(3375, 'q6h'), T(4500, 'q6h', { hd: 1, t: '院內感染／P. aeruginosa' })],
-  R: [[40, 4, 5], [20, 2, 4], [0, 1, 2]],
-  rr: { HD: [3, 3, 'iHD：4,500 mg Q12H（透析日於 AD 給藥）'], PD: [0, 1], CRRT: [4, 5, '3,375–4,500 mg Q6–8H'], SLED: [2, 4] },
+  L: [T(2250, 'q12h'), T(2250, 'q8h'), T(2250, 'q6h'), T(4500, 'q12h'), T(3375, 'q8h'), T(3375, 'q6h'), T(4500, 'q8h'), T(4500, 'q6h', { hd: 1, t: '院內感染／P. aeruginosa' })],
+  R: [[100, 5, 7, 'CrCl ≥100：建議改延長輸注（pIF），較易達 PK/PD 目標'], [40, 5, 7], [20, 2, 5, '', '', ['', '或 4,500 mg Q8H']], [0, 1, 2, '', '', ['', '或 4,500 mg Q12H']]],
+  rr: { HD: [3, 3, '透析日於 after dialysis (AD) 給藥', '或 2,250 mg Q8H'], PD: [3, 3, '', '或 2,250 mg Q8H'], CRRT: [6, 6, 'Loading 4,500 mg；CRRT 中斷時需調整劑量，避免蓄積', '或 2,250 mg Q6H'], SLED: [4, 6, 'SLED（8 h，effluent 約 300 mL/min）：3,375 mg Q8H；高容量（effluent >500 mL/min）：4,500 mg Q8H'] },
+  ld: (c) => (c.rrt === 'CRRT' ? 'Loading 4,500 mg' : ''),
   im: ['std', 'pif', 'cif'], pifH: 4, cifBag: 12,
-  pif: { L: [T(3375, 'q12h'), T(4500, 'q12h'), T(3375, 'q8h'), T(4500, 'q8h', { hd: 1 })], R: [[21, 2, 3], [0, 0, 1]],
-    rr: { HD: [0, 1, 'AD 給藥'], PD: [0, 1], CRRT: [2, 3, 'CVVHDF 1 L/h 為基準'], SLED: [2, 3, '資料有限'] }, nt: ['UpToDate：Dosing for prolonged infusions of beta-lactams（Graphic 99434 v11）：CrCl >20 Q8H；≤20、iHD、PD Q12H；CRRT Q8H；皆 4 h 輸注。'] },
-  arc: { i: 5, t: 'ARC：建議 4,500 mg Q6H，或改 pIF／cIF，並考慮 TDM。' },
+  pif: { L: [T(3375, 'q12h'), T(4500, 'q12h'), T(3375, 'q8h'), T(4500, 'q8h', { hd: 1 })], R: [[20, 2, 3], [0, 0, 1]],
+    rr: { HD: [0, 1, 'AD 給藥'], PD: [0, 1], CRRT: [2, 3, 'CVVHDF 1 L/h 為基準'], SLED: [2, 3, '資料有限'] }, nt: ['UpToDate：Dosing for prolonged infusions of beta-lactams（Graphic 99434 v11）：CrCl >20 Q8H；≤20、iHD、PD Q12H；CRRT Q8H；皆 4 h 輸注。', '重症、MIC 16 mg/L 或 CrCl 較高者：4,500 mg Q6H 3-h 延長輸注最能達到 PK/PD 目標（CrCl 20–39 改 Q8H，<20 改 Q12H；FDA 2023、UpToDate, 2026/11/16）。'] },
+  arc: { i: 7, t: 'ARC：CrCl 130–169：4,500 mg Q6H 3-h 延長輸注，或 loading 4,500 mg 後 18 g/24 h 持續輸注；CrCl ≥170：建議 loading 4,500 mg 後 22.5 g/24 h 持續輸注；並考慮 TDM。' },
   aki: 'w', ob: '肥胖：不建議常規加量；重症肥胖病人建議延長輸注 + TDM（Märtson, Lancet ID 2025）。',
   tox: ['長期使用（>10–14 天）：嗜中性球低下、血小板低下', BL_TOX_NEURO, '低血鉀、出血傾向'],
   inf: { dil: { NS: '室溫 24 h、冷藏 48 h', D5W: '室溫 24 h、冷藏 48 h' }, v: [50, 100, 150], t: [0.5, 4], ti: 0 },
   nt: [EI_NOTE] });
 
-add({ id: 'cfz', ref: 'PI・UpToDate', rrRef: 'UpToDate・SG', blg: 'ceph', naD: [47, 1000], ind: ['一般感染（SSTI、UTI）', 'MSSA 菌血症／深部感染'], indDef: 2, g: 'Cefazolin', b: 'Cefamezin', zh: '西華樂林', st: '1,000 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: '1st generation cephalosporin mssa prophylaxis',
-  L: [T(1000, 'q24h'), T(1000, 'q12h'), T(2000, 'q24h'), T(1000, 'q8h'), T(2000, 'q12h'), T(2000, 'q8h', { t: 'MSSA 菌血症／重症' })],
-  R: [[35, 3, 5], [11, 1, 4], [0, 0, 2]],
-  rr: { HD: [0, 2, '或 2,000 mg AD (TIW)，72 h 間隔前 3,000 mg'], PD: [0, 1], CRRT: [4, 5, 'Loading 2,000 mg'], SLED: [4, 5] },
+add({ id: 'cfz', utd: '2026/11/16', utdSrc: 'Cefazolin: Drug information', ref: 'UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', blg: 'ceph', naD: [47, 1000], ind: ['一般感染（SSTI、UTI）', 'MSSA 菌血症／深部感染'], indDef: 2, g: 'Cefazolin', b: 'Cefamezin', zh: '西華樂林', st: '1,000 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: '1st generation cephalosporin mssa prophylaxis',
+  L: [T(1000, 'q24h'), T(1000, 'q12h'), T(2000, 'q24h'), T(1000, 'q8h'), T(2000, 'q12h'), T(2000, 'q8h', { t: 'MSSA 菌血症／重症' }), T(2000, 'q6h', { t: 'ARC' })],
+  R: [[50, 3, 5], [30, 1, 4, 'UpToDate：1,000–2,000 mg Q8–12H'], [10.0001, 1, 4, 'MSSA／嚴重感染：部分專家使用 2,000 mg Q12H', '>10–29'], [0, 0, 0, '', '≤10']],
+  rr: { HD: [0, 0, '透析日於 after dialysis (AD) 給藥', ['', '或 2,000 mg AD TIW（72 h 間隔前 3,000 mg）']], PD: [0, 0, '', '或 500 mg Q12H'], CRRT: [3, 4, 'Loading 2,000 mg'], SLED: [3, 4, 'Loading 2,000 mg'] },
+  arc: { i: 6, t: 'ARC：2,000 mg Q6H。' },
   aki: 'w', tox: [BL_TOX_NEURO, '過敏反應', '長期：嗜中性球低下'],
   inf: { dil: { NS: '室溫 24 h、冷藏 10 d', D5W: '室溫 24 h、冷藏 10 d' }, v: [50, 100], t: [0.5], ti: 0, note: '亦可 IV push 3–5 min（1,000 mg 溶於 10 mL）' },
   cx: '手術預防：2,000 mg（≥120 kg 用 3,000 mg）切皮前 60 min 內；術中每 4 h 追加（CPB 期間亦同）。',
   nt: ['手術預防：2,000 mg（≥120 kg：3,000 mg），術中每 4 h 追加。'] });
 
-add({ id: 'cxm', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'ceph', naD: [42, 750], ind: ['750 mg/dose', '1,500 mg/dose'], g: 'Cefuroxime', b: 'Zinacef (Furoxime)', zh: '福樂欣', st: '750 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: '2nd generation cephalosporin',
-  L: [T(750, 'q24h'), T(750, 'q12h'), T(750, 'q8h'), T(1500, 'q12h'), T(1500, 'q8h')],
-  R: [[20, 2, 4], [10, 1, 3], [0, 0, 1]],
-  rr: { HD: [0, 1, 'after dialysis (AD) 給藥'], PD: [0, 0], CRRT: [2, 3], SLED: [3, 3] },
+add({ id: 'cxm', utd: '2026/11/16', utdSrc: 'Cefuroxime: Drug information', ref: 'UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', blg: 'ceph', naD: [42, 750], ind: ['750 mg/dose', '1,500 mg/dose'], g: 'Cefuroxime', b: 'Zinacef (Furoxime)', zh: '福樂欣', st: '750 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: '2nd generation cephalosporin',
+  L: [T(750, 'q24h'), T(750, 'q12h'), T(1500, 'q24h'), T(750, 'q8h'), T(1500, 'q12h'), T(1500, 'q8h'), T(1500, 'q6h', { t: 'ARC：3-h 延長輸注' })],
+  R: [[30, 3, 5], [10, 1, 4], [0, 0, 2]],
+  rr: { HD: [0, 2, 'after dialysis (AD) 給藥'], PD: [0, 2], CRRT: [4, 4], SLED: [4, 4] },
+  arc: { i: 6, t: 'ARC：1,500 mg Q6H 3-h 延長輸注，或 loading 1,500 mg 後 6,000 mg/24 h 持續輸注。' },
   aki: 'w', tox: [BL_TOX_NEURO],
   inf: { dil: { NS: '室溫 24 h、冷藏 7 d', D5W: '室溫 24 h' }, v: [50, 100], t: [0.5], ti: 0 } });
 
@@ -456,42 +465,48 @@ add({ id: 'flx', ref: 'Antibiotics 2022', rrRef: 'Andrassy 1991・透析ガイ�
   inf: { dil: { NS: '建議配製後儘速使用', D5W: '建議配製後儘速使用' }, v: [100], t: [0.5, 1], ti: 0 },
   nt: ['腎功能劑量依 PK/PD 模擬（目標 70% fT>MIC，ESBL-producing Enterobacterales）：CrCl >50 為 1 g Q6H、CrCl 10–50 為 1 g Q8H–Q12H、CrCl <10 為 1 g QD。Flomoxef t1/2 約 1 h，屬時間依賴型；每日總量相同時，縮短給藥間隔較能提高 fT>MIC。研究族群為侵襲性 UTI，用於其他感染部位時需外推。', 'Reference：Antibiotics 2022;11(4):456. doi:10.3390/antibiotics11040456；iHD／PD：Andrassy 1991、日本《透析患者への投薬ガイドブック》。'] });
 
-add({ id: 'cro', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'ceph', naD: [83, 1000], g: 'Ceftriaxone', b: 'Rocephin (Sintrix)', zh: '信得瑞', st: '1 g/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: '3rd generation cephalosporin',
+add({ id: 'cro', utd: '2026/11/16', utdSrc: 'Ceftriaxone: Drug information', ref: 'UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', blg: 'ceph', naD: [83, 1000], g: 'Ceftriaxone', b: 'Rocephin (Sintrix)', zh: '信得瑞', st: '1 g/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: '3rd generation cephalosporin',
   modes: [
     { k: 'gen', lab: '一般感染', L: [T(1000, 'q12h', { ps: '(2,000 mg/day)' }), T(2000, 'q12h', { ps: '(4,000 mg/day)' })], R: NA(0, 0, '無需依腎功能調整'), rr: SAME(0, 0, '不被透析移除') },
     { k: 'cns', lab: 'CNS 感染／併 ampicillin 治療 E. faecalis', L: [T(2000, 'q12h', { hd: 1 })], R: NA(0, 0, '限定 2,000 mg Q12H'), rr: SAME(0, 0, '限定 2,000 mg Q12H') }],
   aki: 'w', tox: ['假性膽結石 (pseudolithiasis)', 'ESRD 合併高劑量：腦病變 (encephalopathy)', '免疫性溶血', '不可與含鈣溶液同管輸注'],
   inf: { dil: { NS: '室溫 48 h、冷藏 10 d', D5W: '室溫 48 h、冷藏 10 d' }, v: [50, 100], t: [0.5], ti: 0, note: '禁用含鈣溶液（LR、Ringer）同管輸注' },
-  nt: ['肝腎功能皆嚴重不全：每日不超過 2,000 mg。'] });
+  nt: ['腎功能不全／透析：每日 >2,000 mg 未經研究，合併肝功能異常時需密切監測（UpToDate, 2026/11/16）。', 'ARC（CrCl ≥150 mL/min，empiric 或 MIC 2 mg/L）：2,000 mg Q12H。', 'iHD 替代方案：2,000 mg AD TIW（MIC ≤1 mg/L）。', '肝腎功能皆嚴重不全：每日不超過 2,000 mg。'] });
 
-add({ id: 'ctx', ref: 'UpToDate・PI', rrRef: 'UpToDate・SG', blg: 'ceph', naD: [24, 500], g: 'Cefotaxime', b: 'Claforan', zh: '可活能', st: '500 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: '3rd generation cephalosporin meningitis',
+const CTX_GL = [T(1000, 'q24h'), T(2000, 'q24h'), T(1000, 'q8h', { t: '輕中度感染' }), T(2000, 'q12h'), T(2000, 'q8h'), T(2000, 'q6h', { t: '重症／菌血症／需較高劑量' })];
+const CTX_SLED = 'PIRRT 日同 CrCl >10–50（一劑排在 PIRRT 後）；非 PIRRT 日同 CrCl ≤10';
+add({ id: 'ctx', utd: '2026/11/16', utdSrc: 'Cefotaxime (United States: Limited availability): Drug information', ref: 'UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', blg: 'ceph', naD: [24, 500], g: 'Cefotaxime', b: 'Claforan', zh: '可活能', st: '500 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: '3rd generation cephalosporin meningitis',
   modes: [
-    { k: 'gen', lab: '一般感染（1–2 g Q6–8H）',
-      L: [T(1000, 'q24h'), T(2000, 'q24h'), T(1000, 'q8h', { t: '輕中度感染' }), T(2000, 'q12h'), T(2000, 'q8h'), T(2000, 'q6h', { t: '重症／菌血症／需較高劑量' })],
-      R: [[50, 4, 4], [10, 3, 3], [0, 1, 1]],
-      rr: { HD: [1, 1, '透析日於 after dialysis (AD) 給藥'], PD: [0, 0], CRRT: [3, 3], SLED: [3, 3, '資料有限'] } },
+    { k: 'gen', lab: '一般感染（1–2 g Q8H 為基準）',
+      L: CTX_GL,
+      R: [[50.0001, 4, 4, '', '>50'], [10.0001, 3, 3, '', '>10–50'], [0, 1, 1, '', '≤10']],
+      rr: { HD: [1, 1, '透析日於 after dialysis (AD) 給藥'], PD: [0, 0, 'UpToDate：1,000–2,000 mg QD'], CRRT: [3, 3], SLED: [3, 3, CTX_SLED] } },
+    { k: 'sev', lab: '重症（1–2 g Q6H 為基準）',
+      L: CTX_GL,
+      R: [[50.0001, 5, 5, '', '>50'], [10.0001, 4, 4, '', '>10–50'], [0, 3, 3, '', '≤10']],
+      rr: { HD: [3, 3, '透析日於 after dialysis (AD) 給藥'], PD: [3, 3], CRRT: [4, 4], SLED: [4, 4, CTX_SLED] } },
     { k: 'cns', lab: 'CNS 感染／腦膜炎（2,000 mg Q4H）',
       L: [T(2000, 'q24h'), T(2000, 'q12h'), T(2000, 'q8h'), T(2000, 'q6h'), T(2000, 'q4h', { t: 'CNS 感染：每日 12 g（IDSA 細菌性腦膜炎 8–12 g/day Q4–6H）' })],
-      R: [[50, 4, 4], [10, 2, 2], [0, 1, 1]],
-      rr: { HD: [1, 1, '透析日於 after dialysis (AD) 給予其中一劑'], PD: [1, 1, '資料有限'], CRRT: [3, 3], SLED: [3, 3, '資料有限'] } }],
+      R: [[50.0001, 4, 4, '', '>50'], [10.0001, 2, 2, 'UpToDate：2,000 mg Q6–8H', '>10–50'], [0, 1, 1, '', '≤10']],
+      rr: { HD: [1, 1, '透析日於 after dialysis (AD) 給予其中一劑'], PD: [1, 1], CRRT: [3, 3, 'UpToDate：同 CrCl >10–50（2,000 mg Q6–8H）'], SLED: [3, 3, CTX_SLED] } }],
   nt: ['先依適應症決定每劑劑量（一般 2,000 mg Q8H；CNS 2,000 mg Q4H），再依腎功能延長給藥間隔：CrCl 10–50 約減為常規每日量 50–67%，CrCl <10 約 33–50%（仿單：CrCl <20 劑量減半）。'],
   aki: 'w', tox: [BL_TOX_NEURO, '快速推注：心律不整'],
   inf: { dil: { NS: '室溫 24 h、冷藏 5 d', D5W: '室溫 24 h' }, v: [50, 100], t: [0.5], ti: 0 } });
 
-add({ id: 'caz', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'ceph', pifStart: '維持劑量依原給藥間隔開始', naD: [52, 1000], ind: ['一般感染', 'P. aeruginosa／院內感染'], g: 'Ceftazidime', b: 'Fortum (Sintum)', zh: '信騰', st: '2,000 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'pseudomonas antipseudomonal',
-  L: [T(500, 'q48h'), T(500, 'q24h'), T(1000, 'q48h'), T(1000, 'q24h'), T(1000, 'q12h'), T(2000, 'q24h'), T(1000, 'q8h'), T(2000, 'q12h'), T(2000, 'q8h', { t: 'P. aeruginosa／重症' })],
-  R: [[50, 6, 8], [31, 4, 7], [16, 3, 5], [6, 1, 3], [0, 0, 2]],
-  rr: { HD: [2, 3, 'Loading 1,000 mg；after dialysis (AD) 給藥'], PD: [1, 3, 'Loading 1,000 mg'], CRRT: [4, 7], SLED: [7, 7] },
-  arc: { i: 8, t: 'ARC：2,000 mg Q8H，建議改 pIF 或 cIF（6,000 mg/24 h）。' }, im: ['std', 'pif', 'cif'], pifH: 3, cifBag: 8,
+add({ id: 'caz', utd: '2026/11/16', utdSrc: 'Ceftazidime: Drug information', ref: 'UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', blg: 'ceph', pifStart: '維持劑量依原給藥間隔開始', naD: [52, 1000], ind: ['一般感染', 'P. aeruginosa／院內感染'], g: 'Ceftazidime', b: 'Fortum (Sintum)', zh: '信騰', st: '2,000 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'pseudomonas antipseudomonal',
+  L: [T(500, 'q24h'), T(1000, 'q24h'), T(1000, 'q12h'), T(2000, 'q24h'), T(1000, 'q8h'), T(2000, 'q12h'), T(2000, 'q8h', { t: 'P. aeruginosa／重症' }), T(2000, 'q6h', { t: 'ARC' })],
+  R: [[50.0001, 4, 6, '', '>50'], [31, 2, 5, '', '31–50'], [16, 1, 3, '', '16–30'], [0, 0, 1, '', '≤15']],
+  rr: { HD: [1, 1, '透析日於 after dialysis (AD) 給藥'], PD: [1, 1], CRRT: [5, 6, '2,000 mg Q8–12H（高 MIC 或 sepsis 取 Q8H）；或 loading 2,000 mg 後 3,000 mg/24 h 持續輸注'], SLED: [5, 5] },
+  arc: { i: 7, t: 'ARC：2,000 mg Q6H；或 loading 2,000 mg 後 10 g/24 h 持續輸注。' }, im: ['std', 'pif', 'cif'], pifH: 3, cifBag: 8,
   aki: 'w', tox: [BL_TOX_NEURO + '（腎衰竭時常見）'],
   inf: { dil: { NS: '≤40 mg/mL：室溫 24 h、冷藏 7 d', D5W: '室溫 24 h' }, v: [50, 100], t: [0.5, 3, 4], ti: 0, c: [0, 40], note: '配製時產生 CO₂，需排氣' },
   nt: [EI_NOTE] });
 
-add({ id: 'fep', ref: 'PI・UpToDate', rrRef: 'UpToDate・SG', blg: 'ceph', pifStart: '維持劑量依原給藥間隔開始（例：Q8H 則首劑後 8 h）', ind: ['一般感染', 'P. aeruginosa／CNS／發燒性嗜中性球低下'], indDef: 2, g: 'Cefepime', b: 'Maxipime (Supecef)', zh: '斯沛服', st: '500 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: '4th generation cephalosporin pseudomonas',
-  L: [T(500, 'q24h'), T(1000, 'q24h'), T(2000, 'q24h'), T(1000, 'q12h'), T(2000, 'q12h'), T(2000, 'q8h', { hd: 1, t: 'P. aeruginosa／CNS／FN' })],
-  R: [[60, 4, 5], [30, 3, 4], [11, 1, 2], [0, 0, 1]],
-  rr: { HD: [0, 1, 'Loading 1,000 mg；after dialysis (AD) 給藥（或 2,000 mg AD TIW）'], PD: [1, 1], CRRT: [4, 5, '1,000–2,000 mg q8–12h'], SLED: [4, 4] },
-  arc: { i: 5, t: 'ARC：2,000 mg Q8H，建議改 pIF（3–4 h）或 cIF。' }, im: ['std', 'pif', 'cif'], pifH: 3, cifBag: 12,
+add({ id: 'fep', utd: '2026/11/16', utdSrc: 'Cefepime: Drug information', ref: 'UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', blg: 'ceph', pifStart: '維持劑量依原給藥間隔開始（例：Q8H 則首劑後 8 h）', ind: ['一般感染', 'P. aeruginosa／CNS／發燒性嗜中性球低下'], indDef: 2, g: 'Cefepime', b: 'Maxipime (Supecef)', zh: '斯沛服', st: '500 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: '4th generation cephalosporin pseudomonas',
+  L: [T(500, 'q24h'), T(1000, 'q24h'), T(2000, 'q24h'), T(1000, 'q12h'), T(2000, 'q12h'), T(1000, 'q6h', { t: 'SLED' }), T(2000, 'q8h', { hd: 1, t: 'P. aeruginosa／CNS／FN' }), T(2000, 'q6h', { t: 'ARC：3-h 延長輸注' })],
+  R: [[60, 4, 6], [30, 3, 4], [11, 1, 3, '', '', ['', '或 2,000 mg QD']], [0, 0, 1]],
+  rr: { HD: [0, 1, '首日 1,000 mg，之後透析日於 after dialysis (AD) 給藥。TIW 方案：無尿且 MIC <4 mg/L → 1,500 mg AD（下次透析 48 h）／2,000 mg AD（72 h）；empiric、有殘餘腎功能或 MIC ≥4 mg/L → 2,000 mg AD'], PD: [1, 1], CRRT: [4, 6, '2,000 mg Q8–12H；effluent <20 mL/kg/h 用 Q12H，≥35 mL/kg/h 用 Q8H'], SLED: [5, 5, 'Loading 2,000 mg 後 1,000 mg Q6H；或 PIRRT 開始時 2,000 mg、結束後 3,000 mg；非 PIRRT 日依殘餘腎功能給藥'] },
+  arc: { i: 7, t: 'ARC：2,000 mg Q6H 3-h 延長輸注（empiric 或 MIC >4 mg/L），密切監測神經毒性，可行時 TDM。' }, im: ['std', 'pif', 'cif'], pifH: 3, cifBag: 12,
   pif: { L: [T(1000, 'q24h'), T(1000, 'q12h'), T(2000, 'q12h'), T(2000, 'q8h', { hd: 1 })], R: [[50, 3, 3], [30, 2, 2], [15, 1, 1], [0, 0, 0]],
     rr: { HD: [0, 0, 'AD 給藥'], PD: [0, 0, '比照 CrCl <15'], CRRT: [2, 2, 'CVVHDF 1 L/h 為基準'], SLED: [2, 2, '資料有限'] }, nt: ['UpToDate：Dosing for prolonged infusions of beta-lactams（Graphic 99434 v11）：3–4 h 輸注（部分研究用 3 h）。'] },
   aki: 'w', tox: ['Cefepime 誘發神經毒性 (CIN)：腦病變 (encephalopathy)、肌抽躍 (myoclonus)、NCSE；腎功能不全、劑量未調整、既有 CNS 疾病為危險因子；可考慮 TDM（trough >20 mg/L 風險增加）'],
@@ -506,8 +521,8 @@ add({ id: 'cps', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'ceph', naD: [68.5, 100
   inf: { dil: { NS: '室溫 24 h', D5W: '室溫 24 h', LR: '需先以 SWFI 溶解再稀釋' }, v: [100], t: [0.5, 1], ti: 0, note: '勿與 aminoglycoside 同管混合' },
   nt: ['使用高劑量（4,000 mg q12h 以上）時需注意出血徵象或 hypoprothrombinemia。'] });
 
-const CPT_RR = { HD: [0, 0, 'after dialysis (AD) 給藥'], PD: [0, 0, '資料有限'], CRRT: [2, 2, '文獻 400–600 mg（Pistolesi 2019）'], SLED: [2, 2, '資料有限'] };
-add({ id: 'cpt', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'ceph', g: 'Ceftaroline', b: 'Zinforo', zh: '捷復寧', st: '600 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'mrsa vre 5th generation cephalosporin',
+const CPT_RR = { HD: [0, 0, '透析日一劑排在 after dialysis (AD)'], PD: [0, 0], CRRT: [2, 2], SLED: [2, 2] };
+add({ id: 'cpt', utd: '2026/11/16', utdSrc: 'Ceftaroline: Drug information', ref: 'UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', blg: 'ceph', g: 'Ceftaroline', b: 'Zinforo', zh: '捷復寧', st: '600 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'mrsa vre 5th generation cephalosporin',
   modeDefault: () => 'q12',
   modes: [
     { k: 'q8', lab: 'q8h：嚴重 MRSA 感染／VRE 合併治療', L: [T(200, 'q8h'), T(300, 'q8h'), T(400, 'q8h'), T(600, 'q8h', { hd: 1 })],
@@ -515,7 +530,7 @@ add({ id: 'cpt', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'ceph', g: 'Ceftaroline
       inf: { dil: { NS: '室溫 6 h、冷藏 24 h', D5W: '室溫 6 h、冷藏 24 h', LR: '相容' }, v: [50, 100, 250], t: [2], ti: 0, fixed: 1, note: '嚴重 MRSA（Q8H）：限定延長輸注 ≥2 h' } },
     { k: 'q12', lab: 'q12h：其他感染', L: [T(200, 'q12h'), T(300, 'q12h'), T(400, 'q12h'), T(600, 'q12h')],
       R: [[51, 3, 3], [31, 2, 2], [15, 1, 1], [0, 0, 0]], rr: CPT_RR,
-      arc: { i: 3, t: 'ARC (CrCl >150)：建議改用 600 mg q8h。' } }],
+      arc: { i: 3, t: 'ARC（CrCl ≥130）：建議改用 600 mg Q8H，輸注 2 h。' } }],
   aki: 'w', tox: ['使用 >2 週（尤其 q8h 高劑量）：嗜中性球低下，每週 CBC', 'Eosinophilic pneumonia', "Coombs' test 呈陽性，可能合併溶血 (hemolysis)"],
   inf: { dil: { NS: '室溫 6 h、冷藏 24 h', D5W: '室溫 6 h、冷藏 24 h', LR: '相容' }, v: [50, 100, 250], t: [1, 2], ti: 0 },
   nt: ['給藥間隔依感染類型選擇：q8h（嚴重 MRSA 菌血症／肺炎，或與 daptomycin 等合併治療 VRE），q12h（其他感染）；每劑劑量依腎功能決定（>50：600 mg；31–50：400 mg；15–30：300 mg；<15／HD：200 mg）。'] });
@@ -556,10 +571,10 @@ add({ id: 'azavi', utd: '2026/11/16', utdSrc: 'Aztreonam and avibactam: Drug inf
   inf: { dil: { NS: '冷藏 24 h + ≤30°C 12 h', D5W: '冷藏 24 h + ≤30°C 6 h', LR: '冷藏 24 h + ≤30°C 12 h' }, v: [50, 100, 250], t: [3], ti: 0, fixed: 1, c: [1.5, 40], note: '一律 3-h 輸注（仿單）。溶解 10 mL SWFI（aztreonam 131.2 mg/mL），30 分鐘內完成稀釋' },
   nt: ['臺灣已核准，健保不給付（自費）。', '劑量依 US FDA（2025）與 EMA SmPC，兩者一致：Loading 2,670 mg (2,000/670 mg)，維持 2,000 mg (1,500/500 mg) q6h，皆 3-h 輸注。', 'MBL-producing Enterobacterales 首選之一（IDSA 2024）。'] });
 
-add({ id: 'etp', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'carb', naD: [137, 1000], g: 'Ertapenem', b: 'Invanz', zh: '益滿治', st: '1,000 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'carbapenem esbl',
+add({ id: 'etp', utd: '2026/11/16', utdSrc: 'Ertapenem: Drug information', ref: 'UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', blg: 'carb', naD: [137, 1000], g: 'Ertapenem', b: 'Invanz', zh: '益滿治', st: '1,000 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'carbapenem esbl',
   L: [T(500, 'q24h'), T(1000, 'q24h')],
   R: [[31, 1, 1], [0, 0, 0]],
-  rr: { HD: [0, 0, '若於 HD 前 6 h 內給藥，AD補 150 mg'], PD: [0, 0], CRRT: [0, 1, '500–1,000 mg q24h'], SLED: [1, 1, '1,000 mg q24h (Sethi 2018)'] },
+  rr: { HD: [0, 0, '於 HD 前 ≥6 h 或 AD 給藥；若於 HD 前 6 h 內給藥，AD 補 150 mg；或 500–1,000 mg AD TIW'], PD: [0, 0], CRRT: [1, 1], SLED: [1, 1, '或首劑 500 mg，之後每次 PIRRT 後 500 mg'] },
   aki: 'w', ob: '肥胖／低白蛋白：游離分率改變，標準劑量 PTA 可能不足，重症肥胖可考慮改用其他 carbapenem。',
   tox: ['癲癇（腎功能不全、CNS 病史）', CARBA_VPA],
   nx: CARBA_VPA,
@@ -567,35 +582,37 @@ add({ id: 'etp', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'carb', naD: [137, 1000
 
 const MEM_L = [T(500, 'q24h'), T(500, 'q12h'), T(1000, 'q24h'), T(500, 'q8h'), T(1000, 'q12h'), T(1000, 'q8h'), T(2000, 'q12h'), T(2000, 'q8h', { hd: 1 })];
 const MEM_L_EI = MEM_L.map((t) => ({ ...t, x: '3-h pIF' }));
-add({ id: 'mem', ref: 'PI・UpToDate', rrRef: 'UpToDate・SG', blg: 'carb', noDilIM: ['D5W'], pifStart: '維持劑量依原給藥間隔開始（例：Q8H 則首劑後 8 h）', naD: [45.1, 500], g: 'Meropenem', b: 'Mepem (Mepenem)', zh: '滅平寧', st: '500 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'carbapenem',
+const MEM_SLED = '1,000 mg Q12H；殘餘尿量 ≥300 mL/day 可增至 2,000 mg Q8H';
+add({ id: 'mem', utd: '2026/11/16', utdSrc: 'Meropenem: Drug information', ref: 'UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', blg: 'carb', noDilIM: ['D5W'], pifStart: '維持劑量依原給藥間隔開始（例：Q8H 則首劑後 8 h）', naD: [45.1, 500], g: 'Meropenem', b: 'Mepem (Mepenem)', zh: '滅平寧', st: '500 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'carbapenem',
   modes: [
     { k: 'std', col: 1, lab: 'cIAI／cUTI／菌血症／發燒性嗜中性球低下', L: MEM_L, R: [[50.0001, 5, 5, '', '>50'], [25.0001, 4, 4, '', '>25–50'], [10, 1, 1, '', '10–25'], [0, 0, 0, '', '<10']],
-      rr: { HD: [0, 0, 'after dialysis (AD) 給藥'], PD: [0, 0], CRRT: [4, 4, '1,000 mg Q8–12H'], SLED: [4, 4] },
+      rr: { HD: [0, 0, 'after dialysis (AD) 給藥'], PD: [0, 0], CRRT: [3, 3, 'Loading 1,000 mg；之後 500–1,000 mg Q8H'], SLED: [4, 4] },
       nt: ['仿單 1,000 mg Q8H（FN 依 IDSA）；菌血症由敏感 GNB 所致時標準劑量即可。'] },
-    { k: 'cns', col: 2, lab: 'CNS 感染（腦膜炎／腦膿瘍）', L: MEM_L, R: [[50.0001, 7, 7, '', '>50'], [25.0001, 6, 6, '', '>25–50'], [10, 4, 4, '', '10–25'], [0, 2, 2, '', '<10']],
-      rr: { HD: [2, 2, '1,000 mg QD，AD 給藥'], PD: [2, 2], CRRT: [7, 7, '2,000 mg Q8H（腦膜炎）'], SLED: [6, 6] },
+    { k: 'cns', col: 2, lab: 'CNS 感染（腦膜炎／腦膿瘍）', L: MEM_L, R: [[50.0001, 7, 7, '', '>50'], [25.0001, 6, 6, '', '>25–50'], [10, 4, 4, '', '10–25'], [0, 1, 1, '', '<10']],
+      rr: { HD: [1, 1, 'AD 給藥'], PD: [1, 1], CRRT: [7, 7, '2,000 mg Q8H（腦膜炎）'], SLED: [4, 4, MEM_SLED] },
       nt: ['腦膜炎：2,000 mg Q8H（仿單；IDSA 細菌性腦膜炎指引 2004、ESCMID 2016）。'] },
-    { k: 'crit', col: 2, lab: '重症／HAP-VAP／P. aeruginosa／CRE 高 MIC', L: MEM_L, R: [[50.0001, 7, 7, '', '>50'], [25.0001, 6, 6, '', '>25–50'], [10, 4, 4, '', '10–25'], [0, 2, 2, '', '<10']],
-      rr: { HD: [2, 2, 'AD 給藥'], PD: [2, 2], CRRT: [5, 7, '1,000–2,000 mg Q8H'], SLED: [6, 6] },
+    { k: 'crit', col: 2, lab: '重症／HAP-VAP／P. aeruginosa／CRE 高 MIC', L: MEM_L, R: [[50.0001, 7, 7, '', '>50'], [25.0001, 6, 6, '', '>25–50'], [10, 4, 4, '', '10–25'], [0, 1, 1, '', '<10']],
+      rr: { HD: [1, 1, 'AD 給藥'], PD: [1, 1], CRRT: [5, 5, 'Loading 1,000 mg'], SLED: [4, 4, MEM_SLED] },
       nt: ['重症／高 MIC（MIC 2–8）：2,000 mg Q8H，建議改「pIF 3 h」或 cIF 提高 %fT>MIC（IDSA AMR Guidance 2024；BLING III, JAMA 2024）。'] }],
   im: ['std', 'pif', 'cif'], pifH: 3, cifBag: 6,
   pif: { L: MEM_L, R: [[50.0001, 5, 7, '', '>50'], [25.0001, 4, 6, '', '>25–50'], [10, 1, 4, '', '10–25'], [0, 0, 2, '', '<10']], rr: { HD: [0, 2, 'AD 給藥'], PD: [0, 2], CRRT: [4, 6, 'CVVHDF 1 L/h 為基準'], SLED: [4, 6, '資料有限'] }, nt: ['UpToDate：Dosing for prolonged infusions of beta-lactams（Graphic 99434 v11）：3 h 輸注；高劑量用於 CNS 或危及生命感染。'] },
-  arc: { i: 7, t: 'ARC：2,000 mg Q8H，3-h 延長輸注（或持續輸注），建議 TDM。' },
+  arc: { i: 7, t: 'ARC：loading 2,000 mg 後 2,000 mg Q8H 3-h 延長輸注；或 loading 1,000 mg 後 6,000 mg/24 h 持續輸注；建議 TDM，部分病人需 >6,000 mg/day。' },
   aki: 'w', tox: ['癲癇', CARBA_VPA],
   nx: CARBA_VPA,
   inf: { dil: { NS: '室溫依廠牌約 1–6 h（院內 Kabi 廠 6 h）；冷藏 15–24 h', D5W: '室溫 1 h 內使用' }, v: [50, 100], t: [0.5, 3], ti: 0, c: [1, 20], note: 'pIF 3 h 需於安定時間內完成，每劑新鮮配製' } });
 
-add({ id: 'ipm', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'carb', pifStart: '維持劑量依原給藥間隔開始', naD: [37.5, 500], ind: ['一般感染', '中度感受性菌株／重症'], g: 'Imipenem/Cilastatin', b: 'Tienam (Culin)', zh: '庫寧', st: '500 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'carbapenem tienam',
-  L: [T(500, 'q12h'), T(500, 'q8h'), T(500, 'q6h'), T(1000, 'q8h'), T(1000, 'q6h', { hd: 1, t: '中度感受性菌株' })],
-  R: [[90, 2, 3], [60, 1, 2], [30, 1, 1], [15, 0, 0], [0, 0, 0, 'CrCl <15 未於 48 h 內接受 HD：不建議']],
-  rr: { HD: [0, 0, 'after dialysis (AD) 給藥'], PD: [0, 0, '125–250 mg q12h'], CRRT: [1, 2, '500–1,000 mg q6–8h'], SLED: [1, 1, '資料有限'] },
+add({ id: 'ipm', utd: '2026/11/16', utdSrc: 'Imipenem and cilastatin: Drug information', ref: 'UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', blg: 'carb', pifStart: '維持劑量依原給藥間隔開始', naD: [37.5, 500], ind: ['一般感染（500 mg Q6H）', '重症／MIC 4 mg/L（1,000 mg Q6H）'], g: 'Imipenem/Cilastatin', b: 'Tienam (Culin)', zh: '庫寧', st: '500 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'carbapenem tienam',
+  L: [T(500, 'q12h'), T(250, 'q6h'), T(500, 'q8h'), T(500, 'q6h'), T(1000, 'q8h'), T(1000, 'q6h', { hd: 1, t: '重症／MIC 4 mg/L' })],
+  R: [[60, 3, 5, '', '', ['', '或 1,000 mg Q8H']], [30, 2, 3, '', '', ['或 250 mg Q6H', '']], [15, 0, 1, '', '', ['或 250 mg Q8H', '']], [0, -1, -1, 'CrCl <15：除非 48 h 內開始 HD，否則不建議使用']],
+  rr: { HD: [0, 0, '250–500 mg Q12H；透析日一劑排在 after dialysis (AD)'], PD: [0, 0, '250–500 mg Q12H'], CRRT: [2, 3, 'Loading 1,000 mg，之後 250 mg Q6H 或 500 mg Q6–8H'], SLED: [2, 2, 'Loading 500–1,000 mg，之後 250 mg Q6H 或 500 mg Q8H（一劑排在 PIRRT 後）；此劑量可能未達 PK/PD 目標，提高劑量則癲癇風險明顯增加，可考慮改用其他藥物'] },
+  arc: { i: 5, t: 'ARC：1,000 mg Q6H。' },
   im: ['std', 'pif'], pifH: 3,
   pif: { L: [T(250, 'q12h'), T(500, 'q12h'), T(250, 'q6h'), T(500, 'q8h'), T(500, 'q6h'), T(750, 'q8h'), T(1000, 'q6h', { hd: 1 })],
     R: [[71, 4, 6], [41, 3, 5], [21, 2, 4], [6, 0, 1], [0, -1, -1, 'CrCl <6 未透析：不建議']],
     rr: { HD: [0, 1, 'AD 給藥'], PD: [0, 1], CRRT: [4, 4, 'CVVHDF 1 L/h 為基準'], SLED: [4, 4, '資料有限'] }, nt: ['UpToDate：Dosing for prolonged infusions of beta-lactams（Graphic 99434 v11）：體重 >70 kg 之劑量；3 h 輸注（Imipenem 室溫安定約 4 h，不適合持續輸注）。'] },
   aki: 'w', tox: ['癲癇（腎功能不全、CNS 病變、高劑量）', CARBA_VPA, '快速輸注：噁心嘔吐'],
   nx: 'Imipenem 癲癇閾值下降最明顯；CNS 感染或神經重症病人建議改用 meropenem。' + CARBA_VPA,
-  inf: { dil: { NS: '≤5 mg/mL：室溫 4 h、冷藏 24 h', D5W: '室溫 4 h' }, v: [100, 250], t: [0.5, 1, 3], ti: 0, c: [0, 5] } });
+  inf: { dil: { NS: '≤5 mg/mL：室溫 4 h、冷藏 24 h', D5W: '室溫 4 h' }, v: [100, 250], t: [0.5, 1, 3], ti: 0, c: [0, 5] }, nt: ['AKI 時非腎清除可能增加，療效不佳時考慮加量或改用其他藥物（UpToDate, 2026/11/16）。'] });
 
 add({ id: 'rec', utd: '2026/11/16', utdSrc: 'Imipenem, cilastatin, and relebactam: Drug information', ref: 'UpToDate, 2026/11/16・PI', rrRef: 'UpToDate, 2026/11/16', blg: 'carb', novel: 1, g: 'Imipenem/Cilastatin/Relebactam', b: 'Recarbrio', zh: '', st: '1,250 mg/vial (500/500/250 mg)', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'kpc relebactam',
   L: [T(500, 'q12h', { lb: '500 mg（總量）' }), T(500, 'q8h', { lb: '500 mg（總量）' }), T(500, 'q6h', { lb: '500 mg（總量）' }), T(750, 'q6h', { lb: '750 mg（總量）' }), T(1000, 'q6h', { lb: '1,000 mg（總量）' }), T(1250, 'q6h', { lb: '1,250 mg' })],
@@ -606,31 +623,31 @@ add({ id: 'rec', utd: '2026/11/16', utdSrc: 'Imipenem, cilastatin, and relebacta
   inf: { dil: { NS: '室溫 2 h、冷藏 24 h', D5W: '室溫 2 h、冷藏 24 h' }, v: [100], t: [0.5], ti: 0 } });
 
 /* β-lactam 口服 */
-add({ id: 'amx', ref: 'UpToDate', rrRef: 'UpToDate・SG', blg: 'pen', ind: ['一般感染', '高劑量（S. pneumoniae／H. pylori）'], g: 'Amoxicillin', b: 'Amoxicillin', zh: '安謀黴素', st: '500 mg/cap', cls: 'bac', sub: 'bl', rt: 'po', kw: 'penicillin',
-  L: [T(500, 'q24h'), T(500, 'q12h'), T(500, 'q8h'), T(1000, 'q8h', { hd: 1, t: 'S. pneumoniae 高劑量' })],
-  R: [[30, 2, 3], [10, 1, 1], [0, 0, 0]],
-  rr: { HD: [0, 0, 'after dialysis (AD) 給藥'], PD: [0, 0], CRRT: [2, 2], SLED: [1, 1] },
+add({ id: 'amx', utd: '2026/11/16', utdSrc: 'Amoxicillin: Drug information', ref: 'UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', blg: 'pen', ind: ['一般感染', '高劑量（S. pneumoniae／H. pylori）'], g: 'Amoxicillin', b: 'Amoxicillin', zh: '安謀黴素', st: '500 mg/cap', cls: 'bac', sub: 'bl', rt: 'po', kw: 'penicillin',
+  L: [T(500, 'q24h'), T(500, 'q12h'), T(500, 'q8h'), T(1000, 'q12h'), T(1000, 'q8h', { hd: 1, t: 'S. pneumoniae 高劑量' })],
+  R: [[30, 2, 4], [10, 1, 3], [0, 0, 1]],
+  rr: { HD: [0, 1, 'QD 者於 after dialysis (AD) 給藥，或透析日 AD 追加一劑'], PD: [1, 1], CRRT: [2, 2], SLED: [1, 1] },
   aki: 'w', tox: ['腹瀉、皮疹'] });
 
-add({ id: 'amc', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'pen', g: 'Amoxicillin/Clavulanate', b: 'Augmentin (Curam)', zh: '諾快寧', st: '1,000 mg/tab (875/125 mg)', cls: 'bac', sub: 'bl', rt: 'po', kw: 'augmentin curam',
+add({ id: 'amc', utd: '2026/11/16', utdSrc: 'Amoxicillin and clavulanate: Drug information', ref: 'UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', blg: 'pen', g: 'Amoxicillin/Clavulanate', b: 'Augmentin (Curam)', zh: '諾快寧', st: '1,000 mg/tab (875/125 mg)', cls: 'bac', sub: 'bl', rt: 'po', kw: 'augmentin curam',
   L: [T(1000, 'q12h', { lb: '1,000 mg (875/125 mg)' })],
   R: [[30, 0, 0], [0, -1, -1, 'CrCl <30 不建議 875/125 mg 錠；改 500/125 mg q12h（CrCl 10–30）或 q24h（<10）']],
-  rr: { HD: [-1, -1, '改 500/125 mg q24h，AD追加一劑'], PD: [-1, -1, '改 500/125 mg q24h'], CRRT: [0, 0], SLED: [-1, -1] },
+  rr: { HD: [-1, -1, '改 500/125 mg q24h，AD追加一劑'], PD: [-1, -1, '改 500/125 mg Q12H'], CRRT: [0, 0], SLED: [-1, -1] },
   aki: 'w', tox: ['腹瀉', '膽汁滯留性肝炎（clavulanate；老年男性、長療程）'] });
 
-add({ id: 'cec', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'ceph', ind: ['250 mg/dose', '500 mg/dose'], g: 'Cefaclor', b: 'Keflor (Cero)', zh: '賜福', st: '250 mg/cap', cls: 'bac', sub: 'bl', rt: 'po', kw: '2nd generation',
+add({ id: 'cec', utd: '2026/11/16', utdSrc: 'Cefaclor: Drug information', ref: 'UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', blg: 'ceph', ind: ['250 mg/dose', '500 mg/dose'], g: 'Cefaclor', b: 'Keflor (Cero)', zh: '賜福', st: '250 mg/cap', cls: 'bac', sub: 'bl', rt: 'po', kw: '2nd generation',
   L: [T(250, 'q8h'), T(500, 'q8h')], R: NA(0, 1, '一般無需依腎功能調整'), rr: SAME(0, 1, 'after dialysis (AD) 給藥'), aki: 'w',
-  tox: ['血清病樣反應'] });
+  tox: ['血清病樣反應'], nt: ['無尿者半衰期延長，需小心使用（UpToDate, 2026/11/16）。'] });
 
-add({ id: 'lex', ref: 'UpToDate', rrRef: 'UpToDate・SG', blg: 'ceph', ind: ['一般感染', '高劑量（骨關節降階）'], g: 'Cephalexin', b: 'Keflex', zh: '賜福力欣', st: '500 mg/cap', cls: 'bac', sub: 'bl', rt: 'po', kw: '1st generation',
-  L: [T(500, 'q24h'), T(500, 'q12h'), T(500, 'q8h'), T(500, 'q6h'), T(1000, 'q6h', { hd: 1, t: '骨髓炎等降階' })],
-  R: [[50, 3, 4], [10, 1, 2], [0, 0, 1]],
-  rr: { HD: [0, 0, 'after dialysis (AD) 給藥'], PD: [0, 0], CRRT: [2, 2], SLED: [2, 2] }, aki: 'w' });
+add({ id: 'lex', utd: '2026/11/16', utdSrc: 'Cephalexin: Drug information', ref: 'UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', blg: 'ceph', ind: ['一般感染', '高劑量（骨關節降階）'], g: 'Cephalexin', b: 'Keflex', zh: '賜福力欣', st: '500 mg/cap', cls: 'bac', sub: 'bl', rt: 'po', kw: '1st generation',
+  L: [T(500, 'q24h'), T(500, 'q12h'), T(1000, 'q24h'), T(500, 'q8h'), T(500, 'q6h'), T(1000, 'q12h'), T(1000, 'q8h'), T(1000, 'q6h', { hd: 1, t: '骨髓炎等降階' })],
+  R: [[50, 4, 7], [30, 4, 6], [15, 3, 5], [0, 1, 2]],
+  rr: { HD: [1, 2, 'after dialysis (AD) 給藥'], PD: [1, 2], CRRT: [4, 6, '無資料，專家意見：同 CrCl 30–49'], SLED: [4, 6, 'PIRRT 日同 CrCl 30–49；非 PIRRT 日同 CrCl <15'] }, aki: 'w' });
 
-add({ id: 'cfm', ref: 'PI', rrRef: 'UpToDate・SG', blg: 'ceph', g: 'Cefixime', b: 'Cefspan (Cexime)', zh: '賜信', st: '100 mg/cap', cls: 'bac', sub: 'bl', rt: 'po', kw: '3rd generation',
+add({ id: 'cfm', utd: '2026/11/16', utdSrc: 'Cefixime: Drug information', ref: 'UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', blg: 'ceph', g: 'Cefixime', b: 'Cefspan (Cexime)', zh: '賜信', st: '100 mg/cap', cls: 'bac', sub: 'bl', rt: 'po', kw: '3rd generation',
   L: [T(200, 'q24h'), T(300, 'q24h'), T(200, 'q12h')],
-  R: [[61, 2, 2], [21, 1, 1, '75% 劑量'], [0, 0, 0, '50% 劑量']],
-  rr: { HD: [1, 1, '仿單：75% 劑量'], PD: [0, 0, '50% 劑量'], CRRT: [1, 1], SLED: [1, 1] }, aki: 'w' });
+  R: [[60, 2, 2], [21, 1, 1], [0, 0, 0]],
+  rr: { HD: [1, 1], PD: [0, 0], CRRT: [1, 1, '無資料，建議改用其他藥物'], SLED: [1, 1, '無資料，建議改用其他藥物'] }, aki: 'w', nt: ['單次給藥（如 800 mg 單劑）不需依腎功能調整。'] });
 /* ================= Fluoroquinolones ================= */
 const FQ_TOX = ['QTc 延長（併用其他延長 QT 藥物、低 K/Mg）', '肌腱炎／肌腱斷裂（老年、類固醇）', '血糖異常（低血糖尤需注意）', 'CNS：譫妄、癲癇閾值下降', '主動脈瘤／剝離風險', '應避免用於重症肌無力者'];
 const FQ_NX = 'Fluoroquinolone 降低癲癇閾值、可致譫妄；神經重症病人需評估風險效益。';
@@ -1203,7 +1220,8 @@ function bandLabel(R, i, unit) {
 }
 
 function pick(d0, c0) {
-  const d = eff(d0, c0), notes = []; let idx = null, band = '', rrtText = null, mark = '';
+  const d = eff(d0, c0), notes = []; let idx = null, band = '', rrtText = null, mark = '', alt = null;
+  const altOf = (a, si) => (Array.isArray(a) ? a[si - 1] : a) || null;
   const c = ctxFor(d, c0);
   const sevI = d.col === 1 ? 1 : 2;
   const normal = d.R[0][sevI];
@@ -1214,16 +1232,16 @@ function pick(d0, c0) {
       let e = d.rr && d.rr[c.rrt];
       if (typeof e === 'function') e = e(c);
       if (!e) notes.push('此 RRT 模式資料有限，請會診藥師。');
-      else { idx = sevI === 2 ? e[1] : e[0]; if (e[2]) notes.push(e[2]); }
+      else { idx = sevI === 2 ? e[1] : e[0]; if (e[2]) notes.push(e[2]); alt = altOf(e[3], sevI); }
     }
   } else {
     const val = d.basis === 'egfr' ? c.paxEgfr : c.cr;
     const bi = d.R.findIndex((r) => val >= r[0]);
     const b = d.R[bi < 0 ? d.R.length - 1 : bi];
-    idx = b[sevI]; if (b[3]) notes.push(b[3]);
+    idx = b[sevI]; if (b[3]) notes.push(b[3]); alt = altOf(b[5], sevI);
     band = bandLabel(d.R, bi < 0 ? d.R.length - 1 : bi, d.basis === 'egfr' ? 'eGFR' : 'CrCl');
-    if (c.arc && d.arc) { if (idx < d.arc.i) { idx = d.arc.i; mark = 'ARC'; } notes.push(d.arc.t); }
-    if (c.aki && c.akiHold && d.aki === 'w' && idx >= 0 && idx < normal) { idx = normal; mark = 'AKI-48h'; notes.push('AKI 初期（前 24–48 h）Scr 未達穩定態，寬治療指數藥物先給予未減量劑量，之後依腎功能趨勢重新評估（Crass RL, CID 2019）。'); }
+    if (c.arc && d.arc) { if (idx < d.arc.i) { idx = d.arc.i; mark = 'ARC'; alt = null; } notes.push(d.arc.t); }
+    if (c.aki && c.akiHold && d.aki === 'w' && idx >= 0 && idx < normal) { idx = normal; mark = 'AKI-48h'; alt = null; notes.push('AKI 初期（前 24–48 h）Scr 未達穩定態，寬治療指數藥物先給予未減量劑量，之後依腎功能趨勢重新評估（Crass RL, CID 2019）。'); }
   }
   if (c.rrt === 'none' && d.rf && idx >= 0) {
     const bi = d.rf.findIndex((r) => c.cr >= r[0]); const b = d.rf[bi < 0 ? d.rf.length - 1 : bi];
@@ -1247,7 +1265,7 @@ function pick(d0, c0) {
   else if (idx == null) status = 'rt';
   else if (idx < normal || mark === 'RF' || mark === 'AKI') status = 'adj';
   else if (idx > normal) status = 'up';
-  return { d, idx, notes, band, rrtText, normal, status, mark };
+  return { d, idx, notes, band, rrtText, normal, status, mark, alt };
 }
 
 const PERDAY = { q4h: 6, q6h: 4, q8h: 3, q12h: 2, q24h: 1, q36h: 2 / 3, q48h: 0.5, q72h: 1 / 3 };
@@ -1592,7 +1610,7 @@ function renderDetail() {
   h += '<div class="ladder">' + [...visible].reverse().map(({ t, i, x }) => {
     const cls = best(i) ? 'best' : near(i) ? 'near' : 'dim';
     const lv = best(i) ? (p.mark === 'ARC' ? '建議（ARC）' : p.mark === 'AKI-48h' ? '建議（AKI 48h）' : p.mark === 'AKI' ? '建議（AKI 進展中）' : '最適建議') : near(i) ? (i > p.idx ? '上一階' : '下一階') : `階層 ${i + 1}`;
-    return `<button class="tier ${cls} ${S.tierSel === i ? 'sel' : ''}" data-i="${i}"><span class="lv">${lv}</span><span><span class="dose">${esc(x.main)}${d._m === 'pif' ? `<span class="xb">${d.pifH}-h pIF</span>` : t.x ? `<span class="xb">${esc(t.x)}</span>` : ''}${t.ps ? `<span class="ps">${esc(t.ps)}</span>` : ''}${x.po ? `<span class="poc">→ ${esc(x.po)}</span>` : ''}${t.hd ? '<span class="hdt">高劑量</span>' : ''}</span>${x.sub ? `<div class="why">${esc(x.sub)}</div>` : ''}${t.t ? `<div class="why">${esc(t.t)}</div>` : ''}</span><span class="bands">${(bandMap[i] || []).length ? esc((bandMap[i] || []).join('・')) : '<span style="opacity:.6">—</span>'}${refOf(i) ? `<i>${linkify(esc(refOf(i)), 1)}</i>` : ''}</span></button>`;
+    return `<button class="tier ${cls} ${S.tierSel === i ? 'sel' : ''}" data-i="${i}"><span class="lv">${lv}</span><span><span class="dose">${esc(x.main)}${d._m === 'pif' ? `<span class="xb">${d.pifH}-h pIF</span>` : t.x ? `<span class="xb">${esc(t.x)}</span>` : ''}${t.ps ? `<span class="ps">${esc(t.ps)}</span>` : ''}${best(i) && p.alt && d._m !== 'pif' && d._m !== 'cif' ? `<span class="ps">${esc(p.alt)}</span>` : ''}${x.po ? `<span class="poc">→ ${esc(x.po)}</span>` : ''}${t.hd ? '<span class="hdt">高劑量</span>' : ''}</span>${x.sub ? `<div class="why">${esc(x.sub)}</div>` : ''}${t.t ? `<div class="why">${esc(t.t)}</div>` : ''}</span><span class="bands">${(bandMap[i] || []).length ? esc((bandMap[i] || []).join('・')) : '<span style="opacity:.6">—</span>'}${refOf(i) ? `<i>${linkify(esc(refOf(i)), 1)}</i>` : ''}</span></button>`;
   }).join('') + '</div>';
   if (LA.length > visible.length || S.showAll) h += `<button class="morebtn" id="moreBtn">${S.showAll ? '只顯示建議與上下一階' : `顯示完整劑量階梯（${LA.length} 階）`}</button>`;
   { const bn = typeof d.banNote === 'function' ? d.banNote(CC) : d.banNote; if (banned.size && bn) h += `<p class="al w" style="margin-top:6px">${esc(bn)}</p>`; }
