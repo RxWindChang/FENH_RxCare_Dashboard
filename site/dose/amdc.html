@@ -341,6 +341,7 @@ const EI_NOTE = '重症／高 MIC：可改用 pIF（3–4 h）或 cIF 以提高 
 
 /* 非仿單／UpToDate 之文獻：顯示文字 → PubMed 連結（tier 右側參考與備註中自動加超連結） */
 const REFS = {
+  'El-Gaml, Eur J Clin Pharmacol 2022': 'https://pubmed.ncbi.nlm.nih.gov/35610318/',
   'IDSA MDRG(-) infection guideline 2024': 'https://pubmed.ncbi.nlm.nih.gov/39108079/',
   'IJID 2024 Dec;149:107267': 'https://pubmed.ncbi.nlm.nih.gov/?term=10.1016%2Fj.ijid.2024.107267',
   'Wenzler E, AAC 2017': 'https://pubmed.ncbi.nlm.nih.gov/28416553/',
@@ -711,12 +712,21 @@ const VAN_TDM = (c) => {
   return `<div class="tdmx"><ul><li><b>Trough level</b> 請於給藥前 0–30 min 抽測（just before dosing）。</li><li><b>Peak level</b> 請於輸注完成後 1 小時抽測（1-h after the end of infusion）。</li></ul>
 <div class="calcs"><span>AUC 線上計算：</span><a class="calc" href="${VAN_PAT}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h2M12 11h2M16 11h0M8 15h2M12 15h2M8 18h2M12 18h4"/></svg>Japan PAT Calc, v4.1c</a><a class="doc" href="${VAN_PAT_DOC}" target="_blank" rel="noopener" title="Japan PAT Calc 繁體中文使用說明書" aria-label="Japan PAT Calc 繁體中文使用說明書"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M9 8h7M9 11.5h5"/></svg>說明書</a><a class="calc" href="${VAN_CLINCALC}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h2M12 11h2M8 15h2M12 15h2M8 18h2M12 18h4"/></svg>ClinCalc - Vanco</a></div></div>`;
 };
-add({ id: 'van', tdmFn: VAN_TDM, aucLad: 1, ban: (c) => (c.rrt === 'HD' ? [1, 2, 3, 4, 5, 6, 7] : []), /* ESRD-iHD：只顯示建議劑量 */ ref: 'ASHP/IDSA 2020・UpToDate', rrRef: 'UpToDate・SG', tdmIcon: 1, auc: 1, g: 'Vancomycin', b: 'Vancomycin (Vanco)', zh: '安克', st: '500 mg/vial', cls: 'bac', sub: 'gpc', rt: 'inj', kw: 'glycopeptide mrsa vanco', wt: 'TBW', rd: 250, mx: 2500,
+add({ id: 'van', tdmFn: VAN_TDM, aucLad: 1, ban: (c) => (c.rrt === 'HD' ? [1, 2, 3, 4, 5, 6, 7] : []), /* ESRD-iHD：只顯示建議劑量 */ utd: '2026/11/16', utdSrc: 'Vancomycin: Drug information', ref: 'ASHP/IDSA 2020・UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', tdmIcon: 1, auc: 1, g: 'Vancomycin', b: 'Vancomycin (Vanco)', zh: '安克', st: '500 mg/vial', cls: 'bac', sub: 'gpc', rt: 'inj', kw: 'glycopeptide mrsa vanco', wt: 'TBW', rd: 250, mx: 2500,
   L: [K(7.5, '每次 AD', { rng: [7.5, 10], rd: 50, t: 'ESRD-iHD 維持劑量，依 pre-HD 濃度調整' }), K(15, 'q48h', { t: '依濃度' }), K(15, 'q24h'), K(10, 'q12h'), K(15, 'q12h'), K(20, 'q12h'), K(15, 'q8h'), K(20, 'q8h', { hd: 1 })],
   R: [[90, 5, 6], [50, 4, 5], [20, 2, 2], [0, 1, 1, 'Loading 後依濃度給藥']],
-  rr: { HD: [0, 0, '血液透析者的建議抽血時間為「透析前」，C pre-HD 的建議區間為 15–25 μg/mL。Loading 25 mg/kg；之後每次 AD 7.5–10 mg/kg（四捨五入至 50 mg）'], PD: [1, 1, 'Loading 25 mg/kg，依濃度追加'], CRRT: [3, 4, 'Loading 25 mg/kg，維持 7.5–10 mg/kg q12h'], SLED: [2, 2, 'SLED 結束後 15 mg/kg，24 h 後監測濃度'] },
-  ld: { k: () => 25, mx: 3000, rd: 250, t: 'TBW，最大 3,000 mg' },
-  arc: { i: 7, t: 'ARC：清除率大增，建議 q8h 給藥並及早以 AUC 監測；或採持續輸注。' },
+  rr: { HD: [0, 0, '建議抽血時間為洗腎前（pre-HD），C pre-HD 建議區間 15–25 μg/mL（見下方說明）。Loading 25 mg/kg；之後每次 AD 7.5–10 mg/kg（四捨五入至 50 mg；low flux 7.5、high flux 10 mg/kg）；72 h 透析間隔前通常需增加約 25% 劑量'], PD: [1, 1, 'Loading 20–25 mg/kg；48–72 h 後抽濃度，依濃度追加 10–15 mg/kg'], CRRT: [3, 3, 'Loading 20–25 mg/kg，之後 7.5–10 mg/kg Q12H；嚴重 MRSA 感染應於 24–48 h 內以 AUC 監測調整'], SLED: [2, 2, 'Loading 20–25 mg/kg（即使 SLED 進行中亦給予）；之後每次 SLED 結束後（或最後 60–90 min）15 mg/kg，並監測濃度'] },
+  ld: { k: () => 25, mx: 3000, rd: 250, t: 'TBW，最大 3,000 mg；用於重症或疑似／確定嚴重 MRSA 感染，重症 sepsis 可考慮至 35 mg/kg（最大 3,000 mg）' },
+  arc: { i: 7, t: 'ARC：loading 25–35 mg/kg，之後 15–20 mg/kg Q8H（部分病人需 15 mg/kg Q6H），及早以 AUC 監測；或改持續輸注（40–60 mg/kg/day）。' },
+  im: ['std', 'cif'], cifBag: 12,
+  cif: { L: [K(7, 'q24h'), K(14, 'q24h'), K(25, 'q24h'), K(30, 'q24h'), K(40, 'q24h', { rng: [40, 60], t: 'ARC' })],
+    R: [[80.0001, 3, 3, '', '>80'], [50.0001, 2, 2, '', '>50–80'], [25, 1, 1, '', '25–50'], [0, 0, 0, '', '<25']],
+    rr: { HD: [-1, -1, 'iHD 不建議持續輸注，請改用間歇給藥'], PD: [-1, -1, 'PD 不建議持續輸注，請改用間歇給藥'], CRRT: [-1, -1, 'CRRT 持續輸注資料有限，請改用間歇給藥並以 AUC 監測'], SLED: [-1, -1, 'SLED 不建議持續輸注，請改用間歇給藥'] },
+    arc: { i: 4, t: 'ARC：40–60 mg/kg/day 持續輸注，依濃度調整。' },
+    ld: { k: () => 20, rng: [15, 20], rd: 250, mx: 3000, t: '重症 sepsis 可考慮 25 mg/kg（最大 3,000 mg）；loading 輸注完畢後立即開始持續輸注' },
+    ban: () => [], auc: 0, mx: 0, tdmFn: () => '',
+    tdm: '持續輸注：建議開始輸注後隔日抽 random level（任一時間點皆可），目標 Css 16.7–25 μg/mL（相當於 AUC₂₄ 400–600 mg·h/L）；之後依濃度等比例調整每日劑量。',
+    nt: ['持續輸注劑量依 UpToDate, 2026/11/16（CrCl >80–119：30 mg/kg/24 h；>50–80：25；25–50：14；<25：7 mg/kg/24 h）。', '建議開法（每 12 h 換袋）：Vancomycin（每袋劑量見上）加入 NS 250 mL，每袋劑量 >1,250 mg 時改用 NS 500 mL（周邊靜脈濃度 ≤5 mg/mL）；以 12 h 等速輸注（250 mL 約 21 mL/h；500 mL 約 42 mL/h）。', '經由獨立管路輸注，避免與其他藥物 Y-site 混合（尤其 β-lactam、heparin 以外藥物應確認相容性）。'] },
   aki: 'n', tdm: 'AUC₂₄ 400–600 mg·h/L（Bayesian 或兩點法）；第 4 劑前或 24–48 h 內評估。請會診藥師。',
   ob: '肥胖症者使用 vancomycin >7–10 天易發生濃度蓄積，進而增加 AKI 風險，請審慎監測。Loading 25 mg/kg TBW（最大 3,000 mg）；維持劑量依 AUC，起始每日總量通常 ≤4,500 mg（ASHP 2020；Märtson 2025）。',
   tox: ['AKI（AUC >600、利尿劑、顯影劑、其他腎毒性藥物）', 'Vancomycin infusion reaction：輸注速率 ≤1,000 mg/h（≤10–15 mg/min）', '耳毒性', '嗜中性球低下（>1–2 週）', 'DRESS／LABD'],
@@ -735,31 +745,40 @@ add({ id: 'tei', ref: 'PI（EU）', rrRef: 'UpToDate・SG', naD: [11.6, 200], g:
   inf: { dil: { NS: '冷藏 24 h', D5W: '冷藏 24 h' }, v: [50, 100], t: [0.083, 0.5], ti: 1, note: '溶解時輕旋勿搖晃（起泡）；可 IV push 3–5 min 或 IM' },
   nt: ['本院主要用於 MRSA：每劑（loading 與維持）9–12 mg/kg，四捨五入至 100 mg 以利抽取；嚴重感染直接 12 mg/kg/dose。', 'CrCl 30–80：每劑不變，延長為 Q48H（等同仿單減半）；CrCl <30／HD：Q3D（等同仿單 1/3）；自治療第 4 天起。'] });
 
-add({ id: 'dap', ref: 'PI・UpToDate', rrRef: 'UpToDate・SG', g: 'Daptomycin', b: 'Cubicin', zh: '救必辛', st: '500 mg/vial', cls: 'bac', sub: 'gpc', rt: 'inj', kw: 'lipopeptide mrsa vre', wt: 'OB', rd: 50,
+add({ id: 'dap', utd: '2026/11/16', utdSrc: 'Daptomycin: Drug information', ref: 'UpToDate, 2026/11/16・PI', rrRef: 'UpToDate, 2026/11/16', g: 'Daptomycin', b: 'Cubicin', zh: '救必辛', st: '500 mg/vial', cls: 'bac', sub: 'gpc', rt: 'inj', kw: 'lipopeptide mrsa vre', wt: 'OB', rd: 50,
   L: [K(6, 'q48h'), K(10, 'q48h', { rng: [10, 12], hd: 1 }), K(6, 'q24h', { t: '非複雜性 S. aureus 菌血症（參考）' }), K(10, 'q24h', { rng: [10, 12], hd: 1, t: '嚴重／複雜性 MRSA、VRE' })],
   R: [[30, 3, 3], [0, 1, 1]],
-  rr: { HD: [1, 1, 'AD 給藥 TIW；高劑量於 72 h 間隔前增量需審慎並監測 CPK'], PD: [1, 1], CRRT: [1, 1, '高流量 CRRT 仍可視情形給予 QD 的 dosing interval（Soraluce 2018；Xu 2017）'], SLED: [1, 1] },
-  ban: (c) => (c.rrt === 'CRRT' ? [2] : ['HD', 'PD', 'SLED'].includes(c.rrt) || (c.rrt === 'none' && c.cr < 30) ? [2, 3] : []), banNote: (c) => (c.rrt === 'CRRT' ? '' : 'CrCl <30 mL/min 或 ESRD 並接受 RRT（iHD、PD、SLED）：daptomycin dosing interval 一律為 QOD。'),
+  rr: { HD: [1, 1, 'Q48H，透析日於 after dialysis (AD) 給藥。或 TIW：48 h 間隔日給予常規劑量，72 h 間隔前 AD 劑量增加 50%（≥6 mg/kg 之 TIW 方案未經評估，需監測 CPK）。AD 可輸注 30 min 或 IV push 2 min，亦可於透析最後 1 h 給藥'], PD: [1, 1, '同 CrCl <30'],
+    CRRT: (c) => { const e = c.eff > 0 && c.wt > 0 ? c.eff * 1000 / c.wt : null; return [3, 3, 'Effluent >20 mL/kg/h：10–12 mg/kg QD，監測 CPK' + (e == null ? '（請確認 effluent rate）' : e > 20 ? `（目前約 ${Math.round(e)} mL/kg/h）` : `（目前約 ${Math.round(e)} mL/kg/h，≤20 mL/kg/h 時 QD 給藥資料有限，請審慎評估）`)]; }, SLED: [3, 3, '於 SLED 結束後給藥；監測 CPK'] },
+  ban: (c) => (['CRRT', 'SLED'].includes(c.rrt) ? [2] : ['HD', 'PD'].includes(c.rrt) || (c.rrt === 'none' && c.cr < 30) ? [2, 3] : []), banNote: (c) => (['CRRT', 'SLED'].includes(c.rrt) ? '' : 'CrCl <30 mL/min、iHD 或 PD：daptomycin dosing interval 一律為 QOD；>8 mg/kg 於此族群研究有限，需密切監測 CPK。'),
+  arc: { i: 3, t: 'ARC：10 mg/kg QD；嚴重感染（如 VRE 菌血症、心內膜炎）可 12 mg/kg QD。' },
   aki: 'w', ob: '肥胖（BMI ≥30）：以 AdjBW 計算，降低 CPK 上升風險（Märtson 2025）。',
   tox: ['CPK：高劑量（10–12 mg/kg）每週監測 2 次；CPK >5×ULN 伴症狀或 >10×ULN 停藥', '暫停 statin（HMG-CoA reductase inhibitor）', 'Eosinophilic pneumonia', '周邊神經病變', '干擾 PT/INR 檢驗（假性延長）'],
   inf: { dil: { NS: '室溫 12 h、冷藏 48 h', LR: '相容' }, v: [50, 100], t: [0.033, 0.5], ti: 1, note: '可 IV push 2 min 或輸注 30 min；不可使用含 dextrose 溶液' },
   nt: ['本院主要用於嚴重／複雜性 MRSA、VRE 感染：10–12 mg/kg/dose，四捨五入至 50 mg 以利抽取。', '不可用於肺炎（被 surfactant 失活）。'] });
 
-const LZD = { cls: 'bac', sub: 'gpc', lzd: 1, kw: 'oxazolidinone mrsa vre zyvox', L: [T(600, 'q24h', { t: '非常規；腎功能不全併血小板下降時 TDM 指引' }), T(600, 'q12h')],
-  R: NA(1, 1, '無需依腎功能調整；但 CrCl <30 代謝物蓄積、血小板低下風險上升，可考慮 TDM（trough 2–7 mg/L）'), rr: SAME(1, 1, '透析日於 after dialysis (AD) 給藥'),
-  ob: '肥胖：≤150 kg 使用標準劑量（Bhalodi 2013）；腎功能正常之肥胖者暴露量可能偏低。',
+const LZD_LOW = 'CrCl <30：血小板低下風險上升，建議加密監測 CBC 並盡量縮短療程；部分專家建議臨床穩定且預期療程 >10 天者，72 h 後減為 300 mg Q12H 並以 TDM 確認（本院無法檢測濃度，需審慎評估）。';
+const LZD = { cls: 'bac', sub: 'gpc', lzd: 1, kw: 'oxazolidinone mrsa vre zyvox', L: [T(300, 'q12h', { t: '部分專家：CrCl <30 且療程 >10 天' }), T(600, 'q24h', { t: '非常規' }), T(600, 'q12h')],
+  R: [[30, 2, 2, '無需依腎功能調整'], [0, 2, 2, LZD_LOW]],
+  rr: { HD: [2, 2, '無需調整；透析日其中一劑於 after dialysis (AD) 給藥。' + LZD_LOW], PD: [2, 2, '無需調整。' + LZD_LOW], CRRT: [2, 2, '無需調整；PK 變異大，MIC ≥2 mg/L 時標準劑量可能不足，建議改用其他藥物'], SLED: [2, 2, '無需調整；其中一劑於 SLED 後給藥'] },
+  arc: { i: 2, t: '重症或 ARC：可考慮持續輸注 cIF with loading（Day 1：300 mg IV + 900 mg cIF；Day 2 起 1,200 mg/24 h cIF；El-Gaml, Eur J Clin Pharmacol 2022）。' },
+  ob: '肥胖（BMI ≥30）：不依體型調整；CKD-EPI 60–129 且 MIC ≤1 mg/L 時，Monte Carlo 模擬建議 loading 600 mg 後 450 mg Q8H（UpToDate, 2026/11/16）；600 mg Q8H 需 TDM 確認 trough <8 mg/L，本院無法檢測，不建議。',
   tox: ['血小板低下（>10–14 天、腎功能不全）、貧血：每週 CBC', 'Serotonin syndrome（SSRI/SNRI、MAOI）', '乳酸中毒', '視神經／周邊神經病變（>28 天）', '低血糖（併降血糖藥）', '低血鈉'],
   nx: '神經科病人常併用 SSRI／SNRI／triptan／fentanyl 等，注意 serotonin syndrome。' };
-add({ ...LZD, id: 'lzdiv', ref: 'PI', rrRef: 'UpToDate・SG', naD: [114.9, 600], g: 'Linezolid', b: 'Zyvox', zh: '采福適', st: '600 mg/300 mL/bag', rt: 'inj',
-  inf: { rb: 300, t: [0.5, 1, 2], ti: 1, dil: { '預混軟袋': '室溫保存，勿冷凍' }, note: '輸注 30–120 min' } });
-add({ ...LZD, id: 'lzdpo', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Linezolid', b: 'Zyvox', zh: '采福適', st: '600 mg/tab', rt: 'po' });
+add({ ...LZD, id: 'lzdiv', utd: '2026/11/16', utdSrc: 'Linezolid: Drug information', ref: 'UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', naD: [114.9, 600], g: 'Linezolid', b: 'Zyvox', zh: '采福適', st: '600 mg/300 mL/bag', rt: 'inj',
+  inf: { rb: 300, t: [0.5, 1, 2], ti: 1, dil: { '預混軟袋': '室溫保存，勿冷凍' }, note: '輸注 30–120 min' },
+  im: ['std', 'cif'], cifBag: 12,
+  cif: { L: [T(600, 'q12h')], R: [[0, 0, 0, '持續輸注劑量不依腎功能調整']], rr: SAME(0, 0), arc: null,
+    ld: () => 'Loading 300 mg IV（取預混軟袋 150 mL，輸注 30 min）；Day 1 其餘時間給予 900 mg cIF（450 mL，約 19 mL/h），Day 2 起 1,200 mg/24 h cIF',
+    nt: ['重症病人 cIF with loading：Day 1 300 mg IV + 900 mg cIF，Day 2 起 1,200 mg/24 h cIF（El-Gaml, Eur J Clin Pharmacol 2022；48 位 ICU 病人 RCT，AUC/MIC >80 達標率與存活率優於間歇給藥）。', '建議開法：Day 1 loading 後，900 mg（450 mL）以約 19 mL/h 輸注至 Day 1 結束；Day 2 起每袋 600 mg/300 mL 以 25 mL/h 輸注 12 h。'] } });
+add({ ...LZD, id: 'lzdpo', utd: '2026/11/16', utdSrc: 'Linezolid: Drug information', ref: 'UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', g: 'Linezolid', b: 'Zyvox', zh: '采福適', st: '600 mg/tab', rt: 'po' });
 
-add({ id: 'clniv', ref: 'PI', rrRef: 'UpToDate・SG', g: 'Clindamycin', b: 'Cleocin (B.B. Inj.)', zh: '比比黴素', st: '300 mg/2 mL/amp', cls: 'bac', sub: 'gpc', rt: 'inj', kw: 'lincosamide anaerobe toxin',
+add({ id: 'clniv', utd: '2026/11/16', utdSrc: 'Clindamycin (systemic): Drug information', ref: 'UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', g: 'Clindamycin', b: 'Cleocin (B.B. Inj.)', zh: '比比黴素', st: '300 mg/2 mL/amp', cls: 'bac', sub: 'gpc', rt: 'inj', kw: 'lincosamide anaerobe toxin',
   L: [T(600, 'q8h', { rngTxt: '600–900 mg', t: '壞死性筋膜炎（抑制毒素）可用 900 mg Q8H' })], R: NA(0, 0, '無需依腎功能調整'), rr: SAME(0, 0),
   tox: ['腹瀉', '肝功能異常'],
   inf: { dil: { NS: '室溫 16 d', D5W: '室溫 16 d' }, v: [50, 100], t: [0.333, 0.5], ti: 1, c: [0, 18], note: '輸注速率 ≤30 mg/min；單次 >1,200 mg 不建議' } });
 
-add({ id: 'clnpo', ref: 'PI', rrRef: 'UpToDate・SG', ind: ['一般感染', '高劑量（骨關節等）'], g: 'Clindamycin', b: 'Cleocin (Lindacin)', zh: '利達信', st: '150 mg/cap', cls: 'bac', sub: 'gpc', rt: 'po', kw: 'lincosamide',
+add({ id: 'clnpo', utd: '2026/11/16', utdSrc: 'Clindamycin (systemic): Drug information', ref: 'UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', ind: ['一般感染', '高劑量（骨關節等）'], g: 'Clindamycin', b: 'Cleocin (Lindacin)', zh: '利達信', st: '150 mg/cap', cls: 'bac', sub: 'gpc', rt: 'po', kw: 'lincosamide',
   L: [T(150, 'q6h'), T(300, 'q8h'), T(300, 'q6h'), T(450, 'q6h')], R: NA(1, 3, '無需依腎功能調整'), rr: SAME(1, 3), tox: ['食道潰瘍（以足量水服用）'] });
 
 add({ id: 'fus', ref: 'PI', rrRef: 'UpToDate・SG', ind: ['500 mg Q12H', '500 mg Q8H（骨關節／嚴重）'], g: 'Fusidic acid', b: 'Fucidin (Disfect)', zh: '復剋菌', st: '250 mg/tab', cls: 'bac', sub: 'gpc', rt: 'po', kw: 'fusidate mrsa',
@@ -1206,7 +1225,7 @@ const eff = (d, c = C) => {
   if (d.aucLad && c && c.ok !== false && c.rrt === 'none' && c.cr > 0) { const v = vancoLadder(d, c); if (v) r = { ...r, ...v }; }
   if (d.modes) { const m = d.modes.find((x) => x.k === modeKey(d)) || d.modes[0]; r = { ...d, ...m }; }
   const im = imKey(d);
-  if (im !== 'std') { r = { ...r, _m: im }; if (im === 'pif' && d.pif) r = { ...r, L: d.pif.L, R: d.pif.R, rr: d.pif.rr || r.rr, nt: [...(d.pif.nt || []), ...(r.nt || [])] }; }
+  if (im !== 'std') { r = { ...r, _m: im }; if (im === 'pif' && d.pif) r = { ...r, L: d.pif.L, R: d.pif.R, rr: d.pif.rr || r.rr, nt: [...(d.pif.nt || []), ...(r.nt || [])] }; if (im === 'cif' && d.cif) r = { ...r, _lad: null, ...d.cif, nt: [...(d.cif.nt || []), ...(r.nt || [])] }; }
   return r;
 };
 
@@ -1403,7 +1422,7 @@ function ldText0(d, c, idx) {
   const [wl, W] = d.wt ? dosingWeight(d, c) : ['TBW', c.wt];
   const ecmo = c.ecmo && d.ld.ecmoK;
   const k = ecmo ? d.ld.ecmoK : typeof d.ld.k === 'function' ? d.ld.k(c) : d.ld.k;
-  if (d.ld.rng && !ecmo) { const rd = d.ld.rd || 10; return `Loading ${d.ld.rng[0]}–${d.ld.rng[1]} mg/kg × ${r1(W)} kg (${wl}) → <b class="num">${roundTo(d.ld.rng[0] * W, rd).toLocaleString('en-US')}–${fmtMg(roundTo(d.ld.rng[1] * W, rd))}</b>（四捨五入至 ${rd} mg）`; }
+  if (d.ld.rng && !ecmo) { const rd = d.ld.rd || 10; return `Loading ${d.ld.rng[0]}–${d.ld.rng[1]} mg/kg × ${r1(W)} kg (${wl}) → <b class="num">${roundTo(d.ld.rng[0] * W, rd).toLocaleString('en-US')}–${fmtMg(roundTo(d.ld.rng[1] * W, rd))}</b>（四捨五入至 ${rd} mg）${d.ld.t ? '。' + d.ld.t : ''}`; }
   let mg = roundTo(k * W, d.ld.rd || 10); const capped = d.ld.mx && mg > d.ld.mx; if (capped) mg = d.ld.mx;
   return `Loading ${k} mg/kg × ${r1(W)} kg (${wl}) → <b class="num">${fmtMg(mg)}</b>${capped ? `（上限 ${fmtMg(d.ld.mx)}）` : ''}${d.ld.t ? '。' + d.ld.t : ''}`;
 }
@@ -1570,7 +1589,7 @@ function renderDetail() {
       const pk = (sub.match(/^（[\d.]+#）/) || [''])[0]; if (pk) sub = sub.slice(pk.length).replace(/^[；，]/, '');
       const all = `${sub}${rest}`, m1 = all.match(/末次 loading 後 ([\d–]+ h)/), m2 = all.match(/第 (\d+) 天起(?:（第 \d+ 劑）)?(?:開始維持| \d)/);
       step1 = { t: '多劑 Loading（誘導期）', big: `${big}${pk} ${h2}`, sub: [sub, rest].filter(Boolean).join(rest.startsWith('（') ? '' : '；'), arr: m1 ? `末次後 ${m1[1]}` : m2 ? `第 ${m2[1]} 天起` : '誘導期後' };
-    } else { const m3 = sub.match(/([\d–]+ h) 後開始維持/); step1 = { t: '首劑 Loading dose', big, sub, arr: m3 ? `${m3[1]} 後` : ivH ? `${ivH} h 後` : '接續' }; }
+    } else { const m3 = sub.match(/([\d–]+ h) 後開始維持/); step1 = { t: '首劑 Loading dose', big, sub, arr: d._m === 'cif' ? '立即接續' : m3 ? `${m3[1]} 後` : ivH ? `${ivH} h 後` : '接續' }; }
   } else if (d._m && bx) {
     const x0 = tierText({ ...d, _m: null }, d.L[p.idx], CC);
     step1 = { t: '首劑標準輸注', big: `${d.L[p.idx].lb ? d.L[p.idx].lb : x0.mg != null ? fmtMg(x0.mg, d.unit) : x0.main}（30 min）`, sub: `作為 loading dose，以快速達到目標濃度。請於醫囑註明首劑輸注時間（Stanford Health Care Extended-Infusion β-Lactam Protocol 2026）`, arr: d._m === 'pif' ? (d.pifStart ? '依原間隔' : '下一劑起') : '立即接續' };
@@ -1666,8 +1685,8 @@ function infusionHTML(d, sel) {
   const dil = st.dil && dils.includes(st.dil) ? st.dil : dils[0];
   if (inf.rb) {
     const bagMg = parseFloat(d.st);
-    const vol = mg && bagMg ? mg / bagMg * inf.rb : inf.rb;
-    h += `<div class="infg"><div class="fld"><label>輸注時間</label><div class="inp"><select data-inf="t" ${inf.fixed ? 'disabled' : ''}>${tOpts.map((o) => `<option value="${o}" ${o === t ? 'selected' : ''}>${hrs(o)}</option>`).join('')}</select></div></div></div>`;
+    const vol = mgUse && bagMg ? mgUse / bagMg * inf.rb : inf.rb;
+    h += `<div class="infg"><div class="fld"><label>輸注時間</label><div class="inp"><select data-inf="t" ${inf.fixed || lockT ? 'disabled' : ''}>${tList.map((o) => `<option value="${o}" ${o === t ? 'selected' : ''}>${hrs(o)}</option>`).join('')}</select></div></div></div>`;
     h += `<div class="infout"><div class="kv"><span>預混體積</span><b>${r0(vol)} mL</b></div><div class="kv"><span>濃度</span><b>${bagMg ? +(bagMg / inf.rb).toFixed(2) : '—'} mg/mL</b></div><div class="kv"><span>流速</span><b>${r0(vol / t)} mL/h</b></div></div>`;
   } else if (inf.perAmp) {
     const amps = mg ? mg / d.amp : null; const pv = +(st.pa ?? inf.perAmp[0]);
