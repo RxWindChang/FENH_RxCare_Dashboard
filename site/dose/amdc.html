@@ -350,6 +350,7 @@ const EI_NOTE = '重症／高 MIC：可改用 pIF（3–4 h）或 cIF 以提高 
 
 /* 非仿單／UpToDate 之文獻：顯示文字 → PubMed 連結（tier 右側參考與備註中自動加超連結） */
 const REFS = {
+  'Carlier M, Minerva Anestesiol 2015': 'https:\/\/pubmed.ncbi.nlm.nih.gov/25220554/',
   'Nation RL, Clin Infect Dis 2017': 'https:\/\/pubmed.ncbi.nlm.nih.gov/?term=10.1093%2Fcid%2Fciw839',
   'Lam SW, AAC 2019': 'https:\/\/pubmed.ncbi.nlm.nih.gov/31235624/',
   'Honore PM, Crit Care 2018': 'https:\/\/pubmed.ncbi.nlm.nih.gov/?term=10.1186%2Fs13054-018-2231-6',
@@ -612,7 +613,7 @@ add({ id: 'mem', utd: '2026/11/16', utdSrc: 'Meropenem: Drug information', ref: 
   arc: { i: 7, t: 'ARC：loading 2,000 mg 後 2,000 mg Q8H 3-h 延長輸注；或 loading 1,000 mg 後 6,000 mg/24 h 持續輸注；建議 TDM，部分病人需 >6,000 mg/day。' },
   aki: 'w', tox: ['癲癇', CARBA_VPA],
   nx: CARBA_VPA,
-  inf: { dil: { NS: '室溫依廠牌約 1–6 h（院內 Kabi 廠 6 h）；冷藏 15–24 h', D5W: '室溫 1 h 內使用' }, v: [50, 100], t: [0.5, 3], ti: 0, c: [1, 20], note: 'pIF 3 h 需於安定時間內完成，每劑新鮮配製' } });
+  inf: { dil: { NS: '室溫（25 °C）：10–20 mg/mL 可 12 h、40 mg/mL 8 h（Carlier M, Minerva Anestesiol 2015；原廠與 Sandoz、Fresenius Kabi、Hospira 學名藥安定性相當）；仿單（院內 Kabi 廠）室溫 6 h；冷藏 15–24 h', D5W: '室溫 1 h 內使用' }, v: [50, 100], t: [0.5, 3], ti: 0, c: [1, 20], note: 'pIF 3 h 需於安定時間內完成，每劑新鮮配製' } });
 
 add({ id: 'ipm', utd: '2026/11/16', utdSrc: 'Imipenem and cilastatin: Drug information', ref: 'UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', blg: 'carb', pifStart: '維持劑量依原給藥間隔開始', naD: [37.5, 500], ind: ['一般感染（500 mg Q6H）', '重症／MIC 4 mg/L（1,000 mg Q6H）'], g: 'Imipenem/Cilastatin', b: 'Tienam (Culin)', zh: '庫寧', st: '500 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'carbapenem tienam',
   L: [T(500, 'q12h'), T(250, 'q6h'), T(500, 'q8h'), T(500, 'q6h'), T(1000, 'q8h'), T(1000, 'q6h', { hd: 1, t: '重症／MIC 4 mg/L' })],
@@ -1748,7 +1749,7 @@ function infusionHTML(d, sel) {
     h += `<div class="infout"><div class="kv ${bad ? 'bad' : ''}"><span>最終濃度${d.cf ? '（主成分）' : ''}</span><b>${conc != null ? +conc.toFixed(2) + ' mg/mL' : '—'}</b></div><div class="kv"><span>建議濃度範圍</span><b>${inf.c ? `${inf.c[0] || 0}–${inf.c[1]}` : '—'}</b></div><div class="kv"><span>${perLabel ? '每袋劑量／' : ''}流速</span><b>${perLabel && mgUse ? Math.round(mgUse).toLocaleString('en-US') + ' mg／' : ''}${r0(v / t)} mL/h</b></div></div>`;
     if (bad) h += `<p class="al d" style="margin-top:8px">濃度超出建議範圍，請調整稀釋體積。</p>`;
   }
-  if (dil && inf.dil[dil]) h += `<p class="note"><b>${esc(dil)}</b>：${esc(inf.dil[dil])}</p>`;
+  if (dil && inf.dil[dil]) h += `<p class="note"><b>${esc(dil)}</b>：${linkify(esc(inf.dil[dil]))}</p>`;
   if (inf.note) h += `<p class="note">${esc(inf.note)}</p>`;
   if (inf.card) { const im = document.querySelector(`#cardStore img[data-card="${inf.card.id}"]`); if (im) h += `<details class="cardbox"><summary>${esc(inf.card.t)}</summary><img src="${im.src}" alt="${esc(inf.card.t)}" data-zoom="1"><p class="src">${esc(inf.card.src)}；點圖放大</p></details>`; }
   return h + '</div></div>';
