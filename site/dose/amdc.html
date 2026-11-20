@@ -576,13 +576,13 @@ add({ id: 'czt', utd: '2026/11/16', utdSrc: 'Ceftolozane and tazobactam: Drug in
   aki: 'w', tox: ['低血鉀'],
   inf: { dil: { NS: '室溫 24 h、冷藏 7 d', D5W: '室溫 24 h、冷藏 7 d' }, v: [100], t: [3], ti: 0, fixed: 1, note: '本院一律 3-h 延長輸注（仿單 1 h）' } });
 
-add({ id: 'azavi', utd: '2026/11/16', utdSrc: 'Aztreonam and avibactam: Drug information', ref: 'UpToDate, 2026/11/16・PI', rrRef: 'UpToDate, 2026/11/16', blg: 'nov', novel: 1, g: 'Aztreonam/Avibactam', b: 'Emblaveo', zh: '', st: '2,000 mg/vial (1,500 mg/500 mg)', cls: 'bac', sub: 'bl', rt: 'inj', ext: '健保不給付', kw: 'mbl ndm aztreonam avibactam', unitNote: '劑量以 aztreonam 計',
-  L: [T(675, 'q12h', { lb: '675/225 mg' }), T(675, 'q8h', { lb: '675/225 mg' }), T(750, 'q6h', { lb: '750/250 mg' }), T(1500, 'q6h', { lb: '1,500/500 mg' })],
+add({ id: 'azavi', utd: '2026/11/16', utdSrc: 'Aztreonam and avibactam: Drug information', ref: 'UpToDate, 2026/11/16・PI', rrRef: 'UpToDate, 2026/11/16', blg: 'nov', novel: 1, g: 'Aztreonam/Avibactam', b: 'Emblaveo', zh: '', st: '2,000 mg/vial (1,500 mg/500 mg)', cls: 'bac', sub: 'bl', rt: 'inj', ext: '健保不給付', kw: 'mbl ndm aztreonam avibactam', unitNote: '劑量以總量（aztreonam + avibactam）計',
+  L: [T(900, 'q12h', { lb: '900 mg (675/225 mg)' }), T(900, 'q8h', { lb: '900 mg (675/225 mg)' }), T(1000, 'q6h', { lb: '1,000 mg (750/250 mg)' }), T(2000, 'q6h', { lb: '2,000 mg (1,500/500 mg)' })],
   R: [[50.0001, 3, 3, '', '>50'], [30.0001, 2, 2, '', '>30–50'], [15.0001, 1, 1, '', '>15–30'], [0, 0, 0, '', '≤15']],
-  ld: (c) => c.rrt === 'PD' || c.rrt === 'SLED' ? '' : c.rrt === 'HD' || (c.rrt === 'none' && c.cr <= 15) ? 'Loading 1,000 mg/330 mg (3 h)' : c.rrt === 'none' && c.cr <= 30 ? 'Loading 1,350 mg/450 mg (3 h)' : 'Loading 2,000 mg/670 mg (3 h)，下一個給藥間隔開始維持劑量',
+  ld: (c) => c.rrt === 'PD' || c.rrt === 'SLED' ? '' : c.rrt === 'HD' || (c.rrt === 'none' && c.cr <= 15) ? 'Loading 1,330 mg (1,000/330 mg) (3 h)' : c.rrt === 'none' && c.cr <= 30 ? 'Loading 1,800 mg (1,350/450 mg) (3 h)' : 'Loading 2,670 mg (2,000/670 mg) (3 h)，下一個給藥間隔開始維持劑量',
   rr: { HD: [0, 0, 'after dialysis (AD) 給藥'], PD: [-1, -1, '資料不足'], CRRT: [2, 3, '資料不足；需高於 HD 劑量，依 CRRT clearance 評估'], SLED: [-1, -1, '資料不足'] },
   aki: 'w', tox: ['肝功能異常（ALT/AST 上升）', BL_TOX_NEURO],
-  inf: { dil: { NS: '冷藏 24 h + ≤30°C 12 h', D5W: '冷藏 24 h + ≤30°C 6 h', LR: '冷藏 24 h + ≤30°C 12 h' }, v: [50, 100, 250], t: [3], ti: 0, fixed: 1, c: [1.5, 40], note: '一律 3-h 輸注（仿單）。溶解 10 mL SWFI（aztreonam 131.2 mg/mL），30 分鐘內完成稀釋', card: { id: 'emblaveo', t: 'Emblaveo 輸注小卡（初始配製、腎功能分區劑量與抽取量）', src: 'Pfizer 台灣專業醫療人員資料 PP-A1E-TWN-0023-202608（依 SmPC 20240422-3）' } },
+  inf: { dil: { NS: '冷藏 24 h + ≤30°C 12 h', D5W: '冷藏 24 h + ≤30°C 6 h', LR: '冷藏 24 h + ≤30°C 12 h' }, v: [50, 100, 250], t: [3], ti: 0, fixed: 1, c: [2, 53.3], note: '一律 3-h 輸注（仿單）。濃度以總量計（仿單 aztreonam 1.5–40 mg/mL，相當總量 2–53.3 mg/mL）。溶解 10 mL SWFI（aztreonam 131.2 mg/mL），30 分鐘內完成稀釋', card: { id: 'emblaveo', t: 'Emblaveo 輸注小卡（初始配製、腎功能分區劑量與抽取量）', src: 'Pfizer 台灣專業醫療人員資料 PP-A1E-TWN-0023-202608（依 SmPC 20240422-3）' } },
   nt: ['臺灣已核准，健保不給付（自費）。', '劑量依 US FDA（2025）與 EMA SmPC，兩者一致：Loading 2,670 mg (2,000/670 mg)，維持 2,000 mg (1,500/500 mg) q6h，皆 3-h 輸注。', 'MBL-producing Enterobacterales 首選之一（IDSA 2024）。'] });
 
 add({ id: 'etp', utd: '2026/11/16', utdSrc: 'Ertapenem: Drug information', ref: 'UpToDate, 2026/11/16', rrRef: 'UpToDate, 2026/11/16', blg: 'carb', naD: [137, 1000], g: 'Ertapenem', b: 'Invanz', zh: '益滿治', st: '1,000 mg/vial', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'carbapenem esbl',
