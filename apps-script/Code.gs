@@ -9,6 +9,7 @@
  *               實習生排程、宣達事項（工作表依名稱自動找最新的一張）
  *
  * 評鑑評核：?evals=1&from=&to= 查詢評核紀錄；POST 送出評核（見檔案最後的「評鑑評核」段落）。
+ * 聚餐點餐：?dinner=1 讀取點餐資料；POST action:'dinner' 寫入（見檔案最後的「聚餐點餐」段落）。
  *
  * 網頁以 <網頁應用程式網址>?p=<密碼> 呼叫。
  * 密碼存在「專案設定 › 指令碼屬性」的 PASSWORD，不寫在程式碼裡
@@ -45,6 +46,12 @@ function doGet(e) {
   const cache = CacheService.getScriptCache();
   const bad = checkPw_(e.parameter.p);
   if (bad) return json_({ ok: false, error: bad });
+
+  // 聚餐點餐：讀取全部點餐資料（不快取）
+  if (e.parameter.dinner) {
+    try { return json_(dinnerState_()); }
+    catch (err) { return json_({ ok: false, error: String(err && err.message || err) }); }
+  }
 
   // 評鑑評核：查詢評核紀錄（不快取）
   if (e.parameter.evals) {
@@ -108,7 +115,7 @@ function page_() {
 const SUBPAGES = { resources: { path: 'resources.html', title: '臨床資源｜藥事照護組' },
   eval: { path: 'eval/index.html', title: '評鑑評核｜藥事照護組' }, evalinhaler: { path: 'eval/inhaler.html', title: '吸入劑衛教評核｜評鑑評核' },
   evalinsulin: { path: 'eval/insulin.html', title: '筆型胰島素注射技術｜評鑑評核' }, evalcva: { path: 'eval/cva.html', title: 'CVA 衛教評核｜評鑑評核' },
-  evalexport: { path: 'eval/export.html', title: '評核表下載｜評鑑評核' },vpa: { path: 'tdm/valproic-acid.html', title: 'Valproic Acid TDM Calculator', icon: 'tdm/vpa-icon.png' }, vpaguide: { path: 'tdm/valproic-acid-guide.html', title: 'VPA TDM Calculator 使用說明書', icon: 'tdm/vpa-icon.png' }, amdc: { path: 'dose/amdc.html', title: 'Anti-Microbial Dose Calculator (AMDC)', icon: 'dose/amdc-icon.png' }, ccmc: { path: 'dose/ccmc.html', title: 'Critical Care Medication Calculator (CCMC)', icon: 'dose/ccmc-icon.png' } };
+  evalexport: { path: 'eval/export.html', title: '評核表下載｜評鑑評核' }, dinner: { path: 'dinner/index.html', title: '聚餐點餐｜藥事照護組' },vpa: { path: 'tdm/valproic-acid.html', title: 'Valproic Acid TDM Calculator', icon: 'tdm/vpa-icon.png' }, vpaguide: { path: 'tdm/valproic-acid-guide.html', title: 'VPA TDM Calculator 使用說明書', icon: 'tdm/vpa-icon.png' }, amdc: { path: 'dose/amdc.html', title: 'Anti-Microbial Dose Calculator (AMDC)', icon: 'dose/amdc-icon.png' }, ccmc: { path: 'dose/ccmc.html', title: 'Critical Care Medication Calculator (CCMC)', icon: 'dose/ccmc-icon.png' } };
 function subpage_(name) {
   const sp = SUBPAGES[name];
   if (!sp) return HtmlService.createHtmlOutput('<p>找不到這個頁面。</p>');
@@ -318,6 +325,7 @@ function authorize() {
   SpreadsheetApp.openById(BOARD_ID).getName();
   UrlFetchApp.fetch(PAGE_URL, { muteHttpExceptions: true }); // 備用網址需要「連線到外部服務」權限
   Logger.log('評核紀錄試算表：' + evalSheet_().getParent().getUrl());
+  Logger.log('聚餐點餐試算表：' + dinnerSheet_().getParent().getUrl());
   Logger.log('授權完成。');
 }
 
@@ -372,6 +380,7 @@ function doPost(e) {
   if (bad) return json_({ ok: false, error: bad });
   try {
     if (body.action === 'save') return json_(evalSave_(body.rec));
+    if (body.action === 'dinner') return json_(dinnerOp_(body.req));
     return json_({ ok: false, error: '不支援的動作' });
   } catch (err) { return json_({ ok: false, error: String(err && err.message || err) }); }
 }
@@ -441,6 +450,138 @@ function trim_(values) {
   const firstNum = head.indexOf('藥事服務');
   const rows = values.slice(1).filter((r) => r[0] && r.slice(firstNum).some((x) => String(x).trim() !== ''));
   return [head].concat(rows).map((r) => keep.map((i) => r[i]));
+}
+
+/* ======================= 聚餐點餐（site/dinner/） =======================
+ * 點餐網頁送來的資料寫進「照護組聚餐點餐」試算表的「資料」工作表，一筆一列：
+ *   類型 order＝個人單點、group＝套餐揪團、slot＝自填空位、roster＝名單（整份）
+ * 試算表第一次使用時自動建立在擁有者的雲端硬碟，ID 記在指令碼屬性 DINNER_SHEET_ID。
+ * 「摘要」欄是給人看的文字；網頁只讀「內容(JSON)」欄。
+ */
+const DINNER_SHEET = '資料';
+const DINNER_HEAD = ['類型', '鍵', '內容(JSON)', '更新時間', '摘要'];
+const DINNER_KEY = /^[A-Za-z0-9_-]{1,30}$/;
+
+function dinnerSetup() { Logger.log('聚餐點餐試算表：' + dinnerSheet_().getParent().getUrl()); }
+
+function dinnerSheet_() {
+  const props = PropertiesService.getScriptProperties();
+  const id = props.getProperty('DINNER_SHEET_ID');
+  let ss;
+  if (id) ss = SpreadsheetApp.openById(id);
+  else { ss = SpreadsheetApp.create('照護組聚餐點餐'); props.setProperty('DINNER_SHEET_ID', ss.getId()); }
+  let sh = ss.getSheetByName(DINNER_SHEET);
+  if (!sh) {
+    sh = ss.getSheets().length === 1 && ss.getSheets()[0].getLastRow() === 0 ? ss.getSheets()[0].setName(DINNER_SHEET) : ss.insertSheet(DINNER_SHEET);
+    sh.getRange(1, 1, 1, DINNER_HEAD.length).setValues([DINNER_HEAD]).setFontWeight('bold');
+    sh.setFrozenRows(1);
+    sh.getRange('A:E').setNumberFormat('@');
+    sh.setColumnWidth(3, 260); sh.setColumnWidth(5, 420);
+  }
+  return sh;
+}
+
+function dinnerRows_(sh) {
+  const n = sh.getLastRow() - 1;
+  return n < 1 ? [] : sh.getRange(2, 1, n, 3).getDisplayValues();
+}
+
+function dinnerState_() {
+  const out = { ok: true, orders: {}, groups: {}, slots: {}, roster: null, updated: new Date().toISOString() };
+  dinnerRows_(dinnerSheet_()).forEach((r) => {
+    let v; try { v = JSON.parse(r[2] || 'null'); } catch (err) { return; }
+    if (r[0] === 'order') out.orders[r[1]] = v;
+    else if (r[0] === 'group') out.groups[r[1]] = v;
+    else if (r[0] === 'slot' && v && v.name) out.slots[r[1]] = String(v.name);
+    else if (r[0] === 'roster' && Array.isArray(v)) out.roster = v;
+  });
+  return out;
+}
+
+/** 寫入一筆：值為 null 時刪除該列。 */
+function dinnerPut_(sh, type, key, value, summary) {
+  const rows = dinnerRows_(sh);
+  let idx = -1;
+  for (let i = 0; i < rows.length; i++) if (rows[i][0] === type && rows[i][1] === key) { idx = i; break; }
+  if (value == null) { if (idx >= 0) sh.deleteRow(idx + 2); return; }
+  const text = JSON.stringify(value);
+  if (text.length > 40000) throw new Error('資料過長');
+  const row = [type, key, text, Utilities.formatDate(new Date(), TZ, 'yyyy-MM-dd HH:mm:ss'), String(summary || '').slice(0, 1000)];
+  const r = idx >= 0 ? idx + 2 : sh.getLastRow() + 1;
+  sh.getRange(r, 1, 1, row.length).setNumberFormat('@').setValues([row]);
+}
+
+function dinnerGet_(sh, type, key) {
+  const hit = dinnerRows_(sh).filter((r) => r[0] === type && r[1] === key)[0];
+  if (!hit) return null;
+  try { return JSON.parse(hit[2]); } catch (err) { return null; }
+}
+
+/** 套餐成員異動要先確認：這個人沒有在別團、這團還沒滿。 */
+function dinnerInGroup_(sh, member) {
+  return dinnerRows_(sh).some((r) => { if (r[0] !== 'group') return false; try { return (JSON.parse(r[2]).members || []).indexOf(member) >= 0; } catch (err) { return false; } });
+}
+
+/** 網頁送來的操作：{ op, key, data, sum }。op：order／slot／roster／gset（整團存檔）／gdel（解散） */
+function dinnerOp_(req) {
+  if (!req || typeof req !== 'object') throw new Error('資料格式錯誤');
+  const op = String(req.op || ''), key = String(req.key || '');
+  if (op !== 'roster' && !DINNER_KEY.test(key)) throw new Error('鍵值格式不正確');
+  const member = req.member == null ? '' : String(req.member);
+  if (member && !DINNER_KEY.test(member)) throw new Error('成員格式不正確');
+  const sum = String(req.sum || '').slice(0, 1000);
+  const obj = (v) => (v && typeof v === 'object' && !Array.isArray(v) ? v : null);
+  const lock = LockService.getScriptLock();
+  lock.waitLock(20000);
+  try {
+    const sh = dinnerSheet_();
+    if (op === 'order') {
+      if (req.data === null) dinnerPut_(sh, 'order', key, null);
+      else { const d = obj(req.data); if (!d) throw new Error('點單格式不正確'); dinnerPut_(sh, 'order', key, d, sum); }
+    } else if (op === 'slot') {
+      if (!/^x\d$/.test(key)) throw new Error('空位代號不正確');
+      const name = req.data == null ? '' : String(req.data).trim().slice(0, 20);
+      if (name) dinnerPut_(sh, 'slot', key, { name: name }, name);
+      else { if (dinnerInGroup_(sh, key)) throw new Error('這位還在套餐揪團裡，請先退出'); dinnerPut_(sh, 'slot', key, null); dinnerPut_(sh, 'order', key, null); }
+    } else if (op === 'roster') {
+      if (!Array.isArray(req.data)) throw new Error('名單格式不正確');
+      const people = req.data.filter((p) => p && DINNER_KEY.test(String(p.k))).slice(0, 60)
+        .map((p) => ({ k: String(p.k), name: String(p.name || '').slice(0, 20), role: String(p.role || '').slice(0, 20) }));
+      dinnerPut_(sh, 'roster', 'main', people, people.map((p) => p.name).join('、'));
+    } else if (op === 'gset') {
+      // 套餐揪團：整團存檔（新增或修改）。成員不可同時在別團、人數不可超過套餐人數。
+      const d = obj(req.data); if (!d) throw new Error('套餐資料格式不正確');
+      const size = Number(d.size);
+      if ([2, 3, 4, 5].indexOf(size) < 0) throw new Error('套餐人數不正確');
+      const members = (Array.isArray(d.members) ? d.members : []).map(String).filter((m, i, a) => DINNER_KEY.test(m) && a.indexOf(m) === i);
+      if (!members.length) throw new Error('請至少選一位團員');
+      if (members.length > size) throw new Error('團員人數超過套餐人數');
+      const others = dinnerRows_(sh).filter((r) => r[0] === 'group' && r[1] !== key);
+      others.forEach((r) => { let g; try { g = JSON.parse(r[2]); } catch (err) { return; }
+        const dup = (g.members || []).filter((m) => members.indexOf(m) >= 0);
+        if (dup.length) throw new Error('有團員已經在別團了，請重新整理頁面後再選'); });
+      const picks = {};
+      const src = obj(d.picks) || {};
+      members.forEach((m) => { const x = obj(src[m]) || {}; picks[m] = { main: String(x.main || '').slice(0, 10), drink: String(x.drink || '').slice(0, 10) }; });
+      const old = dinnerGet_(sh, 'group', key);
+      dinnerPut_(sh, 'group', key, { size: size, members: members, picks: picks,
+        des: (Array.isArray(d.des) ? d.des : []).slice(0, 2).map((x) => String(x || '').slice(0, 10)),
+        note: String(d.note || '').slice(0, 200), at: (old && old.at) || new Date().toISOString() }, sum);
+    } else if (op === 'gdel') {
+      dinnerPut_(sh, 'group', key, null);
+    } else throw new Error('不支援的動作');
+  } finally { lock.releaseLock(); }
+  return dinnerState_();
+}
+
+/** 由 Apps Script 備用網址開啟點餐頁時，網頁以 google.script.run 呼叫這兩個函式。 */
+function dinnerGetRun(p) {
+  const bad = checkPw_(p); if (bad) return { ok: false, error: bad };
+  try { return dinnerState_(); } catch (err) { return { ok: false, error: String(err && err.message || err) }; }
+}
+function dinnerOpRun(p, req) {
+  const bad = checkPw_(p); if (bad) return { ok: false, error: bad };
+  try { return dinnerOp_(req); } catch (err) { return { ok: false, error: String(err && err.message || err) }; }
 }
 
 function json_(o) {

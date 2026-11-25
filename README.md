@@ -37,6 +37,8 @@ Google 伺服器會到 GitHub 取最新網頁再送出（快取 10 分鐘），�
 | `site/resources.html` | 臨床資源頁（Dashboard 右上角「臨床資源」圖示進入），不需密碼、不含任何資料 |
 | `site/eval/index.html` | 評鑑評核頁（Dashboard「評鑑評核」圖示進入）：照護組評核三項＋評核表下載 |
 | `site/eval/{inhaler,insulin,cva,export}.html` | 吸入劑衛教、筆型胰島素注射技術、CVA 衛教評核表與下載頁（由 `src/build_eval.py` 產生） |
+| `site/dinner/index.html` | 聚餐點餐頁（Dashboard 右上角「聚餐點餐」圖示進入）：單點／揪團分享套餐、彙整與 PDF 匯出；資料經 Apps Script 存進「照護組聚餐點餐」試算表，需 Dashboard 密碼 |
+| `site/dinner/menu/` | 店家菜單原圖（點餐頁的菜單圖庫） |
 | `site/tdm/valproic-acid.html` | Valproic acid TDM 計算器（獨立靜態頁，可直接更新此檔） |
 | `site/tdm/vpa-icon.svg` | 計算器圖示 |
 | `apps-script/Code.gs` | 資料端點程式碼，貼到 Apps Script |
@@ -85,3 +87,12 @@ Dashboard 快速連結列「Moodle」與「臨床資源」之間的「評鑑評�
 - 刪除或修正紀錄：直接在試算表刪列或改內容（「明細(JSON)」欄是評核表逐項結果）。
 - 修改評核表內容或樣式：改 `src/eval/` 後執行 `python3 src/build_eval.py`，重新產生 `site/eval/` 的四個頁面。
 - 若之後用 `build.py` 重新產生 `site/index.html`，需在快速連結列「臨床資源」之前補上 `<a class="ql-a" id="ql-eval" href="eval/" …>` 圖示。
+
+## 聚餐點餐
+
+Dashboard 快速連結列最右側「聚餐點餐」圖示 → `site/dinner/`（備用網址 `/exec?page=dinner`）。
+
+- 先選「我要單點」（只能選一個名字）或「我要揪團點餐」（2–5 人分享套餐，可一次選多位團員，每人各選主餐與飲品，甜點全團共選）。
+- 資料寫進「照護組聚餐點餐」試算表的「資料」工作表（第一次使用時自動建立，ID 記在指令碼屬性 `DINNER_SHEET_ID`）；「摘要」欄是給人看的文字。
+- 需 Dashboard 密碼；登入過 Dashboard 的裝置不必再輸入。
+- 這次聚餐的日期、地點、菜單與名單寫在 `site/dinner/index.html` 內（`DEFAULT`、`M`、`SETS`）；下次聚餐改這幾段即可，並清空試算表「資料」工作表第 2 列以下。

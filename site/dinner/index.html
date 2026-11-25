@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>聚餐點餐｜藥事照護組</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&family=LXGW+WenKai+TC&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: 溫暖、手作、像一張親手寫好寄出的晚餐邀請函
+   IDEA: 印在棉紙上的水彩邀請卡＋小酒館手寫菜單
+   PICTURE: 一桌水彩暈染的料理靜物（SVG 濾鏡做出紙上渲染），點餐區像手寫菜單
+   COLOUR and TYPE: 紙白 #f7f4ee、墨色 #2a2622、靛青 #2f4b7c、柿紅 #c8553d、鼠尾草綠 #6f8f5e；霞鶩文楷（標題）＋ Cormorant 斜體（英文點綴）＋ Noto Sans TC（內文）
+   LAYOUT: 邀請卡 → 店家故事 → 主廚推薦 → 點餐（名單＋菜單＋點單）→ 彙整與 PDF */
+:root{color-scheme:light dark;--bg:light-dark(#f7f4ee,#1c1a17);--ink:light-dark(#2a2622,#ece6da);--mute:light-dark(#6d655b,#a99f91);--line:light-dark(#e2dace,#36322c);--card:light-dark(#fffdf8,#24211d);--blue:light-dark(#2f4b7c,#8fa9d6);--red:light-dark(#c8553d,#e8846c);--sage:light-dark(#6f8f5e,#9dbb8b);--ok:light-dark(#4f7a3f,#9dc58a);--wash:light-dark(#efe7d9,#2a2621)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.75 "Noto Sans TC",system-ui,sans-serif;overflow-x:clip;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .4 0 0 0 0 .35 0 0 0 0 .3 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E")}
+.band{padding:clamp(32px,5vw,72px) max(5vw,16px)}
+.wrap{max-width:1180px;margin:0 auto}
+.rule{border-top:1px solid var(--line);position:relative}
+.rule::before{content:"❦";position:absolute;left:50%;top:-.85em;transform:translateX(-50%);background:var(--bg);padding:0 14px;color:var(--red);font-size:20px}
+h1,h2,h3{margin:0;line-height:1.2;text-wrap:balance;font-weight:400}
+.serif,h1,h2{font-family:"LXGW WenKai TC","Noto Serif TC",serif}
+.en{font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-weight:500}
+h2{font-size:clamp(32px,4.6vw,46px)}
+h2 .en{display:block;font-size:22px;color:var(--red);margin-bottom:2px}
+h2 small{display:block;font:400 16px/1.6 "Noto Sans TC",sans-serif;color:var(--mute);margin-top:8px}
+.blue{color:var(--blue)}.red{color:var(--red)}
+p{margin:.5em 0}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:clamp(24px,5vw,64px);align-items:center}
+.toprow{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.back{font-size:14px;color:var(--mute);text-decoration:none;border:1px solid var(--line);border-radius:99px;padding:5px 14px;background:var(--card)}
+.back:hover{color:var(--ink);border-color:var(--ink)}
+#gate{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}#gate input{min-height:42px;border:1px solid var(--line);border-radius:3px;padding:6px 10px;background:var(--card);font-size:16px}
+.stamp{display:inline-flex;align-items:center;gap:10px;color:var(--red);font-size:14px;letter-spacing:.08em}
+.stamp i{display:grid;place-items:center;width:38px;height:38px;border:1.5px solid var(--red);border-radius:4px;font:400 13px/1.05 "LXGW WenKai TC",serif;font-style:normal;transform:rotate(-6deg);text-align:center}
+.hero .en.lead{display:block;font-size:clamp(22px,2.6vw,28px);color:var(--blue);margin:22px 0 2px}
+.hero h1{font-size:clamp(44px,6.4vw,72px);line-height:1.12;margin:0 0 6px}
+.hero h1 em{font-style:normal;color:var(--red)}
+.brush{display:block;width:min(320px,80%);height:16px;margin:4px 0 26px}
+.facts{display:grid;gap:0;margin:0;padding:0;list-style:none}
+.facts li{display:grid;grid-template-columns:4.2em 1fr;gap:12px;padding:14px 0;border-top:1px dashed var(--line)}
+.facts li:last-child{border-bottom:1px dashed var(--line)}
+.facts b{font:400 17px/1.6 "LXGW WenKai TC",serif;color:var(--mute)}
+.facts .big{font:400 clamp(21px,2.6vw,26px)/1.35 "LXGW WenKai TC",serif}
+.place{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:start}
+.map{display:inline-flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--blue);font-size:12.5px;min-width:64px}
+.map svg{width:52px;height:52px;transition:transform .2s}
+.map:hover svg{transform:translateY(-3px) rotate(-4deg)}
+.map:hover span{text-decoration:underline}
+.deadline{display:inline-flex;align-items:center;gap:8px;margin-top:22px;font:400 18px/1.4 "LXGW WenKai TC",serif;color:var(--red);border:1.5px solid var(--red);border-radius:40px 32px 44px 30px/30px 40px 30px 42px;padding:10px 20px}
+.cta{display:inline-block;margin:22px 0 0 14px;color:var(--blue);font-weight:500}
+.still{position:relative;aspect-ratio:5/4.2;min-height:300px}
+.still svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+
+/* intro */
+.intro{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:clamp(24px,5vw,64px)}
+.intro p.body{font-size:17px}
+.pillars{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px}
+.pillars svg{width:64px;height:64px;display:block;margin-bottom:6px}
+.pillars h3{font:400 21px/1.35 "LXGW WenKai TC",serif}
+.pillars h3 .en{display:block;font-size:16px;color:var(--red)}
+.pillars p{color:var(--mute);font-size:15px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.chip{border:1px solid var(--ink);border-radius:99px;padding:2px 14px;font-size:14px}
+
+/* featured */
+.feat{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:34px 28px;margin-top:30px}
+.dish{display:grid;grid-template-columns:104px 1fr;gap:16px;align-items:start}
+.dish svg{width:104px;height:104px;overflow:visible}
+.dish h3{font:400 19px/1.4 "LXGW WenKai TC",serif}
+.dish .p{font:500 italic 19px/1.2 "Cormorant Garamond",serif;color:var(--red)}
+.dish p{color:var(--mute);font-size:14.5px;margin:.3em 0 0}
+.lab{font-size:12.5px;color:var(--sage);letter-spacing:.06em}
+
+/* rules */
+.rules{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 36px;margin:24px 0 0;padding:0;list-style:none}
+.rules li{padding-left:24px;position:relative;font-size:15.5px}
+.rules li::before{content:"✿";position:absolute;left:0;top:0;color:var(--sage)}
+.rules li.warn::before{content:"✦";color:var(--red)}
+
+/* order */
+.roster{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:26px 0}
+.who{display:flex;flex-direction:column;align-items:flex-start;gap:0;min-height:66px;padding:10px 14px;border:1px solid var(--line);background:var(--card);border-radius:3px;text-align:left;box-shadow:2px 3px 0 var(--wash)}
+.who b{font:400 19px/1.4 "LXGW WenKai TC",serif}
+.who span{font-size:13px;color:var(--mute)}
+.who.done{border-color:var(--ok)}.who.done span{color:var(--ok);font-weight:500}
+.who.abs{opacity:.5}
+.who.slot{border-style:dashed;background:transparent;box-shadow:none;justify-content:center;gap:6px}
+.slotrow{display:flex;gap:6px;width:100%}
+.slotrow input{flex:1;min-width:0;min-height:40px;border:1px solid var(--line);border-radius:3px;padding:4px 8px;background:var(--card);font:400 16px "LXGW WenKai TC",serif}
+.slotrow button{flex:none;min-height:40px;padding:0 12px;border:1px solid var(--blue);background:none;color:var(--blue);border-radius:3px}
+.who[aria-pressed=true]{border-color:var(--blue);box-shadow:0 0 0 1.5px var(--blue),3px 4px 0 var(--wash)}
+.panel{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:28px;align-items:start}
+.menu{border-top:2px solid var(--ink);padding-top:2px}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:12px 0;scrollbar-width:thin}
+.tabs button{flex:none;border:1px solid var(--line);background:var(--card);border-radius:99px;padding:8px 16px;min-height:44px;font:400 16px/1 "LXGW WenKai TC",serif}
+.tabs button[aria-selected=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.search{width:100%;min-height:46px;padding:8px 14px;border:1px solid var(--line);border-radius:3px;background:var(--card);font-size:16px}
+.items{list-style:none;margin:8px 0 0;padding:0;max-height:640px;overflow-y:auto}
+.it{display:grid;grid-template-columns:1fr auto auto;gap:2px 14px;align-items:center;padding:13px 4px;border-bottom:1px dotted var(--line)}
+.it .n{font:400 17.5px/1.45 "LXGW WenKai TC",serif}
+.it .e{grid-column:1;font:italic 15px/1.3 "Cormorant Garamond",serif;color:var(--mute)}
+.it .pr{font:500 italic 19px/1 "Cormorant Garamond",serif;color:var(--red);white-space:nowrap;text-align:right}
+.it .add{grid-row:1/3;grid-column:3;min-width:44px;min-height:44px;border-radius:50%;border:1.5px solid var(--blue);background:none;color:var(--blue);font-size:22px;line-height:1;transition:background .15s,color .15s}
+.it .add:hover{background:var(--blue);color:var(--bg)}
+.it .add:disabled{border-color:var(--line);color:var(--line);background:none}
+.tag{display:inline-block;font:400 12px/1.6 "Noto Sans TC",sans-serif;border-radius:2px;padding:0 6px;margin-left:6px;vertical-align:2px;white-space:nowrap}
+.t-k{background:light-dark(#e6eedf,#26301f);color:var(--ok)}.t-r{background:light-dark(#e3e8f2,#222b3b);color:var(--blue)}.t-s{background:light-dark(#f6e3dc,#3a231d);color:var(--red)}.t-v{border:1px solid var(--ok);color:var(--ok)}.t-n{background:var(--red);color:#fff}.t-x{border:1px solid var(--line);color:var(--mute)}
+.cart{position:sticky;top:12px;border:1px solid var(--line);border-radius:3px;padding:20px;background:var(--card);box-shadow:4px 6px 0 var(--wash)}
+.cart h3{font:400 24px/1.3 "LXGW WenKai TC",serif}
+.cart .sub{color:var(--mute);font-size:14px}
+.line{border-top:1px dotted var(--line);padding:10px 0}
+.line .top{display:flex;justify-content:space-between;gap:10px;font:400 17px/1.45 "LXGW WenKai TC",serif}
+.qty{display:inline-flex;align-items:center;gap:8px;margin-top:6px}
+.qty button{width:36px;height:36px;border:1px solid var(--line);background:var(--bg);border-radius:50%}
+.opts{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.opts label{display:inline-flex;align-items:center;gap:4px;font-size:13.5px;border:1px solid var(--line);border-radius:99px;padding:3px 10px;cursor:pointer;background:var(--bg)}
+.opts input{width:16px;height:16px;accent-color:var(--blue)}
+.alt{margin-top:8px;font-size:14px}
+.alt select{width:100%;min-height:42px;margin-top:4px;border:1px solid var(--red);border-radius:3px;background:var(--bg);padding:6px}
+textarea{width:100%;min-height:76px;border:1px solid var(--line);border-radius:3px;padding:8px 10px;background:var(--bg);font-size:16px}
+.tot{display:flex;justify-content:space-between;font:400 20px/1.4 "LXGW WenKai TC",serif;border-top:1.5px solid var(--ink);padding-top:10px;margin-top:10px}
+.small{font-size:13.5px;color:var(--mute)}
+.btn{min-height:48px;border:0;border-radius:3px;padding:10px 22px;font:400 17px/1 "LXGW WenKai TC",serif;background:var(--red);color:#fff;letter-spacing:.04em}
+.btn.ghost{background:none;color:var(--ink);border:1px solid var(--ink)}
+.btn.blue{background:var(--blue);color:#fff}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+.msg{font-size:14.5px}
+.msg.err{color:var(--red)}.msg.ok{color:var(--ok)}
+.empty{color:var(--mute);padding:14px 0}
+.hint{background:var(--wash);border-left:3px solid var(--red);padding:12px 16px;font-size:15px;margin-top:14px}
+
+/* summary */
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin:26px 0}
+.stat{border-top:1px solid var(--ink);padding-top:8px}
+.stat b{display:block;font:500 italic clamp(30px,4.4vw,44px)/1.1 "Cormorant Garamond",serif;font-variant-numeric:tabular-nums}
+.stat span{color:var(--mute);font-size:14px}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{text-align:left;padding:9px 8px;border-bottom:1px dotted var(--line);vertical-align:top}
+th{font:400 14px/1.4 "LXGW WenKai TC",serif;color:var(--mute);border-bottom:1px solid var(--ink)}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.cols{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:30px;margin-top:10px}
+.cols h3{font:400 22px/1.3 "LXGW WenKai TC",serif}
+.admin{border:1px dashed var(--line);border-radius:3px;padding:16px;margin-top:24px;background:var(--card)}
+.admin input{min-height:44px;border:1px solid var(--line);border-radius:3px;padding:6px 10px;background:var(--bg)}
+footer{border-top:1px solid var(--line);padding:26px max(5vw,16px) 40px;color:var(--mute);font-size:14px;text-align:center}
+footer .sig{display:block;font:400 20px/1.6 "LXGW WenKai TC",serif;color:var(--ink);margin-top:8px}
+
+/* steps & modes */
+.step{display:flex;align-items:center;gap:10px;font:400 22px/1.3 "LXGW WenKai TC",serif;margin:30px 0 4px}
+.step span{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--red);color:#fff;font:500 italic 18px/1 "Cormorant Garamond",serif}
+.step small{font:400 14px/1.4 "Noto Sans TC",sans-serif;color:var(--mute)}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px}
+.modes button{text-align:left;padding:16px 18px;border:1px solid var(--line);background:var(--card);border-radius:3px;box-shadow:3px 5px 0 var(--wash);min-height:84px}
+.modes button b{display:block;font:400 24px/1.3 "LXGW WenKai TC",serif}
+.modes button span{font-size:14px;color:var(--mute)}
+.modes button[aria-pressed=true]{border-color:var(--ink);box-shadow:0 0 0 1.5px var(--ink),3px 5px 0 var(--wash)}
+.modes button[aria-pressed=true] b{color:var(--red)}
+.who.sel{border-color:var(--red);box-shadow:0 0 0 1.5px var(--red),3px 4px 0 var(--wash)}
+.who.sel b::after{content:" ✓";color:var(--red)}
+.who.off{opacity:.45}
+.gb{border:1px solid var(--ink);background:var(--card);border-radius:3px;padding:20px;margin-top:18px}
+.gb h3{font:400 24px/1.3 "LXGW WenKai TC",serif}
+.gtab{width:100%;margin-top:12px}.gtab td,.gtab th{vertical-align:middle}
+.gtab select,.gdes select{width:100%;min-height:42px;border:1px solid var(--line);border-radius:3px;background:var(--bg);padding:6px}
+.gdes{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;margin-top:6px}
+.sizes{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.sizes button{border:1px solid var(--line);background:var(--bg);border-radius:99px;padding:6px 14px;min-height:40px}
+.sizes button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+@media(max-width:600px){.modes{grid-template-columns:minmax(0,1fr)}}
+
+/* gallery, sets, lightbox */
+.gal{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding:22px 2px 10px}
+.gal figure{flex:none;width:190px;margin:0;scroll-snap-align:start}
+.gal button{display:block;padding:0;border:1px solid var(--line);background:#fff;box-shadow:3px 5px 0 var(--wash);cursor:zoom-in;transition:transform .2s}
+.gal button:hover{transform:translateY(-3px) rotate(-.6deg)}
+.gal img{display:block;width:100%;height:auto}
+.gal figcaption{font-size:13.5px;color:var(--mute);margin-top:8px}
+.mode{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0 2px}
+.mode button{min-height:52px;border:1px solid var(--ink);background:var(--card);border-radius:3px;font:400 19px/1.2 "LXGW WenKai TC",serif}
+.mode button small{display:block;font:400 12.5px/1.3 "Noto Sans TC",sans-serif;color:var(--mute)}
+.mode button[aria-selected=true]{background:var(--ink);color:var(--bg)}.mode button[aria-selected=true] small{color:inherit;opacity:.75}
+.sets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:12px}
+.setc{display:grid;grid-template-columns:74px 1fr;gap:12px;align-items:start;border:1px solid var(--line);background:var(--card);padding:12px;border-radius:3px}
+.setc .thumb{padding:0;border:1px solid var(--line);background:#fff;cursor:zoom-in}.setc img{display:block;width:100%}
+.setc b{font-size:19px;font-weight:400}
+.pr2{font:500 italic 20px/1 "Cormorant Garamond",serif;color:var(--red);white-space:nowrap}
+.btn.sm{min-height:40px;padding:6px 14px;font-size:15px;margin-top:8px}
+.grp{border:1px solid var(--line);border-left:4px solid var(--red);background:var(--card);padding:14px 16px;margin-top:12px;border-radius:3px}
+.grp.ok{border-left-color:var(--ok)}
+.gh{display:flex;justify-content:space-between;gap:10px;align-items:baseline}.gh b{font-size:20px;font-weight:400}
+.glist{margin:8px 0 0;padding-left:1.2em;font-size:14.5px}
+.okc{color:var(--ok)}
+.ged fieldset{border:1px dashed var(--line);border-radius:3px;margin:10px 0;padding:8px 12px}
+.ged legend{font:400 16px/1.4 "LXGW WenKai TC",serif;padding:0 6px}
+.ged select{width:100%;min-height:42px;margin:4px 0;border:1px solid var(--line);border-radius:3px;background:var(--bg);padding:6px}
+.gbox{border:1px dashed var(--blue);border-radius:3px;padding:10px 12px;margin:6px 0 8px}.gbox b{font-size:18px;font-weight:400}
+#light{position:fixed;inset:0;z-index:50;background:rgba(28,24,20,.82);display:grid;place-items:center;padding:14px}
+#light[hidden]{display:none}
+.lb{max-width:min(980px,100%);max-height:100%;display:flex;flex-direction:column;gap:8px}
+.lb img{max-height:calc(100vh - 90px);max-width:100%;object-fit:contain;background:#fff;align-self:center}
+.lbbar{display:flex;align-items:center;justify-content:center;gap:10px;color:#f4efe6}
+.lbbar button{min-width:44px;min-height:44px;border:1px solid #f4efe6;background:none;color:#f4efe6;border-radius:50%;font-size:20px}
+#toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:60;background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:3px;font-size:15px;max-width:90vw}
+#toast.err{background:var(--red);color:#fff}
+@media(max-width:600px){.sets{grid-template-columns:minmax(0,1fr)}.gal figure{width:150px}}
+
+/* pdf sheet (off-screen, always light) */
+#sheet{position:fixed;left:-12000px;top:0;color:#111;background:#fff;color-scheme:light}
+.pg{width:794px;padding:40px 44px;background:#fff;font:12.5px/1.5 "Noto Sans TC",sans-serif}
+.pg h1{font:700 22px/1.3 "Noto Sans TC",sans-serif;margin:0 0 4px}
+.pg .meta{display:grid;grid-template-columns:1fr 1fr;gap:2px 20px;border-top:3px solid #111;border-bottom:1.5px solid #111;padding:8px 0;margin:8px 0 12px}
+.pg table{font-size:12px}
+.pg th,.pg td{padding:5px 6px;border-bottom:1px solid #ccc;color:#111}
+.pg th{border-bottom:1.5px solid #111;color:#111;font:700 12px/1.4 "Noto Sans TC",sans-serif}
+.pg .foot{margin-top:12px;font-size:11.5px;color:#444}
+
+@media(max-width:900px){.hero,.intro,.panel,.cols{grid-template-columns:minmax(0,1fr)}.feat{grid-template-columns:repeat(2,minmax(0,1fr))}.cart{position:static}.still{min-height:260px}}
+@media(max-width:600px){.feat,.pillars,.rules{grid-template-columns:minmax(0,1fr)}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.items{max-height:none}.facts li{grid-template-columns:3.6em 1fr}.cta{margin-left:0;display:block}
+table{font-size:13.5px}.stack thead{display:none}.stack tr{display:grid;padding-block:10px;border-bottom:1px dotted var(--line)}.stack td{display:flow-root;border:0;padding:3px 0;padding-inline-start:6em;text-align:start}.stack td::before{content:attr(data-l);float:inline-start;width:5.5em;margin-inline-start:-6em;color:var(--mute)}.stack td:empty{display:none}}
+@media(prefers-reduced-motion:no-preference){.steam{animation:rise 3.6s ease-in-out infinite}@keyframes rise{0%,100%{opacity:.15;transform:translateY(4px)}50%{opacity:.55;transform:translateY(-5px)}}}
+</style>
+<script>new MutationObserver(()=>{for(const c of document.querySelectorAll('.stack td:not([data-l])')){let i=0,p=c;while(p=p.previousElementSibling)i+=p.colSpan;c.dataset.l=c.closest('table').rows[0].cells[i]?.textContent||''}}).observe(document,{childList:true,subtree:true})</script>
+</head>
+<body>
+<div class="rule"></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<filter id="wc" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="3" seed="7" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="10" result="d"/><feGaussianBlur in="d" stdDeviation=".6"/></filter>
+<filter id="ink" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="1" seed="3" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="2.2"/></filter>
+</defs></svg>
+<header class="band"><div class="wrap hero">
+  <div>
+    <div class="toprow"><span class="stamp"><i>照護<br>組</i>亞東醫院藥學部｜藥事照護組</span><a class="back" id="back" href="../">← 回 Dashboard</a></div>
+    <span class="en lead">An invitation to dinner</span>
+    <h1>照護組聚餐<br><em>先點餐</em>，再相聚</h1>
+    <svg class="brush" viewBox="0 0 320 16" aria-hidden="true"><path d="M4 10 C70 2 150 14 220 6 S300 8 316 5" stroke="var(--red)" stroke-width="5" fill="none" stroke-linecap="round" filter="url(#wc)" opacity=".75"/></svg>
+    <ul class="facts">
+      <li><b>日期</b><span class="big">2026 年 12 月 10 日（四）晚上 6:30</span></li>
+      <li><b>地點</b><div class="place"><span><span class="big">gonnaEAT 京站店</span><br>台北市大同區承德路一段1號1樓<br><span class="small">京站時尚廣場內，台北車站步行約 5 分鐘・電話 <span style="white-space:nowrap">02-2558-7968</span></span></span>
+        <a class="map" href="https://www.google.com/maps/search/?api=1&query=gonnaEAT%20%E4%BA%AC%E7%AB%99%E5%BA%97%20%E5%8F%B0%E5%8C%97%E5%B8%82%E5%A4%A7%E5%90%8C%E5%8D%80%E6%89%BF%E5%BE%B7%E8%B7%AF%E4%B8%80%E6%AE%B51%E8%99%9F1%E6%A8%93" target="_blank" rel="noopener" aria-label="在 Google 地圖開啟 gonnaEAT 京站店">
+          <svg viewBox="0 0 60 60" aria-hidden="true"><ellipse cx="30" cy="52" rx="16" ry="4" fill="var(--wash)"/><path d="M30 6c-10 0-17 7.4-17 16.6C13 35 30 51 30 51s17-16 17-28.4C47 13.4 40 6 30 6z" fill="var(--red)" opacity=".85" filter="url(#wc)"/><path d="M30 6c-10 0-17 7.4-17 16.6C13 35 30 51 30 51s17-16 17-28.4C47 13.4 40 6 30 6z" fill="none" stroke="var(--ink)" stroke-width="1.4" filter="url(#ink)"/><circle cx="30" cy="22" r="6.5" fill="var(--bg)" stroke="var(--ink)" stroke-width="1.2"/></svg>
+          <span>Google 地圖</span></a></div></li>
+      <li><b>人數</b><span>明賢副主任、子慧科主任與照護組固定成員，共 <span id="hc">14</span> 位</span></li>
+      <li><b>用餐</b><span>用餐時間 90 分鐘，座位保留 10 分鐘，請準時到場</span></li>
+    </ul>
+    <span class="deadline" id="dl">✎ 請於 12/7（一）17:00 前完成點餐</span><a class="cta" href="#order">前往點餐 →</a>
+  </div>
+  <div class="still" aria-hidden="true">
+    <svg viewBox="0 0 600 500">
+      <defs><g id="plate"><circle r="74" fill="#efe6d4" filter="url(#wc)" opacity=".9"/><circle r="70" fill="#fbf7ef"/><circle r="70" fill="none" stroke="#3a332c" stroke-width="1.6" filter="url(#ink)"/><circle r="55" fill="none" stroke="#3a332c" stroke-width=".8" opacity=".45" filter="url(#ink)"/></g></defs>
+      <ellipse cx="300" cy="260" rx="290" ry="225" fill="#e9b8a2" opacity=".35" filter="url(#wc)"/>
+      <ellipse cx="330" cy="240" rx="230" ry="190" fill="#c9d4c0" opacity=".35" filter="url(#wc)"/>
+      <g transform="translate(160 150)"><use href="#plate"/><g filter="url(#wc)" opacity=".85"><circle cx="-18" cy="-12" r="26" fill="#4f7a3f"/><circle cx="16" cy="-20" r="20" fill="#6f8f5e"/><circle cx="-4" cy="18" r="24" fill="#3e6634"/><circle cx="24" cy="12" r="16" fill="#8aa86f"/><ellipse cx="10" cy="22" rx="18" ry="12" fill="#a9bd6a"/><rect x="-34" y="8" width="14" height="12" rx="3" fill="#e39b3f"/><circle cx="30" cy="-30" r="6" fill="#7b3a6a"/></g></g>
+      <g transform="translate(370 120)"><use href="#plate"/><g filter="url(#wc)" opacity=".88"><circle r="50" fill="#d9bf92"/><rect x="-30" y="-24" width="34" height="22" rx="5" fill="#e88d6a"/><rect x="-26" y="2" width="34" height="22" rx="5" fill="#ea9877"/><ellipse cx="26" cy="-8" rx="17" ry="23" fill="#97b35a"/><circle cx="20" cy="28" r="11" fill="#fbf4e2"/><circle cx="20" cy="28" r="5.5" fill="#e8a62a"/><circle cx="-38" cy="-6" r="6" fill="#6e3a6c"/></g><path d="M-22 -22v18M-12 -22v18M-18 4v18" stroke="#5a3424" stroke-width="1.6" filter="url(#ink)"/></g>
+      <g transform="translate(470 300)"><use href="#plate"/><g filter="url(#wc)" fill="none" stroke="#e8bf63" stroke-width="7" stroke-linecap="round" opacity=".9"><path d="M-40 -6c20-30 50 10 70-14"/><path d="M-36 14c22-26 46 14 72-10"/><path d="M-28 -24c18-12 40 8 56-6"/></g><g filter="url(#wc)" fill="#cf5a3e" opacity=".85"><circle cx="-8" cy="-2" r="9"/><circle cx="22" cy="12" r="8"/><circle cx="-20" cy="22" r="7"/></g></g>
+      <g transform="translate(250 340)"><use href="#plate"/><g filter="url(#wc)" opacity=".88"><rect x="-48" y="-30" width="26" height="54" rx="8" fill="#7a3a30" transform="rotate(-14)"/><rect x="-18" y="-34" width="26" height="54" rx="8" fill="#8a4436" transform="rotate(-14)"/><g fill="#eac35a"><rect x="18" y="-30" width="7" height="40" rx="2" transform="rotate(18 22 -10)"/><rect x="28" y="-26" width="7" height="44" rx="2" transform="rotate(8 30 -4)"/><rect x="38" y="-22" width="7" height="40" rx="2" transform="rotate(-6 40 -2)"/></g><circle cx="-24" cy="40" r="11" fill="#6f8f5e"/></g></g>
+      <g transform="translate(500 90) scale(.55)"><use href="#plate"/><g filter="url(#wc)" opacity=".9"><path d="M-40 26 L34 -34 L44 22 Z" fill="#b8703c"/><path d="M-40 26 L34 -34 L37 -18 L-30 30Z" fill="#fbf0dc"/><circle cx="30" cy="-30" r="16" fill="#ee8a2a"/></g></g>
+      <g transform="translate(90 360)"><circle r="40" fill="#fbf7ef"/><circle r="40" fill="none" stroke="#3a332c" stroke-width="1.5" filter="url(#ink)"/><circle r="30" fill="#a8b66a" filter="url(#wc)" opacity=".85"/><path d="M0 12c-16-10-14-24-4-22 3 1 4 3 4 6 0-3 1-5 4-6 10-2 12 12-4 22z" fill="#fbf6e8"/><path d="M40 -6c14 0 14 12 0 12" fill="none" stroke="#3a332c" stroke-width="1.5" filter="url(#ink)"/><g class="steam" stroke="#8a7f72" stroke-width="2" fill="none" stroke-linecap="round"><path d="M-10 -52c-8-10 8-14 0-26"/><path d="M10 -52c-8-10 8-14 0-26"/></g></g>
+      <g transform="translate(380 445)"><circle r="28" fill="#fbf7ef"/><circle r="28" fill="none" stroke="#3a332c" stroke-width="1.4" filter="url(#ink)"/><circle r="21" fill="#ea8a2c" filter="url(#wc)" opacity=".85"/></g>
+      <path d="M60 60 q20 -18 40 0" stroke="#6f8f5e" stroke-width="2" fill="none" filter="url(#ink)"/><path d="M80 50 q4 -20 18 -26 q-2 18 -18 26z" fill="#9dbb8b" opacity=".7" filter="url(#wc)"/>
+      <text x="560" y="250" font-family="Cormorant Garamond, serif" font-style="italic" font-size="26" fill="#c8553d" text-anchor="end" transform="rotate(-8 560 250)">see you on 12.10</text>
+    </svg>
+  </div>
+</div></header>
+
+<section class="band" style="padding-top:0"><div class="wrap intro">
+  <div>
+    <h2><span class="en">Eat real food</span>關於 gonnaEAT</h2>
+    <p class="body">以原型食物與地中海飲食為概念的餐廳，主打「Fast Slow Food」：上菜快，但每一樣東西都花時間慢慢做。很適合我們這群天天在病房提醒病人「均衡飲食」的藥師，自己也實踐一下。</p>
+    <div class="chips"><span class="chip">免收服務費</span><span class="chip">有全素／無肉選項</span><span class="chip">分量扎實</span><span class="chip">鄰近台北車站</span></div>
+  </div>
+  <div class="pillars">
+    <div><svg viewBox="0 0 64 64" aria-hidden="true"><ellipse cx="32" cy="34" rx="22" ry="16" fill="#c8553d" opacity=".7" filter="url(#wc)"/><ellipse cx="32" cy="34" rx="22" ry="16" fill="none" stroke="currentColor" stroke-width="1.3" filter="url(#ink)"/><ellipse cx="26" cy="31" rx="6" ry="4" fill="#fbf0e0" opacity=".8"/></svg><h3><span class="en">Good Protein</span>好肉、低溫烹調</h3><p>穀飼牛、無抗生素飼養的活菌豬與可追溯來源的雞肉，多以低溫舒肥慢煮，保留肉質軟嫩。</p></div>
+    <div><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M14 30h36c0 12-8 20-18 20s-18-8-18-20z" fill="#e8bf63" opacity=".7" filter="url(#wc)"/><path d="M14 30h36c0 12-8 20-18 20s-18-8-18-20zM40 30l10-18" fill="none" stroke="currentColor" stroke-width="1.3" filter="url(#ink)"/></svg><h3><span class="en">House-made</span>能自己做就自己做</h3><p>醬汁、美乃滋從零開始手作，不使用化學調味，甜點也是店內自製。</p></div>
+    <div><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 54C14 44 14 22 32 10c18 12 18 34 0 44z" fill="#6f8f5e" opacity=".75" filter="url(#wc)"/><path d="M32 54C14 44 14 22 32 10c18 12 18 34 0 44zM32 54V18" fill="none" stroke="currentColor" stroke-width="1.3" filter="url(#ink)"/></svg><h3><span class="en">Good Veggie</span>大量新鮮蔬果</h3><p>每道餐點都有份量十足的蔬菜，羽衣甘藍來自拉拉山小農，果汁是 100% 現榨蔬果。</p></div>
+  </div>
+</div></section>
+
+<section class="band rule"><div class="wrap">
+  <h2><span class="en">Chef's favourites</span>不能錯過的招牌菜</h2>
+  <div class="feat" id="feat"></div>
+</div></section>
+
+<section class="band rule" id="menu"><div class="wrap">
+  <h2><span class="en">The menu</span>店家菜單原圖<small>gonnaEAT 京站店提供的 2026 年 4 月版菜單與分享套餐，點圖可放大翻頁。</small></h2>
+  <div class="gal" id="gal"></div>
+</div></section>
+
+<section class="band rule" id="order"><div class="wrap">
+  <h2><span class="en">Your order, please</span>點餐區<small>先選點餐方式，再選名字。單點是自己點自己的；揪團是 2–5 人一起點分享套餐，一個人就能幫全團點好。</small></h2>
+  <ul class="rules">
+    <li class="warn">店家低消為<b>一人至少一個品項</b>，請每位都點餐；確定不能來請勾選「不克出席」。</li>
+    <li class="warn">羽衣甘藍、芝麻葉供貨不穩，<b>含羽衣甘藍的餐點請一併選「備選餐點」</b>，當天缺貨就換備選。</li>
+    <li>點任一份主餐（沙拉、能量碗、好的蛋白質、漢堡三明治、義大利麵），可再折抵飲品或今日湯 $30（酒類、瓶裝飲料除外）。</li>
+    <li>漢堡牛肉、牛排為非全熟，若要全熟或調整辣度，請寫在「備註」。</li>
+    <li>甜薑陽光康普茶、生薑康普茶已停售；新品紅石榴葡萄柚康普茶價格以店家為準。</li>
+    <li>想吃得豐盛又划算？選<b>「我要揪團點餐」</b>，2–5 人一起點分享套餐（含前菜、每人一份主餐與飲品、甜點共享）。在團裡的人也能另外單點加菜。</li>
+    <li>點完按「儲存我的點餐」即可，截止前都能回來修改。</li>
+  </ul>
+  <div class="hint" id="dbnote" hidden></div>
+  <h3 class="step"><span>1</span>選擇點餐方式</h3>
+  <div class="modes" id="mode">
+    <button data-m="ala" aria-pressed="true"><b>我要單點</b><span>自己點自己的，只選一個名字</span></button>
+    <button data-m="set" aria-pressed="false"><b>我要揪團點餐</b><span>2–5 人分享套餐，可一次選多位團員</span></button>
+  </div>
+  <div id="setBar" hidden></div>
+  <h3 class="step" id="rosterStep"></h3>
+  <div class="roster" id="roster" role="group" aria-label="參加者名單"></div>
+
+  <div class="panel" id="panel">
+    <div class="menu">
+      <div class="tabs" id="tabs" role="tablist"></div>
+      <input class="search" id="q" type="search" placeholder="搜尋餐點，例如：鮭魚、拿鐵、全素" aria-label="搜尋餐點">
+      <ul class="items" id="items"></ul>
+    </div>
+    <aside class="cart" id="cart" aria-live="polite"></aside>
+  </div>
+  <div id="setWrap" hidden></div>
+</div></section>
+
+<section class="band rule" id="summary"><div class="wrap">
+  <h2><span class="en">For the kitchen</span>點餐彙整<small>給組長確認，也可直接輸出給店家。</small></h2>
+  <div class="stats" id="stats"></div>
+  <div class="row">
+    <button class="btn" id="pdf">下載給店家的 PDF</button>
+    <button class="btn ghost" id="copy">複製訂單文字（回信用）</button>
+    <span class="msg" id="xmsg" role="status"></span>
+  </div>
+  <div class="cols">
+    <div><h3 style="margin:20px 0 8px">每人點餐</h3><div class="scroll"><table class="stack" id="ptable"></table></div></div>
+    <div><h3 style="margin:20px 0 8px">單點品項統計（廚房備料）</h3><table id="ttable"></table></div>
+  </div>
+  <h3 style="margin:26px 0 8px">分享套餐</h3><div class="scroll"><table class="stack" id="gtable"></table></div>
+  <details class="admin" id="admin"><summary class="serif" style="font-size:19px;cursor:pointer">名單管理</summary>
+    <div class="row"><input id="newName" placeholder="新增參加者姓名" aria-label="新增參加者姓名"><input id="newRole" placeholder="職稱／備註（選填）" aria-label="職稱"><button class="btn blue" id="addP">新增</button></div>
+    <p class="small">移除名單：點選上方名字後，在點單區下方按「從名單移除」。原訂 16 位，目前名單人數若不同，請記得通知店家。</p>
+  </details>
+</div></section>
+
+<footer><div class="wrap">期待 12/10 和大家一起好好吃一頓飯。<span class="sig">— 照護組 敬邀</span><br>訂位：張先生 16 位｜訂金 $2,000 已匯款，當天結帳時從總額扣除｜店家請於 12/8（二）15:00 前收到預點菜單。菜價依店家 2026 年 4 月版菜單，實際金額以現場結帳為準。</div></footer>
+
+<div id="sheet" aria-hidden="true"></div>
+<div id="light" hidden role="dialog" aria-modal="true" aria-label="菜單原圖"><div class="lb"><img id="lightImg" alt=""><div class="lbbar"><button id="lightPrev" aria-label="上一張">‹</button><span id="lightCap"></span><button id="lightNext" aria-label="下一張">›</button><button id="lightClose" aria-label="關閉">✕</button></div></div></div>
+<div id="toast" hidden role="status"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="../config.js"></script>
+<script>
+{
+const DEPOSIT=2000;
+const CATS=[["sal","沙拉"],["bowl","能量碗"],["pro","好的蛋白質"],["pas","義大利麵"],["bur","漢堡・三明治"],["snk","點心"],["des","甜點"],["drk","飲品"]];
+const MAIN=new Set(["sal","bowl","pro","pas","bur"]);
+// flags: k 含羽衣甘藍 r 推薦 v 全素 m 無肉 s 微辣 S 固定微辣 b 牛肉非全熟 c 含香菜 n 新品 o 可升級燕麥奶 x 不適用折抵 q 價格待確認 u 今日湯(可折抵)
+const M=[
+["s1","sal","豐收季酪梨蘋果羽衣甘藍沙拉","Harvest Apple Avocado Kale Salad",420,"kv"],
+["s2","sal","超級食物羽衣甘藍沙拉","Vegan Superfood Kale Salad",385,"kv"],
+["s3","sal","哈魯米乳酪與鷹嘴豆泥沙拉","Halloumi & Hummus Salad",385,"km"],
+["s4","sal","超營養農家沙拉","The Farmhouse Roasted Vegetable Salad",310,"m"],
+["s5","sal","超牛瑪莎拉酪梨羽衣甘藍沙拉","Masala Beef Avocado Kale Salad",490,"krc"],
+["s6","sal","炙燒海蝦羽衣甘藍沙拉","Charred Shrimp Kale Salad",435,"k"],
+["s7","sal","舊金山酪梨雞肉羽衣甘藍沙拉","Green Goddess Avocado Chicken Kale Salad",450,"k"],
+["s8","sal","墨西哥風味酪梨雞肉沙拉","Baja Chicken & Avocado Salad",450,"c"],
+["s9","sal","Umami雞肉烤蔬菜羽衣甘藍沙拉","Gonna Signature Umami Chicken Kale Salad",395,"kr"],
+["s10","sal","希臘風Tahini雞肉羽衣甘藍沙拉","Tahini Za'atar-Chicken Kale Salad",395,"k"],
+["s11","sal","亞洲風胡麻雞肉藜麥沙拉","Asian Style Sesame Chicken & Quinoa Salad",380,""],
+["s12","sal","蔓越莓酒醋雞肉溫沙拉","Balsamic Chicken & Roasted Root Vegetables",380,""],
+["g1","bowl","蛋白質多多穀物能量碗","Good Protein Grainbowl",360,"km"],
+["g2","bowl","西班牙風味青醬牛肉穀物能量碗","Steak Grain Bowl with Mojo Verde",490,"k"],
+["g3","bowl","墨西哥風味海蝦酪梨穀物能量碗","Baja Shrimp and Avocado Grainbowl",480,"krc"],
+["g4","bowl","酪梨青醬烤鮭魚穀物能量碗","Pesto Salmon Avocado Grainbowl",470,"kr"],
+["g5","bowl","腰果味噌雞胸穀物能量碗","Cashew-Miso Chicken Grainbowl",395,"k"],
+["p1","pro","舒肥烤嫩肩牛與Skinny薯條（6oz）","Flat Iron Steak & Skinny Fries 170g",560,"rb"],
+["p2","pro","舒肥烤嫩肩牛與Skinny薯條（10oz）","Flat Iron Steak & Skinny Fries 280g",790,"rb"],
+["p3","pro","72小時茴香慢烤活菌豬","Cumin Roasted Natural-fed Pork",495,""],
+["p4","pro","地中海風味爐煎海鱸","Pan-seared Seabass with Umami Sauce",520,""],
+["a1","pas","Vegan 純素野菇日曬番茄寬麵","Vegan Mushroom & Sun-dried Tomato Pasta",310,"v"],
+["a2","pas","地中海櫛瓜烤甜椒水管麵","Rigatoni with Pepper, Zucchini and Feta",350,"m"],
+["a3","pas","櫛瓜堅果青醬太陽蛋直麵","Linguine with Zucchini & Pesto",350,"m"],
+["a4","pas","野菇蒜油直麵","Linguine with Garlic Oil, Mushroom and Romano",310,"ms"],
+["a5","pas","太陽蛋酒醋野菇直麵","Linguine with Tomato, Mushroom and Balsamic",310,"ms"],
+["a6","pas","LEO哥的松子芝麻奶油牛排寬麵","Fettuccine with Tahini Cream, Pine Nuts & Steak",490,"ksn"],
+["a7","pas","煙燻海蝦番茄奶油大管麵","Paccheri with Shrimp, Kale and Smoked Tomato Cream",480,"ksn"],
+["a8","pas","海蝦櫛瓜羽衣甘藍直麵","Linguine with Shrimp, Kale & Sun-dried Tomato",470,"k"],
+["a9","pas","南義風味海蝦淡菜黑麵","Black Pasta with Shrimp and Mussel",470,"s"],
+["a10","pas","拿坡里辣味海蝦鯷魚番茄直麵","Linguine with Spicy Shrimp & Tomato",435,"S"],
+["a11","pas","老闆最愛的辣味碎香腸水管麵","Rigatoni with Puttanesca Sauce and Crushed Chorizo",360,"S"],
+["a12","pas","松露大蒜奶油野菇雞肉寬麵","Creamy Truffle Chicken Pasta",435,""],
+["a13","pas","香料活菌豬燻奶油寬麵","Fettuccine with Roasted Pork & Chipotle Cream",390,"S"],
+["a14","pas","堅果青醬番茄雞肉寬麵","Pesto-Tomato Chicken Pasta",375,""],
+["a15","pas","蒜味日曬番茄雞肉水管麵","Rigatoni with Garlic Chicken & Sun-dried Tomato",375,""],
+["a16","pas","雙花菜舒肥雞肉大通心麵","Ripe Rigate with Chicken, Cauliflower & Broccoli",365,"s"],
+["a17","pas","辣味煙花女鮪魚直麵","Linguine Alla Puttanesca",310,"S"],
+["b1","bur","Gonna超級雙層乳酪牛肉堡","Gonna Double-Double Cheese Burger",450,"rb"],
+["b2","bur","Vicky最愛培根太陽蛋牛肉堡","Vicky's Bacon & Egg Burger",420,"rsb"],
+["b3","bur","Jason最愛乳酪野菇牛肉堡","Jason's Mushroom & Cheese Burger",400,"sb"],
+["b4","bur","火努魯魯烤鳳梨乳酪漢堡","Honolulu Grilled Pineapple Cheese Burger",390,"rsb"],
+["b5","bur","街頭芥末烤牛肉三明治","Mustard Roasted Beef Sandwich",420,""],
+["b6","bur","古巴烤活菌豬帕里尼","\"The Cubano\" Roasted Pork Panini",370,""],
+["b7","bur","蔓越莓雞肉帕里尼","Apple-Cranberry Chicken Panini",370,""],
+["n1","snk","優格燕麥炸去骨雞腿","Oatmeal-Crusted Boneless Fried Chicken",220,""],
+["n2","snk","迷迭香薯條","Skinny Fries with Aioli",140,""],
+["n3","snk","地瓜薯條","Sweet Potato Fries with Cranberry-Apple Sauce",140,""],
+["n4","snk","精選今日湯","Soup of the Day",110,"u"],
+["n5","snk","橄欖油煎酸種麵包佐番茄（兩小片）","Tomato Con Pan (Sourdough)",80,""],
+["n6","snk","迷迭香大蒜烤酸種麵包（兩小片）","Rosemary Garlic Bread (Sourdough)",60,""],
+["d1","des","海鹽焦糖巧克力蛋糕","Flourless Salted Caramel Chocolate Fudge Cake",230,"r"],
+["d2","des","毛絨絨栗子蛋糕","Fluffy Chestnut Cake",200,"r"],
+["d3","des","胡蘿蔔蛋糕","Classic Carrot Cake",200,"r"],
+["d4","des","超濃郁提拉米蘇","Tiramisu",200,""],
+["d5","des","高蛋白黑芝麻豆乳蛋糕","High-Protein Black Sesame Soy Milk Cake",200,"n"],
+["j1","drk","橘－胡蘿蔔蘋果汁","ORANGE – Carrot & Apple",180,""],
+["j2","drk","黃－鳳梨萊姆汁","YELLOW – Pineapple & Lime",180,""],
+["j3","drk","紫－甜菜根蘋果汁","PURPLE – Beetroot & Apple",180,""],
+["j4","drk","綠－芭樂黃瓜汁","GREEN – Guava & Cucumber",180,""],
+["t1","drk","薄荷紅玉（熱）","Minty Ruby Black Tea (Hot)",160,""],
+["t2","drk","阿里山小焙青茶（熱）","Alishan Oolong Tea (Hot)",160,""],
+["t3","drk","法式藍伯爵","Earl Grey",160,""],
+["t4","drk","馬可波羅","Marco Polo",160,""],
+["t5","drk","紅色馬可波羅（無咖啡因）","Marco Polo Rouge",160,""],
+["f1","drk","GONNA 精選黑咖啡","Long Black",130,""],
+["f2","drk","卡布奇諾","Cappuccino",160,"o"],
+["f3","drk","經典拿鐵","Caffè Latte",160,"o"],
+["h1","drk","經典熱可可","Hot Chocolate au lait",155,"o"],
+["h2","drk","蜂蜜熱歐蕾","Hot Honey au lait",130,"o"],
+["h3","drk","抹茶熱歐蕾","Matcha au lait (Hot)",130,"o"],
+["h4","drk","黑糖熱歐蕾","Brown Sugar au lait (Hot)",130,"o"],
+["k1","drk","西西里檸檬咖啡（冰）","Espresso Romano Kombucha (Iced)",190,""],
+["k2","drk","檸檬薄荷康普茶（瓶）","Zestea Lemon & Mint, 300ml",200,"x"],
+["k3","drk","紅石榴葡萄柚康普茶（新品）","Zestea Pomegranate Grapefruit",0,"xnq"],
+["w1","drk","聖沛黎洛氣泡礦泉水 1000ml","S.Pellegrino Sparkling",130,"x"],
+["w2","drk","CrystalValley 礦沛氣泡水 585ml","CrystalValley Sparkling",60,"x"],
+["w3","drk","北海道天然礦泉水 500ml","Hokkaido Natural Mineral Water",60,"x"],
+["e1","drk","柏克金啤酒 德式小麥 500ml","Buckskin Hefeweizen",140,"x"],
+["e2","drk","臺虎精釀 IPA 500ml","Taihu IPA",200,"x"],
+["e3","drk","臺虎［嗨］生啤 330ml","Taihu Craft Beer (can)",140,"x"],
+["e4","drk","巴洛克酒 皮密提紅酒 750ml（整瓶）","Campagnola Barocco Primitivo",950,"x"],
+["e5","drk","達文西傑作 灰皮諾白葡萄酒 750ml（整瓶）","Leonardo Da Vinci Pinot Grigio",950,"x"]
+];
+const BY=Object.fromEntries(M.map(r=>[r[0],{id:r[0],cat:r[1],zh:r[2],en:r[3],p:r[4],f:r[5]}]));
+const ADDONS=[["bac","煎培根2條",65],["chk","招牌舒肥雞胸",96],["gs","花園小沙拉",75],["avo","半顆酪梨",90]];
+const DEFAULT=[["mx","王明賢","藥學部副主任"],["zh","葉子慧","臨床藥學科主任"],
+["p01","李宜汶","A群"],["p02","張寧真","A群"],["p03","柯姿璇","A群"],["p04","林怡伶","A群"],
+["p05","張維倫","B群"],["p06","王台欣","B群"],["p07","闕昌琪","B群"],["p08","艾明穎","B群"],
+["p09","楊欣瑜","C群"],["p10","林明燊","C群"],["p11","陳瀅仁","C群"],["p12","林于雅","C群"]].map(([k,name,role])=>({k,name,role}));
+const FEAT=[
+["s9","招牌","店家推薦的代表作：Umami 醬汁配舒肥雞胸與烤蔬菜，第一次來就點它。","#2f6b3a","#f4a63a"],
+["g4","能量碗","鮭魚、酪梨、法羅麥與青醬一碗搞定，蛋白質與好油脂都到位。","#f08a62","#8db24a"],
+["p1","好的蛋白質","穀飼牛肩舒肥後再炙烤上色，配迷迭香細薯條，可加價升級 10oz。","#6b2a24","#f2c24a"],
+["p3","好的蛋白質","活菌豬肩肉醃兩天、低溫烤 24 小時，外皮酥香，店家的時間之作。","#a8553a","#e8c07a"],
+["a6","新品義大利麵","牛排、芝麻醬奶油醬與松子，微辣，是這季新推出的寬麵。","#e2b45a","#6b2a24"],
+["d3","甜點","店家自稱 Best in Town，鳳梨、核果、葡萄乾加奶油乳酪糖霜。","#b5652f","#fff4e4"]
+];
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const money=n=>"$"+Math.round(n).toLocaleString("en-US");
+const has=(id,f)=>(BY[id]?.f||"").includes(f);
+
+const SETS={2:{p:1350,l:1450,veg:1,pro:1,drk:2,des:1,img:"set2",n:"雙人分享餐"},3:{p:1950,l:2065,veg:1,pro:2,drk:3,des:1,img:"set3",n:"三人分享餐"},4:{p:2650,l:2800,veg:2,pro:2,drk:4,des:2,img:"set4",n:"四人快樂餐"},5:{p:3250,l:3420,veg:2,pro:3,drk:5,des:2,img:"set5",n:"五人歡聚餐"}};
+const SLOT=[["veg","好的蔬菜及穀物"],["pro","好的蛋白質及義大利麵"],["drk","一定要有的飲品"],["des","吃飽來點甜的"]];
+const SOPT={veg:[["s1",0],["s6",0],["s9",0],["g5",0]],pro:[["a6",0],["a7",0],["a8",0],["p1",80]],drk:[["f1",0],["h3",0],["h4",0],["f3",30],["j1",50],["j2",50],["k1",60]],des:[["d3",0],["d2",0],["d4",0],["d5",0],["d1",30]]};
+const GALLERY=[["m1","封面・品牌理念"],["m2","沙拉・能量碗・好的蛋白質"],["m3","義大利麵・漢堡三明治・點心"],["m4","甜點・飲品"],["set2","雙人分享餐 $1,350"],["set3","三人分享餐 $1,950"],["set4","四人快樂餐 $2,650"],["set5","五人歡聚餐 $3,250"]];
+const IMG=window.EXEC_URL?"https://rxwindchang.github.io/FENH_RxCare_Dashboard/dinner/menu/":"menu/";
+const up=(s,id)=>(SOPT[s].find(x=>x[0]===id)||[0,0])[1];
+const KEY=/^[\w-]{1,30}$/;
+
+const SLOTK=["x1","x2"];
+let base=DEFAULT.slice(), slotData={}, roster=DEFAULT.slice(), orders={}, groups={}, cur=null, draft=null, tab="sal", mode="ala", canAdmin=true, canWrite=true, dirty=false, gdraft=null;
+
+/* ---------- featured ---------- */
+$("#feat").innerHTML=FEAT.map(([id,lab,txt,c1,c2])=>{const d=BY[id];return `<div class="dish"><svg viewBox="-50 -50 100 100"><circle r="44" fill="#fbf7ef"/><circle r="44" fill="none" stroke="#3a332c" stroke-width="1.2" filter="url(#ink)"/><circle r="34" fill="none" stroke="#3a332c" stroke-width=".6" opacity=".4"/><g filter="url(#wc)" opacity=".85"><circle cx="-9" cy="-6" r="19" fill="${c1}"/><circle cx="12" cy="9" r="15" fill="${c2}"/><circle cx="-4" cy="19" r="8" fill="${c1}" opacity=".7"/></g></svg><div><div class="lab">${lab}</div><h3>${esc(d.zh)}</h3><div class="p">${money(d.p)}</div><p>${txt}</p></div></div>`}).join("");
+
+/* ---------- gallery & lightbox ---------- */
+$("#gal").innerHTML=GALLERY.map(([f,c],i)=>`<figure><button data-li="${i}" aria-label="放大：${c}"><img src="${IMG}${f}_s.jpg" alt="${c}" loading="lazy"></button><figcaption>${c}</figcaption></figure>`).join("");
+let li=0;
+function openLight(i){li=(i+GALLERY.length)%GALLERY.length;const [f,c]=GALLERY[li];$("#lightImg").src=IMG+f+".jpg";$("#lightImg").alt=c;$("#lightCap").textContent=`${c}（${li+1}/${GALLERY.length}）`;$("#light").hidden=false;$("#lightClose").focus()}
+function closeLight(){$("#light").hidden=true}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-li]");if(b)openLight(+b.dataset.li);const s=e.target.closest("[data-img]");if(s)openLight(GALLERY.findIndex(g=>g[0]===s.dataset.img))});
+$("#lightClose").addEventListener("click",closeLight);$("#lightPrev").addEventListener("click",()=>openLight(li-1));$("#lightNext").addEventListener("click",()=>openLight(li+1));
+$("#light").addEventListener("click",e=>{if(e.target.id==="light")closeLight()});
+document.addEventListener("keydown",e=>{if($("#light").hidden)return;if(e.key==="Escape")closeLight();if(e.key==="ArrowLeft")openLight(li-1);if(e.key==="ArrowRight")openLight(li+1)});
+
+/* ---------- helpers ---------- */
+function linePrice(l){const d=BY[l.id];if(!d)return 0;let p=d.p;(l.add||[]).forEach(a=>{const x=ADDONS.find(z=>z[0]===a);if(x)p+=x[2]});if(l.oat)p+=20;if(l.salad)p+=40;return p*(l.qty||1)}
+function calc(items){let sub=0,mains=0,elig=0;(items||[]).forEach(l=>{const d=BY[l.id];if(!d)return;sub+=linePrice(l);const q=l.qty||1;if(MAIN.has(d.cat))mains+=q;if((d.cat==="drk"&&!has(l.id,"x"))||has(l.id,"u"))elig+=q});const disc=30*Math.min(mains,elig);return{sub,disc,net:sub-disc,mains}}
+function optText(l){const o=[];(l.add||[]).forEach(a=>{const x=ADDONS.find(z=>z[0]===a);if(x)o.push("加"+x[1])});if(l.oat)o.push("升級燕麥奶");if(l.salad)o.push("薯條換生菜沙拉");return o.join("、")}
+function lineText(l){const d=BY[l.id];if(!d)return"";const o=optText(l);return d.zh+(o?`（${o}）`:"")+((l.qty||1)>1?` ×${l.qty}`:"")}
+function cleanItems(arr){return Array.isArray(arr)?arr.filter(l=>l&&BY[l.id]).map(l=>({id:l.id,qty:Math.max(1,Math.min(9,+l.qty||1)),add:Array.isArray(l.add)?l.add.filter(a=>ADDONS.some(z=>z[0]===a)):[],oat:!!l.oat&&has(l.id,"o"),salad:!!l.salad&&BY[l.id].cat==="bur",alt:BY[l.alt]?l.alt:""})):[]}
+const VEG=SOPT.veg.map(x=>x[0]),PRO=SOPT.pro.map(x=>x[0]),DRK=SOPT.drk.map(x=>x[0]),DES=SOPT.des.map(x=>x[0]);
+const mainUp=id=>PRO.includes(id)?up("pro",id):0;
+function cleanGroup(v){const size=[2,3,4,5].includes(+v?.size)?+v.size:0;if(!size)return null;const S=SETS[size];const mem=[...new Set((Array.isArray(v.members)?v.members:[]).filter(k=>typeof k==="string"&&KEY.test(k)))].slice(0,size);const picks={};const src=v.picks&&typeof v.picks==="object"?v.picks:{};mem.forEach(k=>{const x=src[k]||{};picks[k]={main:VEG.includes(x.main)||PRO.includes(x.main)?x.main:"",drink:DRK.includes(x.drink)?x.drink:""}});const des=(Array.isArray(v.des)?v.des:[]).map(x=>DES.includes(x)?x:"").slice(0,S.des);while(des.length<S.des)des.push("");return{size,members:mem,picks,des,note:String(v.note||"").slice(0,200),at:String(v.at||"").slice(0,40)}}
+const glist=()=>Object.entries(groups).map(([id,g])=>({id,...g})).sort((a,b)=>a.at.localeCompare(b.at)||a.id.localeCompare(b.id));
+function gname(id){const i=glist().findIndex(g=>g.id===id);return "套餐"+("ABCDEFGHIJKLMNOP"[i]||i+1)}
+const groupOf=k=>glist().find(g=>g.members.includes(k));
+function gCost(g){let c=SETS[g.size].p;g.members.forEach(k=>{const p=g.picks[k]||{};if(p.main)c+=mainUp(p.main);if(p.drink)c+=up("drk",p.drink)});g.des.forEach(id=>{if(id)c+=up("des",id)});return c}
+function gShare(g,k){const p=g.picks[k]||{};let d=0;g.des.forEach(id=>{if(id)d+=up("des",id)});return SETS[g.size].p/g.size+d/g.size+(p.main?mainUp(p.main):0)+(p.drink?up("drk",p.drink):0)}
+function gCount(g,except){let v=0,pr=0;g.members.forEach(k=>{if(k===except)return;const m=g.picks[k]?.main;if(VEG.includes(m))v++;else if(PRO.includes(m))pr++});return{v,pr}}
+function gMissing(g){const S=SETS[g.size],m=[];if(g.members.length<g.size)m.push(`還差 ${g.size-g.members.length} 人`);const np=g.members.filter(k=>!g.picks[k]?.main||!g.picks[k]?.drink);if(np.length)m.push(`${np.map(pname).join("、")} 還沒選完餐點`);const c=gCount(g);if(g.members.length===g.size&&!np.length&&(c.v!==S.veg||c.pr!==S.pro))m.push(`主餐需蔬菜穀物 ${S.veg} 份、蛋白質/麵 ${S.pro} 份`);const d=g.des.filter(Boolean).length;if(d<S.des)m.push(`甜點還差 ${S.des-d} 項`);return m}
+const itemName=(id,u)=>BY[id].zh+(u?`（+${u}）`:"");
+function memberPick(g,k){const p=g.picks[k]||{};return `${p.main?itemName(p.main,mainUp(p.main)):"主餐未選"}＋${p.drink?itemName(p.drink,up("drk",p.drink)):"飲品未選"}`}
+function gLines(g){return["前菜（共享）：自製鷹嘴豆泥與PITA扁麵包",...g.members.map(k=>`${pname(k)}：${memberPick(g,k)}`),`甜點（共享）：${g.des.filter(Boolean).map(id=>itemName(id,up("des",id))).join("、")||"未選"}`]}
+const pname=k=>roster.find(p=>p.k===k)?.name||"（已移除）";
+function status(p){const o=orders[p.k];if(o?.absent)return"abs";const g=groupOf(p.k);if(g)return gMissing(g).length?"grp":"done";return(o?.items||[]).length?"done":"none"}
+function personEst(k){const o=orders[k],g=groupOf(k);let n=o&&!o.absent?calc(o.items).net:0;if(g)n+=gShare(g,k);return n}
+function toast(t,err){const x=$("#toast");x.textContent=t;x.className=err?"err":"";x.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>x.hidden=true,3200)}
+
+/* ---------- 資料端點（Dashboard 的 Apps Script，需 Dashboard 密碼） ---------- */
+const PAGE_URL="https://rxwindchang.github.io/FENH_RxCare_Dashboard/";
+const ls={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+const pw={get(){let v=ls.get("rxcare_pw");if(!v){const m=document.cookie.match(/(?:^|; )rxcare_pw=([^;]*)/);v=m?decodeURIComponent(m[1]):null}return v},set(v){ls.set("rxcare_pw",v);try{document.cookie="rxcare_pw="+encodeURIComponent(v)+"; max-age=31536000; path=/; SameSite=Strict; Secure"}catch(e){}}};
+let PW=pw.get(),gen=0;
+const GS=typeof google!=="undefined"&&google.script&&google.script.run;
+function gsCall(fn,args){return new Promise((res,rej)=>{const r=google.script.run.withSuccessHandler(res).withFailureHandler(rej);r[fn].apply(r,args)})}
+const EP=()=>{const ep=(window.DASH_CONFIG||{}).endpoint;if(!ep)throw new Error("找不到資料端點設定（config.js）");return ep};
+const api={
+  get(){if(GS)return gsCall("dinnerGetRun",[PW]);return fetch(EP()+`?p=${encodeURIComponent(PW)}&dinner=1&t=${Date.now()}`,{cache:"no-store"}).then(r=>r.json())},
+  op(req){if(GS)return gsCall("dinnerOpRun",[PW,req]);return fetch(EP(),{method:"POST",body:JSON.stringify({p:PW,action:"dinner",req})}).then(r=>r.json())}
+};
+const STALE="資料端點尚未更新：請組長在 Apps Script 貼上新版 Code.gs 並發布新版本。";
+function errText(e){const m=e&&(e.error||e.message)||String(e||"");if(m==="unauthorized")return"密碼不正確";if(m==="locked")return"密碼錯誤次數過多，請 10 分鐘後再試";if(/不支援的動作|Script function not found|dinnerOpRun|dinnerGetRun/i.test(m))return STALE;return m}
+function note(t){const n=$("#dbnote");n.hidden=!t;n.textContent=t||""}
+function needPw(msg){const n=$("#dbnote");n.hidden=false;n.innerHTML=`<b>${esc(msg||"請輸入 Dashboard 密碼")}</b><div class="small">點餐資料存在照護組的試算表，輸入一次 Dashboard 密碼後，這台裝置就會記住（登入過 Dashboard 的裝置不必再輸入）。</div><form id="gate"><input type="password" id="gatePw" autocomplete="current-password" aria-label="Dashboard 密碼" placeholder="Dashboard 密碼"><button class="btn sm blue" type="submit">確認</button></form>`;$("#gatePw").focus()}
+$("#dbnote").addEventListener("submit",e=>{if(e.target.id!=="gate")return;e.preventDefault();const v=$("#gatePw").value.trim();if(!v)return;PW=v;refresh(true)});
+function ingest(r){
+  const o={};Object.entries(r.orders||{}).forEach(([k,v])=>{if(KEY.test(k)&&v)o[k]={items:cleanItems(v.items),note:String(v.note||"").slice(0,200),absent:!!v.absent}});orders=o;
+  const g={};Object.entries(r.groups||{}).forEach(([k,v])=>{if(KEY.test(k)){const x=cleanGroup(v);if(x)g[k]=x}});groups=g;if(gdraft?.id&&!groups[gdraft.id])gdraft.id=null;
+  const sl={};Object.entries(r.slots||{}).forEach(([k,v])=>{if(SLOTK.includes(k)){const n=String(v||"").trim().slice(0,20);if(n)sl[k]=n}});slotData=sl;
+  base=Array.isArray(r.roster)&&r.roster.length?r.roster.filter(p=>p&&typeof p.k==="string"&&KEY.test(p.k)).map(p=>({k:p.k,name:String(p.name||"").slice(0,20),role:String(p.role||"").slice(0,20)})):DEFAULT.slice();
+  rebuild();renderAll();
+}
+async function refresh(fromGate){
+  if(!PW)return needPw();const my=++gen;
+  try{const r=await api.get();if(my!==gen)return;
+    if(!r||!r.ok){const m=errText(r);if(m==="密碼不正確"){PW=null;return needPw(fromGate?"密碼不正確，請再試一次":"Dashboard 密碼已更換，請重新輸入")}return note("讀取點餐資料失敗："+m)}
+    if(!("orders" in r))return note(STALE);
+    if(fromGate)pw.set(PW);note("");ingest(r);
+  }catch(e){if(my===gen)note("目前連不到點餐資料，請確認網路後重新整理頁面。")}
+}
+async function call(req){
+  if(!PW){needPw();throw new Error("請先輸入 Dashboard 密碼")}
+  ++gen;const r=await api.op(req);
+  if(!r||!r.ok){const m=errText(r);if(m==="密碼不正確"){PW=null;needPw(m)}throw new Error(m)}
+  ingest(r);return r;
+}
+
+/* ---------- roster ---------- */
+function rebuild(){roster=[...base.filter(p=>!SLOTK.includes(p.k)),...SLOTK.filter(k=>slotData[k]).map(k=>({k,name:slotData[k],role:""}))];if(cur&&!roster.some(p=>p.k===cur)){cur=null;draft=null}}
+function renderRoster(){
+  const keep={};SLOTK.forEach(k=>{const i=document.getElementById("slot-"+k);if(i)keep[k]=i.value});
+  $("#hc").textContent=roster.length;
+  const st=$("#rosterStep"),building=mode==="set"&&gdraft;
+  st.innerHTML=mode==="ala"?`<span>2</span>選你的名字 <small>單點只能選一個人</small>`:building?`<span>3</span>選團員 <small>已選 ${gdraft.members.length}/${gdraft.size} 位，點名字可加入或取消</small>`:"";
+  st.hidden=mode==="set"&&!building;$("#roster").hidden=mode==="set"&&!building;
+  $("#roster").innerHTML=roster.map(p=>{const s=status(p),o=orders[p.k],g=groupOf(p.k);const n=o&&!o.absent?(o.items||[]).reduce((a,l)=>a+(l.qty||1),0):0;
+  let lab=s==="abs"?"不克出席":s==="none"?"尚未點餐":"";
+  if(g)lab=gname(g.id)+(s==="grp"?" 揪團中":"")+(n?`＋單點 ${n} 品`:"");else if(s==="done")lab=`已點 ${n} 品`;
+  let cls=s,pressed=false;
+  if(building){pressed=gdraft.members.includes(p.k);if(pressed)cls+=" sel";else if((g&&g.id!==gdraft.id)||s==="abs")cls+=" off"}
+  else if(mode==="ala")pressed=cur===p.k;
+  return `<button class="who ${cls}" data-k="${esc(p.k)}" aria-pressed="${pressed}"><b>${esc(p.name)}</b><span>${esc(p.role||"")}${p.role?"・":""}${esc(lab)}</span></button>`}).join("")
+  +SLOTK.filter(k=>!slotData[k]).map(k=>`<div class="who slot"><label class="small" for="slot-${k}">空位・自行填入</label><div class="slotrow"><input id="slot-${k}" maxlength="20" placeholder="你的名字" value="${esc(keep[k]||"")}"><button data-slot="${k}">加入</button></div></div>`).join("");
+}
+$("#roster").addEventListener("click",e=>{const sb=e.target.closest("[data-slot]");if(sb)return fillSlot(sb.dataset.slot);const b=e.target.closest("button.who");if(!b)return;const k=b.dataset.k;
+  if(mode==="set"){if(gdraft)toggleMember(k);return}
+  if(dirty&&cur&&cur!==k&&!$("#cart").dataset.warned){$("#cart").dataset.warned="1";setMsg("這位的點單還沒儲存；再點一次名字就會切換並捨棄修改。","err");return}delete $("#cart").dataset.warned;pick(k)});
+$("#roster").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.id?.startsWith("slot-")){e.preventDefault();fillSlot(e.target.id.slice(5))}});
+async function fillSlot(k){const i=document.getElementById("slot-"+k);const n=(i?.value||"").trim().slice(0,20);if(!n)return toast("請先輸入名字。",1);if(roster.some(p=>p.name===n))return toast("名單上已經有這個名字了。",1);
+  try{await call({op:"slot",key:k,data:n});const i2=document.getElementById("slot-"+k);if(i2)i2.value="";if(mode==="set"&&gdraft)toggleMember(k);else pick(k);toast(`歡迎 ${n}！`)}catch(e){toast("加入失敗："+e.message,1)}}
+function loadDraft(){const o=orders[cur];draft={items:cleanItems(o?.items),note:String(o?.note||""),absent:!!o?.absent}}
+function pick(k){cur=k;loadDraft();dirty=false;renderRoster();renderCart();renderItems();if(innerWidth<900)$("#panel").scrollIntoView({behavior:"smooth",block:"start"})}
+
+/* ---------- mode ---------- */
+function renderMode(){document.querySelectorAll("#mode button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.m===mode));$("#panel").hidden=mode!=="ala";$("#setBar").hidden=mode!=="set";$("#setWrap").hidden=mode!=="set"||!gdraft}
+$("#mode").addEventListener("click",e=>{const b=e.target.closest("button");if(!b||b.dataset.m===mode)return;mode=b.dataset.m;renderAll()});
+
+/* ---------- menu ---------- */
+$("#tabs").innerHTML=CATS.map(([k,l])=>`<button role="tab" data-t="${k}" aria-selected="${k===tab}">${l}</button>`).join("");
+$("#tabs").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;tab=b.dataset.t;$("#q").value="";document.querySelectorAll("#tabs button").forEach(x=>x.setAttribute("aria-selected",x.dataset.t===tab));renderItems()});
+$("#q").addEventListener("input",renderItems);
+function tags(id){const f=BY[id].f,t=[];if(f.includes("n"))t.push('<span class="tag t-n">NEW</span>');if(f.includes("r"))t.push('<span class="tag t-r">推薦</span>');if(f.includes("v"))t.push('<span class="tag t-v">全素</span>');else if(f.includes("m"))t.push('<span class="tag t-v">無肉</span>');if(f.includes("S"))t.push('<span class="tag t-s">固定微辣</span>');else if(f.includes("s"))t.push('<span class="tag t-s">微辣</span>');if(f.includes("b"))t.push('<span class="tag t-x">牛肉非全熟</span>');if(f.includes("c"))t.push('<span class="tag t-x">含香菜</span>');if(f.includes("k"))t.push('<span class="tag t-k">羽衣甘藍・需備選</span>');if(f.includes("x")&&BY[id].cat==="drk")t.push('<span class="tag t-x">不適用折抵</span>');return t.join("")}
+function renderItems(){
+  const q=$("#q").value.trim().toLowerCase();
+  let list=M.map(r=>BY[r[0]]);
+  if(q){list=list.filter(d=>(d.zh+d.en).toLowerCase().includes(q)||(q.includes("素")&&/[vm]/.test(d.f))||(q.includes("辣")&&/[sS]/.test(d.f))||(q.includes("推薦")&&d.f.includes("r")))}else list=list.filter(d=>d.cat===tab);
+  const off=!cur||draft?.absent;
+  $("#items").innerHTML=list.length?list.map(d=>`<li class="it"><div class="n">${esc(d.zh)}${tags(d.id)}</div><div class="pr">${d.p?money(d.p):"店家報價"}</div><button class="add" data-id="${d.id}" aria-label="加入 ${esc(d.zh)}" ${off?"disabled":""}>+</button><div class="e">${esc(d.en)}</div></li>`).join(""):`<li class="empty">找不到符合的餐點。</li>`;
+}
+$("#items").addEventListener("click",e=>{const b=e.target.closest(".add");if(!b||!draft)return;const id=b.dataset.id;const ex=draft.items.find(l=>l.id===id&&!(l.add||[]).length&&!l.oat&&!l.salad);if(ex)ex.qty=Math.min(9,ex.qty+1);else draft.items.push({id,qty:1,add:[],oat:false,salad:false,alt:""});dirty=true;renderCart();setMsg(`已加入：${BY[id].zh}`,"ok")});
+
+/* ---------- set menus (groups) ---------- */
+function newDraft(size,from){const S=SETS[size];const d=from?{id:from.id,size,members:[...from.members],picks:JSON.parse(JSON.stringify(from.picks)),des:[...from.des],note:from.note}:{id:null,size,members:[],picks:{},des:[],note:""};d.des=d.des.slice(0,S.des);while(d.des.length<S.des)d.des.push("");d.members=d.members.slice(0,size);return d}
+function renderSet(){
+  if(mode!=="set")return;
+  const gl=glist();
+  const cards=Object.entries(SETS).map(([n,S])=>`<div class="setc"><button class="thumb" data-img="${S.img}" aria-label="看${S.n}原圖"><img src="${IMG}${S.img}_s.jpg" alt="" loading="lazy"></button><div><b class="serif">${S.n}</b> <span class="pr2">${money(S.p)}</span> <s class="small">${money(S.l)}</s><div class="small">每人一份主餐＋一杯飲品，甜點 ${S.des} 份與前菜共享</div><div class="small">每人約 ${money(S.p/n)} 起</div><button class="btn sm" data-new="${n}">開一個${n}人團</button></div></div>`).join("");
+  const list=gl.length?gl.map(g=>{const miss=gMissing(g);return `<div class="grp ${miss.length?"":"ok"}"><div class="gh"><b class="serif">${gname(g.id)}・${SETS[g.size].n}</b><span class="pr2">${money(gCost(g))}</span></div><div class="small">成員（${g.members.length}/${g.size}）：${g.members.map(k=>esc(pname(k))).join("、")}</div><div class="small ${miss.length?"red":"okc"}">${miss.length?esc(miss.join("・")):"✓ 已湊齊，餐點也選好了"}</div><ul class="glist">${gLines(g).map(t=>`<li>${esc(t)}</li>`).join("")}</ul>${g.note?`<div class="small">備註：${esc(g.note)}</div>`:""}${gdraft?.id===g.id?`<div class="small blue">（下方正在編輯這一團）</div>`:`<div class="row"><button class="btn sm blue" data-edit="${g.id}">編輯這一團</button></div>`}</div>`}).join(""):`<p class="empty">還沒有人開團。</p>`;
+  $("#setBar").innerHTML=`<h3 class="step"><span>2</span>選套餐，或編輯已經開好的團</h3>
+  <div class="sets">${cards}</div>
+  <h3 class="serif" style="margin:22px 0 4px;font-size:21px">目前的揪團</h3>${list}`;
+  renderBuilder();
+}
+function renderBuilder(){
+  const w=$("#setWrap");if(mode!=="set"||!gdraft){w.hidden=true;w.innerHTML="";return}
+  w.hidden=false;const d=gdraft,S=SETS[d.size];
+  const tmp={...d,members:d.members};
+  const opt=(id,u,dis,sel)=>`<option value="${id}" ${sel?"selected":""} ${dis?"disabled":""}>${BY[id].zh}${u?`（+$${u}）`:""}${dis?"（已額滿）":""}</option>`;
+  const rows=d.members.map(k=>{const p=d.picks[k]||{};const c=gCount(tmp,k);const takenBy=x=>d.members.some(m=>m!==k&&d.picks[m]?.main===x);
+    const vegO=VEG.map(id=>opt(id,0,(c.v>=S.veg||takenBy(id))&&p.main!==id,p.main===id)).join(""),proO=PRO.map(id=>opt(id,mainUp(id),(c.pr>=S.pro||takenBy(id))&&p.main!==id,p.main===id)).join("");
+    return `<tr><td><b class="serif" style="font-weight:400;font-size:17px">${esc(pname(k))}</b></td><td><select data-pm="${esc(k)}" aria-label="${esc(pname(k))} 的主餐"><option value="">— 選主餐 —</option><optgroup label="好的蔬菜及穀物（共 ${S.veg} 份）">${vegO}</optgroup><optgroup label="好的蛋白質及義大利麵（共 ${S.pro} 份）">${proO}</optgroup></select></td><td><select data-pd="${esc(k)}" aria-label="${esc(pname(k))} 的飲品"><option value="">— 選飲品 —</option>${DRK.map(id=>opt(id,up("drk",id),false,p.drink===id)).join("")}</select></td><td class="num">${money(gShare(tmp,k))}</td></tr>`}).join("");
+  const left=d.size-d.members.length;
+  const des=d.des.map((v,i)=>`<select data-dz="${i}" aria-label="甜點第 ${i+1} 項"><option value="">— 甜點 ${i+1} —</option>${DES.map(id=>opt(id,up("des",id),d.des.some((x,j)=>j!==i&&x===id),v===id)).join("")}</select>`).join("");
+  const miss=gMissing(tmp);
+  w.innerHTML=`<div class="gb"><h3 class="step" style="margin-top:0"><span>4</span>${d.id?esc(gname(d.id)):"新的團"}・${S.n}　<em class="pr2">${money(gCost(tmp))}</em></h3>
+  <div class="sizes" role="group" aria-label="套餐人數">${Object.keys(SETS).map(n=>`<button data-size="${n}" aria-pressed="${+n===d.size}">${n} 人</button>`).join("")}</div>
+  <div class="small">前菜「自製鷹嘴豆泥與PITA扁麵包」全團共享。每人選一份主餐和一杯飲品：蔬菜穀物 ${S.veg} 份、蛋白質/麵 ${S.pro} 份，名額用完的選項會鎖住；四款蔬菜穀物都含羽衣甘藍，缺貨時由店家調整。</div>
+  ${d.members.length?`<div class="scroll"><table class="gtab stack"><thead><tr><th>團員</th><th>主餐</th><th>飲品</th><th class="num">分攤約</th></tr></thead><tbody>${rows}</tbody></table></div>`:""}
+  ${left>0?`<p class="red small" style="margin-top:8px">↑ 在上方名單再點選 ${left} 位團員</p>`:""}
+  <div style="margin-top:14px"><b class="serif" style="font-weight:400;font-size:18px">甜點（全團共選 ${S.des} 項，不可重複）</b><div class="gdes">${des}</div></div>
+  <label class="small" for="gnote" style="display:block;margin-top:12px">備註（缺羽衣甘藍時的替代偏好、口味調整）</label><textarea id="gnote" maxlength="200">${esc(d.note)}</textarea>
+  <div class="small ${miss.length?"red":"okc"}" style="margin-top:8px">${miss.length?esc(miss.join("・"))+"（可以先儲存，之後再回來補）":"✓ 全部選好了"}</div>
+  <div class="row"><button class="btn" data-gsave="1">儲存這一團</button><button class="btn ghost" data-gcancel="1">取消</button>${d.id?`<button class="btn ghost" data-gdel="1">解散這一團</button>`:""}</div></div>`;
+}
+function toggleMember(k){const d=gdraft;if(!d)return;const i=d.members.indexOf(k);
+  if(i>=0){d.members.splice(i,1);delete d.picks[k]}
+  else{const g=groupOf(k);if(g&&g.id!==d.id)return toast(`${pname(k)} 已在${gname(g.id)}，請先從那一團移除。`,1);if(orders[k]?.absent)return toast(`${pname(k)} 已標記不克出席。`,1);if(d.members.length>=d.size)return toast(`這是 ${d.size} 人套餐，最多 ${d.size} 位；要更多人請換大一點的套餐。`,1);d.members.push(k);d.picks[k]={main:"",drink:""}}
+  renderRoster();renderBuilder()}
+$("#setBar").addEventListener("click",e=>{const t=e.target.closest("button");if(!t)return;
+  if(t.dataset.new){gdraft=newDraft(+t.dataset.new);renderAll();$("#rosterStep").scrollIntoView({behavior:"smooth",block:"start"})}
+  else if(t.dataset.edit){const g=groups[t.dataset.edit];if(!g)return;gdraft=newDraft(g.size,{id:t.dataset.edit,...g});renderAll();$("#rosterStep").scrollIntoView({behavior:"smooth",block:"start"})}});
+$("#setWrap").addEventListener("change",e=>{const t=e.target,d=gdraft;if(!d)return;
+  if(t.dataset.pm!=null){(d.picks[t.dataset.pm]||(d.picks[t.dataset.pm]={})).main=t.value}else if(t.dataset.pd!=null){(d.picks[t.dataset.pd]||(d.picks[t.dataset.pd]={})).drink=t.value}else if(t.dataset.dz!=null){d.des[+t.dataset.dz]=t.value}else return;renderBuilder()});
+$("#setWrap").addEventListener("input",e=>{if(e.target.id==="gnote"&&gdraft)gdraft.note=e.target.value});
+$("#setWrap").addEventListener("click",async e=>{const t=e.target.closest("button");if(!t||!gdraft||t.disabled)return;const d=gdraft;
+  if(t.dataset.size){const n=+t.dataset.size;if(d.members.length>n)return toast(`已選 ${d.members.length} 位，請先在名單取消幾位再換成 ${n} 人套餐。`,1);const nd=newDraft(n,d);const S=SETS[n];const c={v:0,pr:0};nd.members.forEach(k=>{const m=nd.picks[k]?.main;if(VEG.includes(m)){if(c.v<S.veg)c.v++;else nd.picks[k].main=""}else if(PRO.includes(m)){if(c.pr<S.pro)c.pr++;else nd.picks[k].main=""}});gdraft=nd;renderAll();return}
+  if(t.dataset.gcancel){gdraft=null;renderAll();return}
+  if(t.dataset.gdel){if(!d.id)return;if(!t.dataset.sure){t.dataset.sure="1";t.textContent="確定解散？再按一次";return}t.disabled=true;try{await call({op:"gdel",key:d.id});gdraft=null;renderAll();toast("已解散這一團。")}catch(err){t.disabled=false;toast(err.message,1)}return}
+  if(t.dataset.gsave){if(!d.members.length)return toast("請先在名單點選至少一位團員。",1);
+    const id=d.id||"g"+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+    const data={size:d.size,members:d.members,picks:d.picks,des:d.des,note:String(d.note).slice(0,200)};
+    const tmp={...data,at:""};t.disabled=true;t.textContent="儲存中…";
+    try{await call({op:"gset",key:id,data,sum:`${SETS[d.size].n}｜${gLines(tmp).join("；")}`});gdraft=null;renderAll();toast(`已儲存 ${gname(id)}！`);$("#setBar").scrollIntoView({behavior:"smooth",block:"start"})}
+    catch(err){t.disabled=false;t.textContent="儲存這一團";toast(err.message,1)}}
+});
+
+/* ---------- cart ---------- */
+const ALTS=M.filter(r=>MAIN.has(r[1])&&!r[5].includes("k")).map(r=>BY[r[0]]);
+function renderCart(){
+  const c=$("#cart");
+  if(!cur){c.innerHTML=`<h3>我的點單</h3><p class="empty">請先在上方點選你的名字，就可以開始點餐。</p>`;return}
+  const p=roster.find(x=>x.k===cur);const t=calc(draft.items);const g=groupOf(cur);
+  const gbox=g?`<div class="gbox"><b class="serif">${gname(g.id)}・${SETS[g.size].n}</b><div class="small">${g.members.map(k=>esc(pname(k))).join("、")}・你的分攤約 ${money(gShare(g,cur))}</div><div class="small">你的餐點：${esc(memberPick(g,cur))}</div><div class="small ${gMissing(g).length?"red":"okc"}">${gMissing(g).length?gMissing(g).join("・"):"✓ 套餐已完成"}</div><div class="small">要改套餐內容請到「我要揪團點餐」；這裡可以再加點個人單點（選填）。</div></div>`:"";
+  const lines=draft.items.map((l,i)=>{const d=BY[l.id];const main=MAIN.has(d.cat);
+    let opts="";
+    if(main&&d.cat!=="pro")opts+=ADDONS.map(([k,n,pr])=>`<label><input type="checkbox" data-i="${i}" data-a="${k}" ${(l.add||[]).includes(k)?"checked":""}>${n} +${pr}</label>`).join("");
+    if(d.cat==="bur")opts+=`<label><input type="checkbox" data-i="${i}" data-s="1" ${l.salad?"checked":""}>薯條換生菜沙拉 +40</label>`;
+    if(has(l.id,"o"))opts+=`<label><input type="checkbox" data-i="${i}" data-o="1" ${l.oat?"checked":""}>升級燕麥奶 +20</label>`;
+    const alt=has(l.id,"k")?`<div class="alt"><b class="red">備選餐點（羽衣甘藍缺貨時改上）</b><select data-i="${i}" data-alt="1" aria-label="備選餐點"><option value="">— 請選擇 —</option>${ALTS.map(a=>`<option value="${a.id}" ${l.alt===a.id?"selected":""}>${esc(a.zh)}　${money(a.p)}</option>`).join("")}</select></div>`:"";
+    return `<div class="line"><div class="top"><span>${esc(d.zh)}</span><span>${d.p?money(linePrice(l)):"另計"}</span></div><div class="qty"><button data-i="${i}" data-q="-1" aria-label="減少">−</button><span>${l.qty}</span><button data-i="${i}" data-q="1" aria-label="增加">＋</button></div>${opts?`<div class="opts">${opts}</div>`:""}${alt}</div>`}).join("");
+  const est=t.net+(g?gShare(g,cur):0);
+  c.innerHTML=`<h3>${esc(p?.name||"")} 的點單</h3><div class="sub">${esc(p?.role||"")}</div>
+  <div class="opts" style="margin:10px 0"><label><input type="checkbox" id="absent" ${draft.absent?"checked":""}>當天不克出席</label></div>
+  ${draft.absent?`<p class="empty">已標記為不克出席，按儲存後組長會看到。</p>`:gbox+(lines||`<p class="empty">${g?"沒有加點也沒關係。":"還沒有餐點：從左邊菜單按「＋」加入。"}</p>`)}
+  ${draft.absent?"":`<label for="note" class="small" style="display:block;margin-top:10px">備註（熟度、辣度、忌口、過敏）</label><textarea id="note" maxlength="200" placeholder="例如：漢堡牛肉要全熟、不要香菜">${esc(draft.note)}</textarea>
+  ${draft.items.length?`<div class="tot"><span>單點小計</span><span>${money(t.sub)}</span></div>${t.disc?`<div class="small" style="display:flex;justify-content:space-between"><span>主餐搭飲品／湯折抵</span><span>−${money(t.disc)}</span></div>`:""}`:""}
+  <div class="small" style="display:flex;justify-content:space-between;font-weight:700;margin-top:6px"><span>我的預估金額${g?"（含套餐分攤）":""}</span><span>${money(est)}</span></div>`}
+  <div class="row"><button class="btn" id="save" ${canWrite?"":"disabled"}>儲存我的點餐</button>${SLOTK.includes(cur)&&canWrite?`<button class="btn ghost" id="rm">清除這個空位</button>`:canAdmin&&!DEFAULT.some(d=>d.k===cur)?`<button class="btn ghost" id="rm">從名單移除</button>`:""}</div>
+  <div class="msg" id="msg" role="status"></div>`;
+}
+let msgT;function setMsg(t,k){const m=$("#msg");if(!m)return;m.textContent=t;m.className="msg "+(k||"");clearTimeout(msgT);if(k==="ok")msgT=setTimeout(()=>{if(m.isConnected)m.textContent=""},2600)}
+$("#cart").addEventListener("click",async e=>{
+  const q=e.target.closest("[data-q]");if(q){const l=draft.items[+q.dataset.i];l.qty+= +q.dataset.q;if(l.qty<1)draft.items.splice(+q.dataset.i,1);if(l.qty>9)l.qty=9;dirty=true;renderCart();return}
+  if(e.target.id==="save")return save();
+  if(e.target.id==="rm")return removePerson(cur);
+});
+$("#cart").addEventListener("change",e=>{
+  const t=e.target;if(t.id==="absent"){if(t.checked&&groupOf(cur)){t.checked=false;return setMsg("你在套餐揪團裡，請先請團員到「我要揪團點餐」把你移出那一團。","err")}draft.absent=t.checked;dirty=true;renderCart();renderItems();renderSet();return}
+  const i=+t.dataset.i;if(isNaN(i))return;const l=draft.items[i];
+  if(t.dataset.a){l.add=t.checked?[...new Set([...(l.add||[]),t.dataset.a])]:(l.add||[]).filter(x=>x!==t.dataset.a)}
+  else if(t.dataset.s)l.salad=t.checked;else if(t.dataset.o)l.oat=t.checked;else if(t.dataset.alt)l.alt=t.value;
+  dirty=true;renderCart();
+});
+$("#cart").addEventListener("input",e=>{if(e.target.id==="note"){draft.note=e.target.value;dirty=true}});
+
+async function save(){
+  const g=groupOf(cur);
+  if(!draft.absent){
+    if(!draft.items.length&&!g)return setMsg("店家低消一人一個品項：請單點至少一樣，或加入套餐揪團；不能來請勾選「不克出席」。","err");
+    const miss=draft.items.find(l=>has(l.id,"k")&&!l.alt);if(miss)return setMsg(`「${BY[miss.id].zh}」含羽衣甘藍，請選一個備選餐點。`,"err");
+  }
+  const body={items:draft.absent?[]:cleanItems(draft.items),note:draft.absent?"":String(draft.note).slice(0,200),absent:draft.absent,at:new Date().toISOString()};
+  const b=$("#save");b.disabled=true;b.textContent="儲存中…";
+  const sum=pname(cur)+"："+(body.absent?"不克出席":body.items.map(lineText).join("、")||"（只參加套餐）")+(body.note?`［${body.note}］`:"");
+  try{await call({op:"order",key:cur,data:body,sum});dirty=false;renderAll();setMsg("已儲存！截止前都可以回來修改。","ok")}
+  catch(err){const b2=$("#save");if(b2){b2.disabled=false;b2.textContent="儲存我的點餐"}setMsg("儲存失敗："+err.message,"err")}
+}
+
+/* ---------- summary ---------- */
+function rows(){return roster.map((p,i)=>({i:i+1,p,o:orders[p.k],s:status(p),g:groupOf(p.k)}))}
+function tally(){const m=new Map();rows().forEach(r=>{if(r.s==="abs"||!r.o)return;(r.o.items||[]).forEach(l=>{const k=lineText({...l,qty:1});const v=m.get(k)||{n:0,ord:M.findIndex(x=>x[0]===l.id)};v.n+=l.qty||1;m.set(k,v)})});return[...m.entries()].sort((a,b)=>a[1].ord-b[1].ord)}
+function totals(){let sub=0,disc=0,sets=0;rows().forEach(r=>{if(r.s!=="abs"&&r.o){const t=calc(r.o.items);sub+=t.sub;disc+=t.disc}});glist().forEach(g=>sets+=gCost(g));const net=sub-disc+sets;return{sub,disc,sets,net,pay:net-DEPOSIT}}
+function itemCell(r){const a=[];if(r.g)a.push(`【${gname(r.g.id)}】${memberPick(r.g,r.p.k)}`);if(r.s!=="abs"&&r.o)(r.o.items||[]).forEach(l=>a.push(lineText(l)));return a}
+function renderSummary(){
+  const R=rows(),done=R.filter(r=>r.s==="done").length,grp=R.filter(r=>r.s==="grp").length,abs=R.filter(r=>r.s==="abs").length,T=totals();
+  $("#stats").innerHTML=`<div class="stat"><b>${done}/${R.length}</b><span>已完成點餐</span></div><div class="stat"><b>${R.length-done-abs}</b><span>尚未完成（含揪團未湊齊 ${grp} 位）</span></div><div class="stat"><b>${abs}</b><span>不克出席</span></div><div class="stat"><b>${money(T.net)}</b><span>預估總額（含套餐與折抵，未扣訂金 ${money(DEPOSIT)}）</span></div>`;
+  $("#ptable").innerHTML=`<thead><tr><th>#</th><th>姓名</th><th>餐點</th><th>備選</th><th>備註</th><th class="num">預估</th></tr></thead><tbody>${R.map(r=>{const a=itemCell(r);
+    const it=r.s==="abs"?"不克出席":a.length?a.map(esc).join("<br>"):'<span class="red">尚未點餐</span>';const alt=r.s!=="abs"&&r.o?(r.o.items||[]).filter(l=>l.alt).map(l=>esc(BY[l.alt]?.zh||"")).join("<br>"):"";
+    return `<tr><td>${r.i}</td><td><b>${esc(r.p.name)}</b></td><td>${it}</td><td>${alt}</td><td>${r.s!=="abs"&&r.o?esc(r.o.note||""):""}</td><td class="num">${r.s!=="abs"&&a.length?money(personEst(r.p.k)):""}</td></tr>`}).join("")}</tbody>`;
+  const gl=glist();
+  $("#gtable").innerHTML=gl.length?`<thead><tr><th>套餐</th><th>成員</th><th>內容</th><th class="num">金額</th></tr></thead><tbody>${gl.map(g=>`<tr><td><b>${gname(g.id)}</b><br>${SETS[g.size].n}${gMissing(g).length?`<br><span class="red small">${esc(gMissing(g).join("・"))}</span>`:""}</td><td>${g.members.map(k=>esc(pname(k))).join("、")}</td><td>${gLines(g).map(esc).join("<br>")}${g.note?`<br><span class="small">備註：${esc(g.note)}</span>`:""}</td><td class="num">${money(gCost(g))}</td></tr>`).join("")}</tbody>`:`<tbody><tr><td class="empty">目前沒有套餐揪團。</td></tr></tbody>`;
+  const tl=tally();
+  $("#ttable").innerHTML=tl.length?`<thead><tr><th>品項</th><th class="num">數量</th></tr></thead><tbody>${tl.map(([k,v])=>`<tr><td>${esc(k)}</td><td class="num">${v.n}</td></tr>`).join("")}</tbody>`:`<tbody><tr><td class="empty">還沒有單點品項。</td></tr></tbody>`;
+}
+function renderAll(){if(cur&&!dirty)loadDraft();renderMode();renderRoster();renderSummary();renderItems();renderSet();renderCart()}
+
+/* ---------- export ---------- */
+function orderText(){
+  const R=rows(),T=totals();let s=`gonnaEAT 京站店 您好：\n12/10（四）18:30 張先生 16 位訂席${R.length!==16?`（人數調整為 ${R.length} 位）`:""}，預點餐點如下：\n`;
+  const gl=glist();if(gl.length){s+=`\n【分享套餐】\n`;gl.forEach(g=>{s+=`${gname(g.id)} ${SETS[g.size].n}（${g.members.map(pname).join("、")}）\n  ${gLines(g).join("\n  ")}${g.note?`\n  備註：${g.note}`:""}\n`})}
+  s+=`\n【每人點餐】\n`;
+  R.forEach(r=>{if(r.s==="abs"){s+=`${r.i}. ${r.p.name}：不克出席\n`;return}const a=itemCell(r);if(!a.length){s+=`${r.i}. ${r.p.name}：（尚未點餐）\n`;return}s+=`${r.i}. ${r.p.name}：${a.join("、")}`;const alt=(r.o?.items||[]).filter(l=>l.alt).map(l=>`${BY[l.id].zh}→沒有就換${BY[l.alt].zh}`);if(alt.length)s+=`（${alt.join("；")}）`;if(r.o?.note)s+=`［備註：${r.o.note}］`;s+="\n"});
+  const tl=tally();if(tl.length)s+=`\n【單點品項統計】\n`+tl.map(([k,v])=>`${k} ×${v.n}`).join("\n");
+  s+=`\n\n預估金額 ${money(T.net)}（訂金 ${money(DEPOSIT)} 已匯款，請於結帳時扣除）。\n含羽衣甘藍的單點餐點已附備選，套餐的蔬菜穀物也麻煩依當天供貨調整，謝謝！\n亞東醫院藥學部 張維倫`;return s;
+}
+$("#copy").addEventListener("click",async()=>{const x=$("#xmsg");try{await navigator.clipboard.writeText(orderText());x.textContent="已複製，可直接貼到回信。";x.className="msg ok"}catch{x.textContent="無法自動複製，請改用 PDF。";x.className="msg err"}});
+
+function buildSheet(){
+  const R=rows(),T=totals(),now=new Date(),gl=glist();
+  const head=`<h1>gonnaEAT 京站店｜預點菜單</h1><div class="meta"><div><b>訂位：</b>張先生 16 位${R.length!==16?`（實際 ${R.length} 位）`:""}</div><div><b>日期：</b>2026/12/10（四）18:30</div><div><b>單位：</b>亞東醫院藥學部 藥事照護組</div><div><b>聯絡：</b>張維倫 藥師</div><div><b>訂金：</b>${money(DEPOSIT)}（已匯款）</div><div><b>彙整時間：</b>${now.getMonth()+1}/${now.getDate()} ${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}</div></div>`;
+  const p1=`<div class="pg">${head}<table><thead><tr><th style="width:28px">#</th><th style="width:70px">姓名</th><th>餐點</th><th style="width:150px">備選（羽衣甘藍缺貨時）</th><th style="width:130px">備註</th></tr></thead><tbody>${R.map(r=>{const a=itemCell(r);const it=r.s==="abs"?"不克出席":a.length?a.map(esc).join("<br>"):"（尚未點餐）";const alt=r.s!=="abs"&&r.o?(r.o.items||[]).filter(l=>l.alt).map(l=>esc(BY[l.id].zh)+" → "+esc(BY[l.alt].zh)).join("<br>"):"";return `<tr><td>${r.i}</td><td><b>${esc(r.p.name)}</b></td><td>${it}</td><td>${alt}</td><td>${r.s!=="abs"&&r.o?esc(r.o.note||""):""}</td></tr>`}).join("")}</tbody></table></div>`;
+  const tl=tally();
+  const gsec=gl.length?`<h1>分享套餐</h1><table><thead><tr><th style="width:120px">套餐</th><th style="width:150px">成員</th><th>內容</th><th style="text-align:right;width:70px">金額</th></tr></thead><tbody>${gl.map(g=>`<tr><td><b>${gname(g.id)}</b><br>${SETS[g.size].n}</td><td>${g.members.map(k=>esc(pname(k))).join("、")}</td><td>${gLines(g).map(esc).join("<br>")}${g.note?`<br>備註：${esc(g.note)}`:""}</td><td style="text-align:right">${money(gCost(g))}</td></tr>`).join("")}</tbody></table><div style="height:18px"></div>`:"";
+  const p2=`<div class="pg">${gsec}<h1>單點品項統計</h1><table><thead><tr><th>品項</th><th style="text-align:right;width:60px">數量</th></tr></thead><tbody>${tl.map(([k,v])=>`<tr><td>${esc(k)}</td><td style="text-align:right">${v.n}</td></tr>`).join("")||`<tr><td colspan="2">（無）</td></tr>`}</tbody></table>
+  <table style="margin-top:14px;width:55%;margin-left:auto"><tbody><tr><td>單點小計</td><td style="text-align:right">${money(T.sub)}</td></tr><tr><td>單點主餐搭飲品／湯折抵</td><td style="text-align:right">−${money(T.disc)}</td></tr><tr><td>分享套餐合計</td><td style="text-align:right">${money(T.sets)}</td></tr><tr><td>扣除訂金</td><td style="text-align:right">−${money(DEPOSIT)}</td></tr><tr><td><b>預估當天應付</b></td><td style="text-align:right"><b>${money(T.pay)}</b></td></tr></tbody></table>
+  <div class="foot">※ 單點含羽衣甘藍餐點已於第 1 頁附備選；套餐的蔬菜穀物皆含羽衣甘藍，麻煩依當天供貨調整。金額依 2026 年 4 月版菜單試算，實際以店家結帳為準。</div></div>`;
+  $("#sheet").innerHTML=p1+p2;
+}
+$("#pdf").addEventListener("click",async()=>{
+  const x=$("#xmsg"),b=$("#pdf");
+  if(!window.html2canvas||!window.jspdf){x.textContent="PDF 元件載入失敗，請重新整理頁面，或先用「複製訂單文字」。";x.className="msg err";return}
+  b.disabled=true;b.textContent="產生中…";x.textContent="";
+  try{
+    buildSheet();await document.fonts.ready;
+    const pdf=new window.jspdf.jsPDF({unit:"mm",format:"a4"});const W=210,H=297;
+    const pages=[...document.querySelectorAll("#sheet .pg")];
+    for(let i=0;i<pages.length;i++){const cv=await html2canvas(pages[i],{scale:2,backgroundColor:"#ffffff"});let w=W,h=cv.height*W/cv.width;if(h>H){w=W*H/h;h=H}if(i)pdf.addPage();pdf.addImage(cv.toDataURL("image/jpeg",.92),"JPEG",(W-w)/2,0,w,h)}
+    const blob=pdf.output("blob");
+    const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="gonnaEAT_1210_照護組預點菜單.pdf";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),4000);
+    x.textContent="PDF 已下載。";x.className="msg ok";
+  }catch(err){x.textContent="PDF 產生失敗，請改用「複製訂單文字」。";x.className="msg err"}
+  finally{b.disabled=false;b.textContent="下載給店家的 PDF"}
+});
+
+/* ---------- roster admin ---------- */
+async function saveRoster(next){next=next.filter(p=>!SLOTK.includes(p.k));try{await call({op:"roster",data:next});toast("名單已更新。")}catch(e){toast("名單更新失敗："+e.message,1)}}
+$("#addP").addEventListener("click",()=>{const n=$("#newName").value.trim().slice(0,20);if(!n)return;const r=$("#newRole").value.trim().slice(0,20);saveRoster([...base,{k:"g"+Date.now().toString(36),name:n,role:r||"來賓"}]);$("#newName").value="";$("#newRole").value=""});
+async function removePerson(k){const p=roster.find(x=>x.k===k);if(!p)return;if(groupOf(k))return setMsg("這位還在套餐揪團裡，請先退出那一團。","err");
+  if(SLOTK.includes(k)){try{await call({op:"slot",key:k,data:null});cur=null;draft=null;renderAll();toast("空位已清除。")}catch(e){toast("清除失敗："+e.message,1)}return}
+  cur=null;draft=null;saveRoster(base.filter(x=>x.k!==k))}
+
+/* ---------- init ---------- */
+if(window.EXEC_URL){const bk=$("#back");bk.href=window.EXEC_URL.replace(/\/a\/macros\/[^/]+\//,"/macros/");bk.target="_top"}
+renderAll();
+if(PW)note("正在讀取點餐資料…");
+refresh();
+setInterval(()=>{if(document.visibilityState==="visible"&&PW)refresh()},20000);
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&PW)refresh()});
+}
+
+</script>
+</body>
+</html>
