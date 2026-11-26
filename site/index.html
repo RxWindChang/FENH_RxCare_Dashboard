@@ -79,6 +79,13 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
 .ph-locked #dash-root{visibility:hidden}
 .ph-logout{position:fixed;top:10px;right:14px;font:inherit;font-size:12px;background:none;border:0;color:var(--color-fg-muted);cursor:pointer;font-family:var(--font-anthropic-sans)}
 .ph-locked .ph-logout{display:none}
+.lv-hands{display:flex;gap:8px;flex-wrap:wrap;margin-right:auto;margin-left:16px}
+.lv-hand{--g:#2f6fdb;display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 12px 0 5px;border-radius:10px;border:1px solid color-mix(in srgb,var(--g) 35%,transparent);background:color-mix(in srgb,var(--g) 7%,#fff);color:var(--g);text-decoration:none;font-size:13px;font-weight:600;white-space:nowrap;transition:background .15s,box-shadow .15s}
+.lv-hand.g-b{--g:#d06a1c}.lv-hand.g-c{--g:#23885c}
+.lv-hand b{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:7px;background:var(--g);color:#fff;font-size:13px;font-weight:800}
+.lv-hand svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.lv-hand:hover,.lv-hand:focus-visible{background:color-mix(in srgb,var(--g) 14%,#fff);box-shadow:0 1px 4px color-mix(in srgb,var(--g) 25%,transparent)}
+@media (max-width:760px){.lv-hands{order:3;width:100%;margin:8px 0 0}}
 </style>
 <script>
 /* 簡易執行環境：提供頁面程式使用的 dash.*，資料由 Apps Script 端點在開啟時即時取得 */
@@ -544,6 +551,7 @@ button.it-tag[aria-pressed="true"]{background:var(--it);color:#fff;border-color:
 
   <section class="hb-view" id="view-leave" hidden>
     <div class="hb-bar"><h2 class="hb-h2" id="lv-title">休假與代理</h2>
+      <div class="lv-hands" aria-label="各組交班表"><a class="lv-hand g-a" href="https://docs.google.com/spreadsheets/d/1L9r1U07B81LeQm6KzODofLugrs3jJzXwsDCnlMeqUZM/edit?gid=35372617#gid=35372617" target="_blank" rel="noopener noreferrer" title="開啟 A 組交班表（Google 試算表）"><b>A</b><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4.5V3h6v1.5"/><path d="M8.5 11h7l-2-2"/><path d="M15.5 15h-7l2 2"/></svg><span>A組交班</span></a><a class="lv-hand g-b" href="https://docs.google.com/spreadsheets/d/1BFiM8xIdkqhBujyiZ0zazxGekR4h-N6RYxGjQI4MQ7M/edit?gid=1194521292#gid=1194521292" target="_blank" rel="noopener noreferrer" title="開啟 B 組交班表（Google 試算表）"><b>B</b><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4.5V3h6v1.5"/><path d="M8.5 11h7l-2-2"/><path d="M15.5 15h-7l2 2"/></svg><span>B組交班</span></a><a class="lv-hand g-c" href="https://docs.google.com/spreadsheets/d/1A67leqO8VfVnFWjTrH_bwN2nOjfK-eln8VlDtbOUbPw/edit?gid=773391596#gid=773391596" target="_blank" rel="noopener noreferrer" title="開啟 C 組交班表（Google 試算表）"><b>C</b><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4.5V3h6v1.5"/><path d="M8.5 11h7l-2-2"/><path d="M15.5 15h-7l2 2"/></svg><span>C組交班</span></a></div>
       <div class="hb-ctrl"><button type="button" class="hb-btn" id="lv-prev" aria-label="上個月">‹</button><span id="lv-month" class="hb-month"></span><button type="button" class="hb-btn" id="lv-next" aria-label="下個月">›</button>
       <label class="hb-check"><input type="checkbox" id="lv-only" checked> 只顯示有休假或備註的日子</label></div></div>
     <div id="lv-body"></div>
