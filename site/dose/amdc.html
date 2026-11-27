@@ -183,10 +183,9 @@ details.more[open] summary{margin-bottom:8px}
 .tier.best .lv,.tier.best .why,.tier.best .dose small{color:var(--accent-ink);opacity:.92}
 .tier.best .dose{font-size:19px;font-weight:600}
 .tier.sel{outline:2px solid var(--ink);outline-offset:2px}
-.tier.crkp{border:2px solid #0E9AA7;background:#E3F6F7}
-.tier.crkp .lv{color:#0B7C86}
-:root[data-theme="dark"] .tier.crkp{background:#0F3A3E}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tier.crkp{background:#0F3A3E}}
+.tier.crkp,.tier.crkp:hover{border:2px solid #0E9AA7;background:#A3F1F4;color:#06303A;opacity:1}
+.tier.crkp .lv{color:#05606A;font-weight:700}
+.tier.crkp .dose,.tier.crkp .bands,.tier.crkp .bands i,.tier.crkp .ps{color:#06303A}
 .fh{display:block;font-size:11.5px;color:var(--faint);margin-top:3px}
 .al-strong{color:var(--danger);font-weight:700}
 .tier .hdt{display:inline-block;margin-left:6px;font-size:10.5px;padding:1px 6px;border-radius:99px;background:var(--danger-soft);color:var(--danger);font-family:var(--f-sans);font-weight:600;vertical-align:2px}
@@ -565,12 +564,12 @@ add({ id: 'fdc', utd: '2026/11/16', utdSrc: 'Cefiderocol: Drug information', ref
   inf: { dil: { NS: '室溫 6 h；冷藏 24 h（之後室溫 6 h 內用完）', D5W: '同 NS' }, v: [100, 250], t: [3], ti: 0, fixed: 1, note: '本院規定一律 3-h 延長輸注（仿單 3 h）' } });
 
 add({ id: 'cza', utd: '2026/11/16', utdSrc: 'Ceftazidime and avibactam: Drug information（Topic 100152 v172.0，2026-08-07 更新）', ref: 'UpToDate, 2026/11/16・PI', rrRef: 'UpToDate, 2026/11/16', blg: 'ceph', novel: 1, g: 'Ceftazidime/Avibactam', b: 'Zavicefta', zh: '贊飛得', st: '2,500 mg/vial (2,000 mg/500 mg)', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'avycaz kpc oxa-48 cre', cf: 0.8,
-  L: [T(937.5, 'q48h', { lb: '940 mg (750/187.5 mg)' }), T(937.5, 'q24h', { lb: '940 mg (750/187.5 mg)' }), T(937.5, 'q12h', { lb: '940 mg (750/187.5 mg)' }), T(1250, 'q12h', { lb: '1,250 mg (1,000/250 mg)' }), T(1250, 'q8h', { lb: '1,250 mg (1,000/250 mg)' }), T(2500, 'q8h', { lb: '2,500 mg (2,000/500 mg)' })],
-  R: [[50.0001, 5, 5, '', '>50'], [30.0001, 4, 4, '', '>30–50'], [15.0001, 2, 2, '', '>15–30'], [5.0001, 1, 1, '', '>5–15'], [0, 0, 0, '', '≤5']],
-  rr: { HD: [1, 1, '透析日於 after dialysis (AD) 給藥'], PD: [1, 1], CRRT: [4, 4, '1,250 mg Q8H（UpToDate, 2026/11/16）；高 effluent 可考慮 2,500 mg Q8H（Wenzler E, AAC 2017）'], SLED: [3, 3, 'PIRRT 當天：1,250 mg Q12H（其中一劑於 PIRRT 後給予）；每日長時間 PIRRT（如 12 h/day）可能需 Q8H；非 PIRRT 日比照 CrCl ≤15（940 mg QD）（UpToDate, 2026/11/16）'] },
+  L: [T(937.5, 'q24h', { lb: '940 mg (750/187.5 mg)' }), T(937.5, 'q12h', { lb: '940 mg (750/187.5 mg)' }), T(1250, 'q12h', { lb: '1,250 mg (1,000/250 mg)' }), T(1250, 'q8h', { lb: '1,250 mg (1,000/250 mg)' }), T(2500, 'q8h', { lb: '2,500 mg (2,000/500 mg)' })],
+  R: [[50.0001, 4, 4, '', '>50'], [30.0001, 3, 3, '', '>30–50'], [15.0001, 1, 1, '', '>15–30'], [0, 0, 0, '', '≤15']],
+  rr: { HD: [0, 0, '透析日於 after dialysis (AD) 給藥'], PD: [0, 0], CRRT: [3, 3, '1,250 mg Q8H（UpToDate, 2026/11/16）；高 effluent 可考慮 2,500 mg Q8H（Wenzler E, AAC 2017）'], SLED: [2, 2, 'PIRRT 當天：1,250 mg Q12H（其中一劑於 PIRRT 後給予）；每日長時間 PIRRT（如 12 h/day）可能需 Q8H；非 PIRRT 日比照 CrCl ≤15（940 mg QD）（UpToDate, 2026/11/16）'] },
   aki: 'w', tox: [BL_TOX_NEURO],
   inf: { dil: { NS: '8 mg/mL：冷藏 12 h + 室溫 4 h；>8–40 mg/mL：室溫 4 h（EU）', D5W: '同 NS', LR: '相容' }, v: [100, 250], t: [3], ti: 0, fixed: 1, c: [8, 40], note: '本院一律 3-h 延長輸注（仿單 2 h）。濃度以 ceftazidime 計 8–40 mg/mL' },
-  crkpUp: 1, adjWarn: 'CRKP／KPC-Kp 嚴重感染：依腎功能減量可能會降低治療成功率。仿單於 cIAI 試驗中 CrCl 30–50 者臨床治癒率較低；統合分析顯示腎劑量調整與較高死亡率相關（OR 1.79, 95% CI 1.18–2.72；Gatti M, Br J Clin Pharmacol 2023, PMID 36337045）；KPC-Kp 菌血症減量組 30 天死亡率較高（HR 4.47；Oliva A, JAC-AMR 2024;6:dlae201）。AKI 初期或重症可考慮先給全劑量，密切監測腎功能與神經毒性，必要時 TDM。',
+  crkpUp: { 0: 1, 1: 3, 2: 3, 3: 4 }, adjWarn: 'CRKP／KPC-Kp 嚴重感染：依腎功能減量可能會降低治療成功率。仿單於 cIAI 試驗中 CrCl 30–50 者臨床治癒率較低；統合分析顯示腎劑量調整與較高死亡率相關（OR 1.79, 95% CI 1.18–2.72；Gatti M, Br J Clin Pharmacol 2023, PMID 36337045）；KPC-Kp 菌血症減量組 30 天死亡率較高（HR 4.47；Oliva A, JAC-AMR 2024;6:dlae201）。AKI 初期或重症可考慮先給全劑量，密切監測腎功能與神經毒性，必要時 TDM。',
   nt: ['MBL (NDM) 菌株：需併用 aztreonam（或改 Emblaveo）。', 'CRKP 嚴重感染腎劑量調整之療效疑慮：Gatti M, Br J Clin Pharmacol 2023（PMID 36337045）；Oliva A, JAC Antimicrob Resist 2024;6(6):dlae201；Avycaz 美國仿單 Warnings 5.1。'] });
 
 add({ id: 'czt', utd: '2026/11/16', utdSrc: 'Ceftolozane and tazobactam: Drug information', ref: 'UpToDate, 2026/11/16・PI', rrRef: 'UpToDate, 2026/11/16', blg: 'ceph', novel: 1, ind: ['HAP／VAP／嚴重 MDR-GNB 感染', 'cIAI／cUTI'], g: 'Ceftolozane/Tazobactam', b: 'Zerbaxa', zh: '諾倍適', st: '1,500 mg/vial (1,000 mg/500 mg)', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'dtr pseudomonas',
@@ -1669,9 +1668,11 @@ function renderDetail() {
     const dnS = sameF.filter((x) => x.i < p.idx).slice(-1)[0] || sameD.filter((x) => H(x.t) > H(bt)).sort((a, b) => H(a.t) - H(b.t))[0];
     nb.add((upS || LA[pos + 1] || {}).i); nb.add((dnS || LA[pos - 1] || {}).i);
   }
+  /* CRKP 嚴重感染：腎功能減量（CKD、CRRT、SLED）時，以 d.crkpUp 指定之上一階為推薦劑量；長期透析（iHD、PD）不顯示 */
+  const crkpOn = d.crkpUp && p.idx >= 0 && (p.status === 'adj' || C.rrt === 'CRRT' || C.rrt === 'SLED') && C.rrt !== 'HD' && C.rrt !== 'PD' && p.mark !== 'ARC';
+  const crkpI = crkpOn && d.crkpUp[p.idx] != null && !banned.has(d.crkpUp[p.idx]) ? d.crkpUp[p.idx] : null;
+  if (crkpI != null) { [...nb].forEach((i) => { if (i != null && i > p.idx) nb.delete(i); }); nb.add(crkpI); }
   const near = (i) => i !== p.idx && nb.has(i);
-  /* CRKP 嚴重感染：腎功能減量（CKD／RRT）時，上一階標示為推薦劑量（藍綠框） */
-  const crkpI = d.crkpUp && p.idx >= 0 && (p.status === 'adj' || C.rrt !== 'none') && p.mark !== 'ARC' ? [...nb].filter((i) => i != null && i > p.idx)[0] : null;
   const best = (i) => i === p.idx;
   const visible = LA.filter(({ i }) => S.showAll || p.idx == null || p.idx < 0 || best(i) || near(i) || LA.length <= 4);
   h += '<div class="ladder">' + [...visible].reverse().map(({ t, i, x }) => {
@@ -1685,7 +1686,7 @@ function renderDetail() {
   const condNotes = [...p.notes.filter((n) => !(p.idx === -1 && n === p.notes[0]))];
   const rf = renalFactor(d, CC); if (rf.n) condNotes.push(rf.n);
   if (C.arc && !d.arc && d.aki === 'w' && C.rrt === 'none') condNotes.push('ARC：腎排除藥物暴露量可能不足，建議選擇階梯中較高劑量或延長輸注。');
-  if (d.adjWarn && (p.status === 'adj' || C.rrt !== 'none' || p.mark === 'AKI-48h')) condNotes.unshift(d.adjWarn);
+  if (d.adjWarn && (p.status === 'adj' || C.rrt !== 'none' || p.mark === 'AKI-48h') && !(d.crkpUp && (C.rrt === 'HD' || C.rrt === 'PD'))) condNotes.unshift(d.adjWarn);
   if (d.lzd) { const r = []; if (C.age >= 65) r.push(`高齡（${C.age} 歲）`); if (C.rrt !== 'none') r.push(C.rrt === 'HD' || C.rrt === 'PD' ? 'ESRD／透析' : RRTNAME[C.rrt]); else if (C.cr < 30) r.push(`CKD stage 4/5（CrCl ${r0(C.cr)}）`);
     if (r.length) condNotes.unshift(`${r.join('、')}：linezolid 血小板低下風險顯著上升，應每週（必要時每週 2 次）追蹤血小板，並斟酌調整劑量（如 TDM 指引下 600 mg QD）。Ref: J Formos Med Assoc 2021;120(1 Pt 2):466–475, doi:10.1016/j.jfma.2020.06.011`); }
   if (C.neuro && d.nx) condNotes.push(d.nx);
