@@ -1391,8 +1391,8 @@ const fq = (s) => String(s ?? '').replace(/\bq24h\b/g, 'QD').replace(/\bq48h\b/g
   .replace(/\bq(\d+)(?:–(\d+))?h\b/g, (m, a, b) => `Q${a}${b ? '–' + b : ''}H`);
 const freqAbbr = (f) => fq(f);
 function poUnits(d, mg) {
-  const m = /([\d.]+)\s*mg\/(?:DR )?(cap|tab|pack)/.exec(d.st || ''); if (!m || mg == null) return null;
-  const n = mg / +m[1], cap = m[2] !== 'tab';
+  const m = /([\d,.]+)\s*mg\/(?:DR )?(cap|tab|pack)/.exec(d.st || ''); if (!m || mg == null) return null;
+  const per = +m[1].replace(/,/g, ''); const n = mg / per, cap = m[2] !== 'tab';
   if (Math.abs(n - Math.round(n)) < 0.01) return `${Math.round(n)}#`;
   if (d.frac && Math.abs(n * 10 - Math.round(n * 10)) < 0.01) return `${+n.toFixed(1)}#`;
   if (!cap && Math.abs(n * 2 - Math.round(n * 2)) < 0.01) return fr2(n);
