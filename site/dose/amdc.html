@@ -183,6 +183,12 @@ details.more[open] summary{margin-bottom:8px}
 .tier.best .lv,.tier.best .why,.tier.best .dose small{color:var(--accent-ink);opacity:.92}
 .tier.best .dose{font-size:19px;font-weight:600}
 .tier.sel{outline:2px solid var(--ink);outline-offset:2px}
+.tier.crkp{border:2px solid #0E9AA7;background:#E3F6F7}
+.tier.crkp .lv{color:#0B7C86}
+:root[data-theme="dark"] .tier.crkp{background:#0F3A3E}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tier.crkp{background:#0F3A3E}}
+.fh{display:block;font-size:11.5px;color:var(--faint);margin-top:3px}
+.al-strong{color:var(--danger);font-weight:700}
 .tier .hdt{display:inline-block;margin-left:6px;font-size:10.5px;padding:1px 6px;border-radius:99px;background:var(--danger-soft);color:var(--danger);font-family:var(--f-sans);font-weight:600;vertical-align:2px}
 .tier.best .hdt{background:#fff;color:var(--danger)}
 .tier .xb{display:inline-block;margin-left:6px;font-size:10.5px;padding:1px 6px;border-radius:99px;background:var(--info-soft);color:var(--info);font-family:var(--f-sans);font-weight:600;vertical-align:2px}
@@ -280,11 +286,11 @@ details.nabox:not([open]) summary h4{border-bottom:0}
           <label class="chk"><input type="checkbox" id="akiHold" checked><span>寬治療指數藥物（β-lactam、FQ 等）AKI 前 48 h 先不減量</span></label>
           <details class="more"><summary>Kinetic eGFR（KeGFR；選填）</summary>
             <div class="grid3">
-              <div class="fld"><label for="bscr">基礎 Scr</label><div class="inp"><input id="bscr" type="number" inputmode="decimal" step="0.01"><span class="u">mg/dL</span></div></div>
-              <div class="fld"><label for="pscr">前次 Scr</label><div class="inp"><input id="pscr" type="number" inputmode="decimal" step="0.01"><span class="u">mg/dL</span></div></div>
-              <div class="fld"><label for="phr">間隔</label><div class="inp"><input id="phr" type="number" inputmode="decimal"><span class="u">h</span></div></div>
+              <div class="fld"><label for="bscr">基礎 Scr</label><div class="inp"><input id="bscr" type="number" inputmode="decimal" step="0.01"><span class="u">mg/dL</span></div><span class="fh">AKI 前穩定值</span></div>
+              <div class="fld"><label for="pscr">前次 Scr</label><div class="inp"><input id="pscr" type="number" inputmode="decimal" step="0.01"><span class="u">mg/dL</span></div><span class="fh">最新一次的前一次</span></div>
+              <div class="fld"><label for="phr">間隔</label><div class="inp"><input id="phr" type="number" inputmode="decimal"><span class="u">h</span></div><span class="fh">兩次抽血相隔</span></div>
             </div>
-            <p class="hint">Chen S, JASN 2013；MaxΔScr 以 1.5 mg/dL/day 計。</p>
+            <p class="hint">上方「Scr」填最新一次；基礎 Scr 不明時可用近 7 天最低值。Chen S, JASN 2013；MaxΔScr 以 1.5 mg/dL/day 計。</p>
           </details>
         </div>
         <label class="chk"><input type="checkbox" id="ecmo"><span>接受 ECMO</span></label>
@@ -564,7 +570,7 @@ add({ id: 'cza', utd: '2026/11/16', utdSrc: 'Ceftazidime and avibactam: Drug inf
   rr: { HD: [1, 1, '透析日於 after dialysis (AD) 給藥'], PD: [1, 1], CRRT: [4, 4, '1,250 mg Q8H（UpToDate, 2026/11/16）；高 effluent 可考慮 2,500 mg Q8H（Wenzler E, AAC 2017）'], SLED: [3, 3, 'PIRRT 當天：1,250 mg Q12H（其中一劑於 PIRRT 後給予）；每日長時間 PIRRT（如 12 h/day）可能需 Q8H；非 PIRRT 日比照 CrCl ≤15（940 mg QD）（UpToDate, 2026/11/16）'] },
   aki: 'w', tox: [BL_TOX_NEURO],
   inf: { dil: { NS: '8 mg/mL：冷藏 12 h + 室溫 4 h；>8–40 mg/mL：室溫 4 h（EU）', D5W: '同 NS', LR: '相容' }, v: [100, 250], t: [3], ti: 0, fixed: 1, c: [8, 40], note: '本院一律 3-h 延長輸注（仿單 2 h）。濃度以 ceftazidime 計 8–40 mg/mL' },
-  adjWarn: 'CRKP／KPC-Kp 嚴重感染：依腎功能減量可能略為降低治療成功率。仿單於 cIAI 試驗中 CrCl 30–50 者臨床治癒率較低；統合分析顯示腎劑量調整與較高死亡率相關（OR 1.79, 95% CI 1.18–2.72；Gatti M, Br J Clin Pharmacol 2023, PMID 36337045）；KPC-Kp 菌血症減量組 30 天死亡率較高（HR 4.47；Oliva A, JAC-AMR 2024;6:dlae201）。AKI 初期或重症可考慮先給全劑量，密切監測腎功能與神經毒性，必要時 TDM。',
+  crkpUp: 1, adjWarn: 'CRKP／KPC-Kp 嚴重感染：依腎功能減量可能會降低治療成功率。仿單於 cIAI 試驗中 CrCl 30–50 者臨床治癒率較低；統合分析顯示腎劑量調整與較高死亡率相關（OR 1.79, 95% CI 1.18–2.72；Gatti M, Br J Clin Pharmacol 2023, PMID 36337045）；KPC-Kp 菌血症減量組 30 天死亡率較高（HR 4.47；Oliva A, JAC-AMR 2024;6:dlae201）。AKI 初期或重症可考慮先給全劑量，密切監測腎功能與神經毒性，必要時 TDM。',
   nt: ['MBL (NDM) 菌株：需併用 aztreonam（或改 Emblaveo）。', 'CRKP 嚴重感染腎劑量調整之療效疑慮：Gatti M, Br J Clin Pharmacol 2023（PMID 36337045）；Oliva A, JAC Antimicrob Resist 2024;6(6):dlae201；Avycaz 美國仿單 Warnings 5.1。'] });
 
 add({ id: 'czt', utd: '2026/11/16', utdSrc: 'Ceftolozane and tazobactam: Drug information', ref: 'UpToDate, 2026/11/16・PI', rrRef: 'UpToDate, 2026/11/16', blg: 'ceph', novel: 1, ind: ['HAP／VAP／嚴重 MDR-GNB 感染', 'cIAI／cUTI'], g: 'Ceftolozane/Tazobactam', b: 'Zerbaxa', zh: '諾倍適', st: '1,500 mg/vial (1,000 mg/500 mg)', cls: 'bac', sub: 'bl', rt: 'inj', kw: 'dtr pseudomonas',
@@ -1664,11 +1670,13 @@ function renderDetail() {
     nb.add((upS || LA[pos + 1] || {}).i); nb.add((dnS || LA[pos - 1] || {}).i);
   }
   const near = (i) => i !== p.idx && nb.has(i);
+  /* CRKP 嚴重感染：腎功能減量（CKD／RRT）時，上一階標示為推薦劑量（藍綠框） */
+  const crkpI = d.crkpUp && p.idx >= 0 && (p.status === 'adj' || C.rrt !== 'none') && p.mark !== 'ARC' ? [...nb].filter((i) => i != null && i > p.idx)[0] : null;
   const best = (i) => i === p.idx;
   const visible = LA.filter(({ i }) => S.showAll || p.idx == null || p.idx < 0 || best(i) || near(i) || LA.length <= 4);
   h += '<div class="ladder">' + [...visible].reverse().map(({ t, i, x }) => {
-    const cls = best(i) ? 'best' : near(i) ? 'near' : 'dim';
-    const lv = best(i) ? (p.mark === 'ARC' ? '建議（ARC）' : p.mark === 'AKI-48h' ? '建議（AKI 48h）' : p.mark === 'AKI' ? '建議（AKI 進展中）' : '最適建議') : near(i) ? (i > p.idx ? '上一階' : '下一階') : `階層 ${i + 1}`;
+    const cls = best(i) ? 'best' : i === crkpI ? 'near crkp' : near(i) ? 'near' : 'dim';
+    const lv = best(i) ? (p.mark === 'ARC' ? '建議（ARC）' : p.mark === 'AKI-48h' ? '建議（AKI 48h）' : p.mark === 'AKI' ? '建議（AKI 進展中）' : '最適建議') : i === crkpI ? 'CRKP 嚴重感染推薦劑量' : near(i) ? (i > p.idx ? '上一階' : '下一階') : `階層 ${i + 1}`;
     return `<button class="tier ${cls} ${S.tierSel === i ? 'sel' : ''}" data-i="${i}"><span class="lv">${lv}</span><span><span class="dose">${esc(x.main)}${d._m === 'pif' ? `<span class="xb">${d.pifH}-h pIF</span>` : t.x ? `<span class="xb">${esc(t.x)}</span>` : ''}${t.ps ? `<span class="ps">${esc(t.ps)}</span>` : ''}${best(i) && p.alt && d._m !== 'pif' && d._m !== 'cif' ? `<span class="ps">${esc(p.alt)}</span>` : ''}${x.po ? `<span class="poc">→ ${esc(x.po)}</span>` : ''}${t.hd ? '<span class="hdt">高劑量</span>' : ''}</span>${x.sub ? `<div class="why">${esc(x.sub)}</div>` : ''}${t.t ? `<div class="why">${esc(t.t)}</div>` : ''}</span><span class="bands">${(bandMap[i] || []).length ? esc((bandMap[i] || []).join('・')) : '<span style="opacity:.6">—</span>'}${refOf(i) ? `<i>${linkify(esc(refOf(i)), 1)}</i>` : ''}</span></button>`;
   }).join('') + '</div>';
   if (LA.length > visible.length || S.showAll) h += `<button class="morebtn" id="moreBtn">${S.showAll ? '只顯示建議與上下一階' : `顯示完整劑量階梯（${LA.length} 階）`}</button>`;
@@ -1684,7 +1692,7 @@ function renderDetail() {
   if (C.ecmo && d.ex) condNotes.push(d.ex);
   if (C.cs && d.cx) condNotes.push(d.cx);
   if (C.obese && d.ob) condNotes.push(d.ob);
-  if (condNotes.length) h += `<div class="box cond"><h4>依此病人狀態之提醒</h4><div class="bd"><ul>${condNotes.map((n) => `<li>${linkify(esc(fq(n)))}</li>`).join('')}</ul></div></div>`;
+  if (condNotes.length) h += `<div class="box cond"><h4>依此病人狀態之提醒</h4><div class="bd"><ul>${condNotes.map((n) => { if (n === d.adjWarn && d.crkpUp) { const k = n.indexOf('。') + 1; return `<li><span class="al-strong">${esc(n.slice(0, k))}</span>${linkify(esc(fq(n.slice(k))))}</li>`; } return `<li>${linkify(esc(fq(n)))}</li>`; }).join('')}</ul></div></div>`;
   if (d.care) h += Object.entries(d.care).map(([k, v]) => `<div class="box"><h4>${esc(k)}</h4><div class="bd"><ul>${v.map((n) => `<li>${linkify(esc(fq(n)))}</li>`).join('')}</ul></div></div>`).join('');
   if (d.tdm) h += `<div class="box"><h4>${d.tdmIcon ? '<span class="tdmi">TDM</span> 建議監測' : 'TDM'}</h4><div class="bd">${esc(d.tdm)}${d.tdmFn ? d.tdmFn(CC) : ''}</div></div>`;
   // tox
